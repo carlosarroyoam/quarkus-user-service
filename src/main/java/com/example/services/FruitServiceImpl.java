@@ -1,4 +1,4 @@
-package com.example;
+package com.example.services;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.jboss.logging.Logger;
 
-import com.example.domain.Fruit;
+import com.example.model.Fruit;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;

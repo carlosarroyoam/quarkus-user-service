@@ -1,9 +1,9 @@
-package com.example;
+package com.example.resources;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.domain.User;
+import com.example.model.User;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;

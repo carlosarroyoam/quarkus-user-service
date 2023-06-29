@@ -1,8 +1,8 @@
-package com.example;
+package com.example.services;
 
 import java.util.Set;
 
-import com.example.domain.Fruit;
+import com.example.model.Fruit;
 
 public interface FruitService {
 

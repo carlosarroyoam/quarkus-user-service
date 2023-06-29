@@ -1,11 +1,11 @@
-package com.example;
+package com.example.resources;
 
 import java.net.URI;
-import java.util.Set;
 
 import org.jboss.logging.Logger;
 
-import com.example.domain.Fruit;
+import com.example.model.Fruit;
+import com.example.services.FruitService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
