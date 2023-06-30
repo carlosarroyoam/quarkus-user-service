@@ -3,6 +3,7 @@ package com.carlosarroyoam.userservice.resources;
 import java.net.URI;
 
 import org.jboss.resteasy.reactive.RestPath;
+import org.jboss.resteasy.reactive.RestResponse;
 
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.services.UserService;
@@ -39,15 +40,15 @@ public class UserResource {
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response findById(@RestPath("id") Long id) {
-		return Response.ok(userService.findById(id)).build();
+	public RestResponse<User> findById(@RestPath Long id) {
+		return RestResponse.ok(userService.findById(id));
 	}
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Transactional
-	public Response create(User user) {
+	public RestResponse<?> create(User user) {
 		userService.create(user);
-		return Response.created(URI.create("/users/" + user.getId())).build();
+		return RestResponse.created(URI.create("/users/" + user.getId()));
 	}
 }
