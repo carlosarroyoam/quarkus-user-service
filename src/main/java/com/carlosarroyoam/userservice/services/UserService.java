@@ -2,6 +2,8 @@ package com.carlosarroyoam.userservice.services;
 
 import java.util.List;
 
+import org.jboss.logging.Logger;
+
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
 
@@ -14,6 +16,7 @@ import jakarta.ws.rs.NotFoundException;
 @ApplicationScoped
 public class UserService {
 
+	private static final Logger LOG = Logger.getLogger(UserService.class);
 	private final UserRepository userRepository;
 
 	@Inject
@@ -30,6 +33,7 @@ public class UserService {
 		User userById = userRepository.findById(id);
 
 		if (userById == null) {
+			LOG.error("User with id: " + id + " not found");
 			throw new NotFoundException();
 		}
 
@@ -41,6 +45,7 @@ public class UserService {
 		User userByUsername = userRepository.findByUsername(user.getUsername());
 
 		if (userByUsername != null) {
+			LOG.error("User with username: " + userByUsername.getUsername() + " not found");
 			throw new BadRequestException("User already exists");
 		}
 
