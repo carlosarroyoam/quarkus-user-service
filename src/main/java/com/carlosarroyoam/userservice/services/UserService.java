@@ -1,9 +1,9 @@
-package com.example.services;
+package com.carlosarroyoam.userservice.services;
 
 import java.util.List;
 
-import com.example.model.User;
-import com.example.repositories.UserRepository;
+import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.repositories.UserRepository;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

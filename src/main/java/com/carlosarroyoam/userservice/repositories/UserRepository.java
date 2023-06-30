@@ -1,6 +1,6 @@
-package com.example.repositories;
+package com.carlosarroyoam.userservice.repositories;
 
-import com.example.model.User;
+import com.carlosarroyoam.userservice.model.User;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;

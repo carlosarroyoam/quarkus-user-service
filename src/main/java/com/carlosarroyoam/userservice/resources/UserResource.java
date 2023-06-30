@@ -1,10 +1,11 @@
-package com.example.resources;
+package com.carlosarroyoam.userservice.resources;
 
 import java.net.URI;
+
 import org.jboss.resteasy.reactive.RestPath;
 
-import com.example.model.User;
-import com.example.services.UserService;
+import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.services.UserService;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
