@@ -7,6 +7,7 @@ import org.jboss.logging.Logger;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
 
+import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -33,8 +34,8 @@ public class UserService {
 		User userById = userRepository.findById(id);
 
 		if (userById == null) {
-			LOG.error("User with id: " + id + " not found");
-			throw new NotFoundException();
+			LOG.error("User with id:" + id + " not found");
+			throw new NotFoundException("User with id:" + id + " not found");
 		}
 
 		return userById;
@@ -45,13 +46,26 @@ public class UserService {
 		User userByUsername = userRepository.findByUsername(user.getUsername());
 
 		if (userByUsername != null) {
-			LOG.error("User with username: " + userByUsername.getUsername() + " not found");
-			throw new BadRequestException("User already exists");
+			LOG.error("User with username:" + userByUsername.getUsername() + " already exists");
+			throw new BadRequestException("User with username:" + userByUsername.getUsername() + " already exists");
 		}
+
+		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 
 		userRepository.persist(user);
 
 		return user;
+	}
+
+	public User findByUsername(String username) {
+		User userByUsername = userRepository.findByUsername(username);
+
+		if (userByUsername == null) {
+			LOG.error("User with username:" + username + " not found");
+			throw new NotFoundException("User with username:" + username + " not found");
+		}
+
+		return userByUsername;
 	}
 
 }
