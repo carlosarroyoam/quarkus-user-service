@@ -2,14 +2,15 @@ package com.carlosarroyoam.userservice.services;
 
 import org.jboss.logging.Logger;
 
+import com.carlosarroyoam.userservice.dto.LoginRequestDto;
+import com.carlosarroyoam.userservice.dto.LoginResponseDto;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
-import io.quarkus.security.UnauthorizedException;
+import io.quarkus.security.AuthenticationFailedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class AuthService {
@@ -25,20 +26,26 @@ public class AuthService {
 		this.tokenService = tokenService;
 	}
 
-	public String auth(User user) {
-		User userByUsername = userRepository.findByUsername(user.getUsername());
+	public LoginResponseDto auth(LoginRequestDto loginRequest) {
+		User userByUsername = userRepository.findByUsername(loginRequest.getUsername());
 
 		if (userByUsername == null) {
-			LOG.error("User with username:" + user.getUsername() + " not found");
-			throw new NotFoundException("User with username:" + user.getUsername() + " not found");
-		}
-		
-		if(!BcryptUtil.matches(user.getPassword(), userByUsername.getPassword())) {
-			LOG.error("Unauthorized credentials for user with username:" + user.getUsername());
-			throw new UnauthorizedException("Unauthorized credentials");
+			LOG.error("User with username:" + loginRequest.getUsername() + " not found");
+			throw new AuthenticationFailedException();
 		}
 
-		return tokenService.generateToken(userByUsername);
+		if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
+			LOG.error("Unauthorized credentials for user with username:" + loginRequest.getUsername());
+			throw new AuthenticationFailedException();
+		}
+
+		String token = tokenService.generateToken(userByUsername);
+
+		LoginResponseDto loginResponse = new LoginResponseDto();
+		loginResponse.setAccessToken(token);
+		loginResponse.setUsername(userByUsername.getUsername());
+
+		return loginResponse;
 	}
 
 }

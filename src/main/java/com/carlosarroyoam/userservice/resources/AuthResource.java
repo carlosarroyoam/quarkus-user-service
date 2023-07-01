@@ -2,7 +2,8 @@ package com.carlosarroyoam.userservice.resources;
 
 import org.jboss.resteasy.reactive.RestResponse;
 
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.dto.LoginRequestDto;
+import com.carlosarroyoam.userservice.dto.LoginResponseDto;
 import com.carlosarroyoam.userservice.services.AuthService;
 
 import jakarta.annotation.security.PermitAll;
@@ -28,8 +29,7 @@ public class AuthResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@PermitAll
-	public RestResponse<String> auth(User user) {
-		String token =  authService.auth(user);
-		return RestResponse.ok(token);
+	public RestResponse<LoginResponseDto> auth(LoginRequestDto loginRequest) {
+		return RestResponse.ok(authService.auth(loginRequest));
 	}
 }

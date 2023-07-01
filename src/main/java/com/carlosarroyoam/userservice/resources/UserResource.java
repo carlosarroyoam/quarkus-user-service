@@ -58,6 +58,7 @@ public class UserResource {
 
 	@GET
 	@Path("/me")
+	@RolesAllowed("**")
 	public RestResponse<User> me(@Context SecurityContext securityContext) {
 		User authUser = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(authUser);
