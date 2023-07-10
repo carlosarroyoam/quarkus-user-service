@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import com.carlosarroyoam.Constants;
+import com.carlosarroyoam.userservice.constants.AppConstants;
 import com.carlosarroyoam.userservice.model.User;
 
 import io.smallrye.jwt.build.Jwt;
@@ -15,7 +15,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TokenService {
 
-	@ConfigProperty(name = Constants.JWT_ISSUER_PROPERTY)
+	@ConfigProperty(name = AppConstants.JWT_ISSUER_PROPERTY)
 	private String issuer;
 
 	public String generateToken(User user) {
