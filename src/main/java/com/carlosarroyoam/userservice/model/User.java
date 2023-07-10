@@ -1,5 +1,7 @@
 package com.carlosarroyoam.userservice.model;
 
+import java.time.ZonedDateTime;
+
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
@@ -27,6 +29,9 @@ public class User {
 	private Integer age;
 
 	@Column(nullable = false)
+	private String mail;
+
+	@Column(nullable = false)
 	@Username
 	private String username;
 
@@ -38,17 +43,17 @@ public class User {
 	@Roles
 	public String role;
 
+	@Column(nullable = false)
+	private Boolean isActive;
+
+	@Column(nullable = false)
+	private ZonedDateTime createdAt;
+
+	@Column(nullable = false)
+	private ZonedDateTime updatedAt;
+
 	public User() {
 		super();
-	}
-
-	public User(String name, Integer age, String username, String password, String role) {
-		super();
-		this.name = name;
-		this.age = age;
-		this.username = username;
-		this.password = password;
-		this.role = role;
 	}
 
 	public Long getId() {
@@ -75,6 +80,14 @@ public class User {
 		this.age = age;
 	}
 
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+
 	public String getUsername() {
 		return username;
 	}
@@ -97,6 +110,30 @@ public class User {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public ZonedDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(ZonedDateTime createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public ZonedDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(ZonedDateTime updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 }

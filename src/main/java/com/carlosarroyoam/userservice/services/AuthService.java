@@ -34,6 +34,11 @@ public class AuthService {
 			throw new AuthenticationFailedException();
 		}
 
+		if (userByUsername.getIsActive().equals(Boolean.FALSE)) {
+			LOG.error("User with username:" + loginRequest.getUsername() + " is not active");
+			throw new AuthenticationFailedException();
+		}
+
 		if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
 			LOG.error("Unauthorized credentials for user with username:" + loginRequest.getUsername());
 			throw new AuthenticationFailedException();

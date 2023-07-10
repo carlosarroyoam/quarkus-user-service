@@ -1,5 +1,6 @@
 package com.carlosarroyoam.userservice.services;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.jboss.logging.Logger;
@@ -51,6 +52,9 @@ public class UserService {
 		}
 
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
+		user.setIsActive(Boolean.FALSE);
+		user.setCreatedAt(ZonedDateTime.now());
+		user.setUpdatedAt(ZonedDateTime.now());
 
 		userRepository.persist(user);
 
