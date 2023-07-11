@@ -35,8 +35,8 @@ public class UserService {
 		User userById = userRepository.findById(id);
 
 		if (userById == null) {
-			LOG.error("User with id:" + id + " not found");
-			throw new NotFoundException("User with id:" + id + " not found");
+			LOG.errorf("User with id: %d not found", id);
+			throw new NotFoundException(String.format("User with id: %d not found", id));
 		}
 
 		return userById;
@@ -47,8 +47,8 @@ public class UserService {
 		User userByUsername = userRepository.findByUsername(user.getUsername());
 
 		if (userByUsername != null) {
-			LOG.error("User with username:" + userByUsername.getUsername() + " already exists");
-			throw new BadRequestException("User with username:" + userByUsername.getUsername() + " already exists");
+			LOG.errorf("User with username: %s already exists", user.getUsername());
+			throw new BadRequestException(String.format("User with username: %s already exists", user.getUsername()));
 		}
 
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
@@ -65,8 +65,8 @@ public class UserService {
 		User userByUsername = userRepository.findByUsername(username);
 
 		if (userByUsername == null) {
-			LOG.error("User with username:" + username + " not found");
-			throw new NotFoundException("User with username:" + username + " not found");
+			LOG.errorf("User with username: %s not found", username);
+			throw new NotFoundException(String.format("User with username: %s not found", username));
 		}
 
 		return userByUsername;

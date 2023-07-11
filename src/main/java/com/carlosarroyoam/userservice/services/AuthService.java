@@ -30,17 +30,17 @@ public class AuthService {
 		User userByUsername = userRepository.findByUsername(loginRequest.getUsername());
 
 		if (userByUsername == null) {
-			LOG.error("User with username:" + loginRequest.getUsername() + " not found");
+			LOG.errorf("User with username: %s not found", loginRequest.getUsername());
 			throw new AuthenticationFailedException();
 		}
 
 		if (userByUsername.getIsActive().equals(Boolean.FALSE)) {
-			LOG.error("User with username:" + loginRequest.getUsername() + " is not active");
+			LOG.errorf("User with username: %s is not active", loginRequest.getUsername());
 			throw new AuthenticationFailedException();
 		}
 
 		if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
-			LOG.error("Unauthorized credentials for user with username:" + loginRequest.getUsername());
+			LOG.errorf("Unauthorized credentials for user with username: %s", loginRequest.getUsername());
 			throw new AuthenticationFailedException();
 		}
 
