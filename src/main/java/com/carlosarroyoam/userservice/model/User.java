@@ -28,10 +28,10 @@ public class User {
 	@Column
 	private Integer age;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String mail;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	@Username
 	private String username;
 
