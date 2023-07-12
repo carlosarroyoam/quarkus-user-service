@@ -1,9 +1,9 @@
 package com.carlosarroyoam.userservice.dto;
 
-public class LoginRequestDto {
+public class LoginResponse {
 
 	private String username;
-	private String password;
+	private String accessToken;
 
 	public String getUsername() {
 		return username;
@@ -13,12 +13,12 @@ public class LoginRequestDto {
 		this.username = username;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getAccessToken() {
+		return accessToken;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 
 }

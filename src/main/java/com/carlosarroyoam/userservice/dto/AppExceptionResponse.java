@@ -2,7 +2,7 @@ package com.carlosarroyoam.userservice.dto;
 
 import java.time.ZonedDateTime;
 
-public class AppExceptionDto {
+public class AppExceptionResponse {
 
 	private String message;
 	private Integer code;

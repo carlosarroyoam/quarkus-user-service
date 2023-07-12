@@ -2,8 +2,8 @@ package com.carlosarroyoam.userservice.services;
 
 import org.jboss.logging.Logger;
 
-import com.carlosarroyoam.userservice.dto.LoginRequestDto;
-import com.carlosarroyoam.userservice.dto.LoginResponseDto;
+import com.carlosarroyoam.userservice.dto.LoginRequest;
+import com.carlosarroyoam.userservice.dto.LoginResponse;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
 
@@ -26,7 +26,7 @@ public class AuthService {
 		this.tokenService = tokenService;
 	}
 
-	public LoginResponseDto auth(LoginRequestDto loginRequest) {
+	public LoginResponse auth(LoginRequest loginRequest) {
 		User userByUsername = userRepository.findByUsername(loginRequest.getUsername());
 
 		if (userByUsername == null) {
@@ -46,7 +46,7 @@ public class AuthService {
 
 		String token = tokenService.generateToken(userByUsername);
 
-		LoginResponseDto loginResponse = new LoginResponseDto();
+		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.setAccessToken(token);
 		loginResponse.setUsername(userByUsername.getUsername());
 
