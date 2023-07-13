@@ -2,6 +2,7 @@ package com.carlosarroyoam.userservice.services;
 
 import org.jboss.logging.Logger;
 
+import com.carlosarroyoam.userservice.constants.AppMessages;
 import com.carlosarroyoam.userservice.dto.LoginRequest;
 import com.carlosarroyoam.userservice.dto.LoginResponse;
 import com.carlosarroyoam.userservice.model.User;
@@ -30,24 +31,22 @@ public class AuthService {
 		User userByUsername = userRepository.findByUsername(loginRequest.getUsername());
 
 		if (userByUsername == null) {
-			LOG.errorf("User with username: %s not found", loginRequest.getUsername());
-			throw new AuthenticationFailedException();
+			LOG.errorf(AppMessages.USER_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			throw new AuthenticationFailedException(AppMessages.USER_NOT_FOUND_EXCEPTION_MESSAGE);
 		}
 
 		if (userByUsername.getIsActive().equals(Boolean.FALSE)) {
-			LOG.errorf("User with username: %s is not active", loginRequest.getUsername());
-			throw new AuthenticationFailedException();
+			LOG.errorf(AppMessages.USER_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			throw new AuthenticationFailedException(AppMessages.USER_NOT_ACTIVE_EXCEPTION_MESSAGE);
 		}
 
 		if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
-			LOG.errorf("Unauthorized credentials for user with username: %s", loginRequest.getUsername());
-			throw new AuthenticationFailedException();
+			LOG.errorf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			throw new AuthenticationFailedException(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE);
 		}
 
-		String token = tokenService.generateToken(userByUsername);
-
 		LoginResponse loginResponse = new LoginResponse();
-		loginResponse.setAccessToken(token);
+		loginResponse.setAccessToken(tokenService.generateToken(userByUsername));
 		loginResponse.setUsername(userByUsername.getUsername());
 
 		return loginResponse;

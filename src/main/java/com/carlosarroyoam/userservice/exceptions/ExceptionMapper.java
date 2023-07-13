@@ -28,4 +28,5 @@ class ExceptionMappers {
 
 		return Response.status(x.getResponse().getStatus()).entity(appExceptionResponse).build();
 	}
+
 }
