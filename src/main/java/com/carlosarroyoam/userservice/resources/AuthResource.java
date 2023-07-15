@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.MediaType;
 
 @Path("/auth")
 @ApplicationScoped
+@PermitAll
 public class AuthResource {
 
 	private final AuthService authService;
@@ -28,7 +29,6 @@ public class AuthResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@PermitAll
 	public RestResponse<LoginResponse> auth(LoginRequest loginRequest) {
 		return RestResponse.ok(authService.auth(loginRequest));
 	}

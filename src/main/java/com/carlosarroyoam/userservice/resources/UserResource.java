@@ -8,6 +8,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.services.UserService;
 
+import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -23,6 +24,7 @@ import jakarta.ws.rs.core.SecurityContext;
 
 @Path("/users")
 @ApplicationScoped
+@Authenticated
 public class UserResource {
 
 	private final UserService userService;
@@ -51,14 +53,13 @@ public class UserResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<?> create(User user) {
+	public RestResponse<Object> create(User user) {
 		userService.create(user);
 		return RestResponse.created(URI.create("/users/" + user.getId()));
 	}
 
 	@GET
 	@Path("/me")
-	@RolesAllowed("**")
 	public RestResponse<User> me(@Context SecurityContext securityContext) {
 		User authUser = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(authUser);
