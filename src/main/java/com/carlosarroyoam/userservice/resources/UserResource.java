@@ -64,4 +64,5 @@ public class UserResource {
 		User authUser = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(authUser);
 	}
+
 }

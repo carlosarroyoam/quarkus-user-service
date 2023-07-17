@@ -1,7 +1,6 @@
 package com.carlosarroyoam.userservice.services;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -16,15 +15,15 @@ import jakarta.inject.Inject;
 class UserServiceTest {
 
 	@Inject
-	UserService userService;
+	private UserService userService;
 
 	@InjectMock
 	private UserRepository userRepository;
 
 	@Test
-	@Disabled(value = "not implemented yet")
+	@Disabled(value = "Not implemented yet")
 	void testFindAllUsers() {
-		assertThat("", notNullValue());
+		fail("Not implemented yet");
 	}
 
 }

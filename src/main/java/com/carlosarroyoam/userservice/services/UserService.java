@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
+import com.carlosarroyoam.userservice.constants.AppMessages;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
 
@@ -35,8 +36,8 @@ public class UserService {
 		User userById = userRepository.findById(id);
 
 		if (userById == null) {
-			LOG.errorf("User with id: %d not found", id);
-			throw new NotFoundException(String.format("User with id: %d not found", id));
+			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, id);
+			throw new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		}
 
 		return userById;
@@ -47,8 +48,15 @@ public class UserService {
 		User userByUsername = userRepository.findByUsername(user.getUsername());
 
 		if (userByUsername != null) {
-			LOG.errorf("User with username: %s already exists", user.getUsername());
-			throw new BadRequestException(String.format("User with username: %s already exists", user.getUsername()));
+			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, user.getUsername());
+			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
+		}
+
+		User userByMail = userRepository.findByMail(user.getMail());
+
+		if (userByMail != null) {
+			LOG.errorf(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, user.getUsername());
+			throw new BadRequestException(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
@@ -65,8 +73,8 @@ public class UserService {
 		User userByUsername = userRepository.findByUsername(username);
 
 		if (userByUsername == null) {
-			LOG.errorf("User with username: %s not found", username);
-			throw new NotFoundException(String.format("User with username: %s not found", username));
+			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
+			throw new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
 		}
 
 		return userByUsername;

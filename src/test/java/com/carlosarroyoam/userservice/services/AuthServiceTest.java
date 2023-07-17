@@ -56,7 +56,7 @@ class AuthServiceTest {
 
 		Throwable ex = assertThrows(AuthenticationFailedException.class, () -> authService.auth(loginRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_NOT_FOUND_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(AuthenticationFailedException.class));
 	}
 
@@ -84,7 +84,7 @@ class AuthServiceTest {
 
 		Throwable ex = assertThrows(AuthenticationFailedException.class, () -> authService.auth(loginRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_NOT_ACTIVE_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(AuthenticationFailedException.class));
 	}
 

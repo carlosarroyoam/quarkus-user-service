@@ -18,15 +18,15 @@ class ExceptionMappers {
 	UriInfo uriInfo;
 
 	@ServerExceptionMapper
-	public Response mapException(WebApplicationException x) {
+	public Response mapException(WebApplicationException ex) {
 		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
-		appExceptionResponse.setMessage(x.getMessage());
-		appExceptionResponse.setCode(x.getResponse().getStatus());
-		appExceptionResponse.setStatus(x.getResponse().getStatusInfo().getReasonPhrase());
+		appExceptionResponse.setMessage(ex.getMessage());
+		appExceptionResponse.setCode(ex.getResponse().getStatus());
+		appExceptionResponse.setStatus(ex.getResponse().getStatusInfo().getReasonPhrase());
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(ZoneId.systemDefault()));
 
-		return Response.status(x.getResponse().getStatus()).entity(appExceptionResponse).build();
+		return Response.status(ex.getResponse().getStatus()).entity(appExceptionResponse).build();
 	}
 
 }

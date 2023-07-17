@@ -31,13 +31,13 @@ public class AuthService {
 		User userByUsername = userRepository.findByUsername(loginRequest.getUsername());
 
 		if (userByUsername == null) {
-			LOG.errorf(AppMessages.USER_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
-			throw new AuthenticationFailedException(AppMessages.USER_NOT_FOUND_EXCEPTION_MESSAGE);
+			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			throw new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE);
 		}
 
 		if (userByUsername.getIsActive().equals(Boolean.FALSE)) {
-			LOG.errorf(AppMessages.USER_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
-			throw new AuthenticationFailedException(AppMessages.USER_NOT_ACTIVE_EXCEPTION_MESSAGE);
+			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			throw new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_MESSAGE);
 		}
 
 		if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
