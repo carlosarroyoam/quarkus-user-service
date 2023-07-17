@@ -52,6 +52,7 @@ public class UserResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	public RestResponse<Object> create(User user) {
 		userService.create(user);
@@ -60,6 +61,7 @@ public class UserResource {
 
 	@GET
 	@Path("/me")
+	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse<User> me(@Context SecurityContext securityContext) {
 		User authUser = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(authUser);
