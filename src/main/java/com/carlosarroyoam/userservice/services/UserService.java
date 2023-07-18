@@ -12,7 +12,6 @@ import com.carlosarroyoam.userservice.repositories.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
@@ -43,7 +42,17 @@ public class UserService {
 		return userById;
 	}
 
-	@Transactional
+	public User findByUsername(String username) {
+		User userByUsername = userRepository.findByUsername(username);
+
+		if (userByUsername == null) {
+			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
+			throw new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
+		}
+
+		return userByUsername;
+	}
+
 	public User create(User user) {
 		User userByUsername = userRepository.findByUsername(user.getUsername());
 
@@ -67,17 +76,6 @@ public class UserService {
 		userRepository.persist(user);
 
 		return user;
-	}
-
-	public User findByUsername(String username) {
-		User userByUsername = userRepository.findByUsername(username);
-
-		if (userByUsername == null) {
-			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
-			throw new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
-		}
-
-		return userByUsername;
 	}
 
 }

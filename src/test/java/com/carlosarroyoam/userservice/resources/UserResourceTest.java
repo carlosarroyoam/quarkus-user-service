@@ -6,21 +6,25 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.carlosarroyoam.userservice.constants.AppMessages;
 import com.carlosarroyoam.userservice.model.User;
 
+import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
 
 @QuarkusTest
+@Tag("integration")
+@TestTransaction
 class UserResourceTest {
 
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testFindAllEndpoint() {
 		given()
 		.contentType(ContentType.JSON)
@@ -30,7 +34,7 @@ class UserResourceTest {
 	}
 
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testFindByIdEndpointWithExistingUser() {
 		given()
 		.contentType(ContentType.JSON)
@@ -42,7 +46,7 @@ class UserResourceTest {
 	}
 	
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testFindByIdEndpointWithNonExistingUser() {
 		given()
 		.contentType(ContentType.JSON)
@@ -52,16 +56,16 @@ class UserResourceTest {
 	}
 
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testCreateEndpoint() {
 		User user = new User();
 		user.setName("Cathy Stefania Guido Rojas");
-		user.setMail("cguidor2@mail.com");
-		user.setUsername("cguidor2");
+		user.setMail("cguidor@mail.com");
+		user.setUsername("cguidor");
 		user.setPassword("secret");
 		user.setRole("User");
 		user.setAge(28);
-		
+
 		given()
 		.contentType(ContentType.JSON)
 		.body(user)
@@ -72,7 +76,7 @@ class UserResourceTest {
 	}
 
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testCreateEndpointWithExistingUsername() {
 		User user = new User();
 		user.setName("Cathy Stefania Guido Rojas");
@@ -92,7 +96,7 @@ class UserResourceTest {
 	}
 	
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testCreateEndpointWithExistingMail() {
 		User user = new User();
 		user.setName("Cathy Stefania Guido Rojas");
@@ -112,7 +116,7 @@ class UserResourceTest {
 	}
 
 	@Test
-	@TestSecurity(user = "carroyom", roles = {"Admin", "Urser"})
+	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testMeEndpoint() {
 		given()
 		.contentType(ContentType.JSON)
@@ -122,4 +126,5 @@ class UserResourceTest {
 		.body("id", equalTo(1))
 		.body("username", equalTo("carroyom"));
 	}
+
 }
