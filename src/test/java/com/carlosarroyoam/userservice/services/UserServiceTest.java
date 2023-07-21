@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.carlosarroyoam.userservice.constants.AppMessages;
+import com.carlosarroyoam.userservice.dto.CreateUserRequest;
+import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
 
@@ -35,7 +37,7 @@ class UserServiceTest {
 
 	@Test
 	void testFindAllRetrievesListOfUsers() {
-		List<User> actualUsers = userService.findAll();
+		List<UserResponse> actualUsers = userService.findAll();
 
 		assertThat(actualUsers, hasSize(0));
 	}
@@ -45,7 +47,7 @@ class UserServiceTest {
 		User expectedUser = getUser(false);
 		Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(expectedUser);
 
-		User actualUser = userService.findById(1l);
+		UserResponse actualUser = userService.findById(1l);
 
 		assertThat(actualUser.getId(), equalTo(expectedUser.getId()));
 		assertThat(actualUser.getUsername(), equalTo(expectedUser.getUsername()));
@@ -66,7 +68,7 @@ class UserServiceTest {
 		User expectedUser = getUser(false);
 		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(expectedUser);
 
-		User actualUser = userService.findByUsername("carroyom");
+		UserResponse actualUser = userService.findByUsername("carroyom");
 
 		assertThat(actualUser.getId(), equalTo(expectedUser.getId()));
 		assertThat(actualUser.getUsername(), equalTo(expectedUser.getUsername()));
@@ -84,16 +86,14 @@ class UserServiceTest {
 
 	@Test
 	void testCreateUser() {
-		User expectedUser = getUserRequest();
+		CreateUserRequest expectedUser = getCreateUserRequest();
 		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(null);
 		Mockito.when(userRepository.findByMail(Mockito.anyString())).thenReturn(null);
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		User actualUser = userService.create(expectedUser);
+		UserResponse actualUser = userService.create(expectedUser);
 
-		assertThat(actualUser.getId(), equalTo(expectedUser.getId()));
 		assertThat(actualUser.getUsername(), equalTo(expectedUser.getUsername()));
-		assertThat(actualUser.getPassword(), is(not(nullValue())));
 		assertThat(actualUser.getIsActive(), is(not(nullValue())));
 		assertThat(actualUser.getCreatedAt(), is(not(nullValue())));
 		assertThat(actualUser.getUpdatedAt(), is(not(nullValue())));
@@ -101,7 +101,7 @@ class UserServiceTest {
 
 	@Test
 	void testCreateUserFailsWithExistingUsername() {
-		User expectedUser = getUserRequest();
+		CreateUserRequest expectedUser = getCreateUserRequest();
 		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(getUser(true));
 		Mockito.when(userRepository.findByMail(Mockito.anyString())).thenReturn(null);
 
@@ -113,7 +113,7 @@ class UserServiceTest {
 
 	@Test
 	void testCreateUserFailsWithExistingMail() {
-		User expectedUser = getUserRequest();
+		CreateUserRequest expectedUser = getCreateUserRequest();
 		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(null);
 		Mockito.when(userRepository.findByMail(Mockito.anyString())).thenReturn(getUser(true));
 
@@ -133,14 +133,14 @@ class UserServiceTest {
 		return user;
 	}
 
-	private User getUserRequest() {
-		User user = new User();
-		user.setName("Carlos Alberto Arroyo Martínez");
-		user.setMail("carroyom@mail.com");
-		user.setUsername("carroyom");
-		user.setPassword("secret");
-		user.setRole("Admin,User");
-		user.setAge(28);
-		return user;
+	private CreateUserRequest getCreateUserRequest() {
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setName("Carlos Alberto Arroyo Martínez");
+		createUserRequest.setMail("carroyom@mail.com");
+		createUserRequest.setUsername("carroyom");
+		createUserRequest.setPassword("secret");
+		createUserRequest.setRole("Admin,User");
+		createUserRequest.setAge(28);
+		return createUserRequest;
 	}
 }

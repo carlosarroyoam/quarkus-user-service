@@ -22,7 +22,7 @@ class AuthResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(loginRequest)
-		.when().post("/auth")
+		.when().post("/api/auth")
 		.then()
 		.statusCode(Status.OK.getStatusCode());
 	}
@@ -36,7 +36,7 @@ class AuthResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(loginRequest)
-		.when().post("/auth")
+		.when().post("/api/auth")
 		.then()
 		.statusCode(Status.UNAUTHORIZED.getStatusCode());
 	}

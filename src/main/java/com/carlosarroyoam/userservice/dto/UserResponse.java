@@ -1,60 +1,18 @@
-package com.carlosarroyoam.userservice.model;
+package com.carlosarroyoam.userservice.dto;
 
 import java.time.ZonedDateTime;
 
-import io.quarkus.security.jpa.Password;
-import io.quarkus.security.jpa.Roles;
-import io.quarkus.security.jpa.UserDefinition;
-import io.quarkus.security.jpa.Username;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+public class UserResponse {
 
-@Entity
-@Table(name = "users")
-@UserDefinition
-public class User {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@Column
 	private String name;
-
-	@Column
 	private Integer age;
-
-	@Column(nullable = false, unique = true)
 	private String mail;
-
-	@Column(nullable = false, unique = true)
-	@Username
 	private String username;
-
-	@Column(nullable = false)
-	@Password
-	private String password;
-
-	@Column(nullable = false)
-	@Roles
 	private String role;
-
-	@Column(nullable = false)
 	private Boolean isActive;
-
-	@Column(nullable = false)
 	private ZonedDateTime createdAt;
-
-	@Column(nullable = false)
 	private ZonedDateTime updatedAt;
-
-	public User() {
-		super();
-	}
 
 	public Long getId() {
 		return id;
@@ -94,14 +52,6 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public String getRole() {

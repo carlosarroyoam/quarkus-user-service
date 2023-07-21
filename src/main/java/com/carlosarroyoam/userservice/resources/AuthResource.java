@@ -15,7 +15,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
-@Path("/auth")
+@Path("/api/auth")
 @ApplicationScoped
 @PermitAll
 public class AuthResource {

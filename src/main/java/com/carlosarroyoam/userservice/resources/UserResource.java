@@ -1,11 +1,13 @@
 package com.carlosarroyoam.userservice.resources;
 
 import java.net.URI;
+import java.util.List;
 
 import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.dto.CreateUserRequest;
+import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.services.UserService;
 
 import io.quarkus.security.Authenticated;
@@ -20,10 +22,9 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 
-@Path("/users")
+@Path("/api/users")
 @ApplicationScoped
 @Authenticated
 public class UserResource {
@@ -39,15 +40,15 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public Response findAll() {
-		return Response.ok(userService.findAll()).build();
+	public RestResponse<List<UserResponse>> findAll() {
+		return RestResponse.ok(userService.findAll());
 	}
 
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<User> findById(@RestPath Long id) {
+	public RestResponse<UserResponse> findById(@RestPath Long id) {
 		return RestResponse.ok(userService.findById(id));
 	}
 
@@ -56,17 +57,16 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	@Transactional
-	public RestResponse<Object> create(User user) {
-		userService.create(user);
+	public RestResponse<Object> create(CreateUserRequest createUserRequest) {
+		UserResponse user = userService.create(createUserRequest);
 		return RestResponse.created(URI.create("/users/" + user.getId()));
 	}
 
 	@GET
 	@Path("/me")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RestResponse<User> me(@Context SecurityContext securityContext) {
-		User authUser = userService.findByUsername(securityContext.getUserPrincipal().getName());
-		return RestResponse.ok(authUser);
+	public RestResponse<UserResponse> me(@Context SecurityContext securityContext) {
+		return RestResponse.ok(userService.findByUsername(securityContext.getUserPrincipal().getName()));
 	}
 
 }

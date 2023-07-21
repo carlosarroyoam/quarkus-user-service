@@ -28,7 +28,7 @@ class UserResourceTest {
 	void testFindAllEndpoint() {
 		given()
 		.contentType(ContentType.JSON)
-		.when().get("/users")
+		.when().get("/api/users")
 		.then()
 		.statusCode(Status.OK.getStatusCode());
 	}
@@ -38,7 +38,7 @@ class UserResourceTest {
 	void testFindByIdEndpointWithExistingUser() {
 		given()
 		.contentType(ContentType.JSON)
-		.when().get("/users/" + 1)
+		.when().get("/api/users/" + 1)
 		.then()
 		.statusCode(Status.OK.getStatusCode())
 		.body("id", equalTo(1))
@@ -50,7 +50,7 @@ class UserResourceTest {
 	void testFindByIdEndpointWithNonExistingUser() {
 		given()
 		.contentType(ContentType.JSON)
-		.when().get("/users/" + 10000)
+		.when().get("/api/users/" + 10000)
 		.then()
 		.statusCode(Status.NOT_FOUND.getStatusCode());
 	}
@@ -69,7 +69,7 @@ class UserResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(user)
-		.when().post("/users")
+		.when().post("/api/users")
 		.then()
 		.statusCode(Status.CREATED.getStatusCode())
 		.headers("Location", is(not(nullValue())));
@@ -89,7 +89,7 @@ class UserResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(user)
-		.when().post("/users")
+		.when().post("/api/users")
 		.then()
 		.statusCode(Status.BAD_REQUEST.getStatusCode())
 		.body("message", equalTo(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE));
@@ -109,7 +109,7 @@ class UserResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(user)
-		.when().post("/users")
+		.when().post("/api/users")
 		.then()
 		.statusCode(Status.BAD_REQUEST.getStatusCode())
 		.body("message", equalTo(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
@@ -120,7 +120,7 @@ class UserResourceTest {
 	void testMeEndpoint() {
 		given()
 		.contentType(ContentType.JSON)
-		.when().get("/users/me")
+		.when().get("/api/users/me")
 		.then()
 		.statusCode(Status.OK.getStatusCode())
 		.body("id", equalTo(1))

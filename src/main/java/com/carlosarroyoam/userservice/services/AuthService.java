@@ -48,7 +48,6 @@ public class AuthService {
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.setAccessToken(tokenService.generateToken(userByUsername));
 		loginResponse.setUsername(userByUsername.getUsername());
-
 		return loginResponse;
 	}
 
