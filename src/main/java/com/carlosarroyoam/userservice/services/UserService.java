@@ -7,8 +7,8 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 import com.carlosarroyoam.userservice.constants.AppMessages;
-import com.carlosarroyoam.userservice.dto.CreateUserRequest;
-import com.carlosarroyoam.userservice.dto.UserResponse;
+import com.carlosarroyoam.userservice.dto.CreateUserDto;
+import com.carlosarroyoam.userservice.dto.UserDto;
 import com.carlosarroyoam.userservice.mappers.UserMapper;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repositories.UserRepository;
@@ -35,11 +35,11 @@ public class UserService {
 		this.clock = clock;
 	}
 
-	public List<UserResponse> findAll() {
+	public List<UserDto> findAll() {
 		return mapper.toDtos(userRepository.listAll());
 	}
 
-	public UserResponse findById(Long id) {
+	public UserDto findById(Long id) {
 		User userById = userRepository.findById(id);
 
 		if (userById == null) {
@@ -50,7 +50,7 @@ public class UserService {
 		return mapper.toDto(userById);
 	}
 
-	public UserResponse findByUsername(String username) {
+	public UserDto findByUsername(String username) {
 		User userByUsername = userRepository.findByUsername(username);
 
 		if (userByUsername == null) {
@@ -61,22 +61,22 @@ public class UserService {
 		return mapper.toDto(userByUsername);
 	}
 
-	public UserResponse create(CreateUserRequest createUserRequest) {
-		User userByUsername = userRepository.findByUsername(createUserRequest.getUsername());
+	public UserDto create(CreateUserDto createUserDto) {
+		User userByUsername = userRepository.findByUsername(createUserDto.getUsername());
 
 		if (userByUsername != null) {
-			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
+			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
-		User userByMail = userRepository.findByMail(createUserRequest.getMail());
+		User userByMail = userRepository.findByMail(createUserDto.getMail());
 
 		if (userByMail != null) {
-			LOG.errorf(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
+			LOG.errorf(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
-		User user = mapper.createRequestToEntity(createUserRequest);
+		User user = mapper.toEntity(createUserDto);
 
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 		user.setIsActive(Boolean.FALSE);

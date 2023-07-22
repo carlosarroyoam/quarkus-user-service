@@ -1,6 +1,6 @@
 package com.carlosarroyoam.userservice.dto;
 
-public class CreateUserRequest {
+public class CreateUserDto {
 
 	private String name;
 	private Integer age;

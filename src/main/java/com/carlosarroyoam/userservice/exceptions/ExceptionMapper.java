@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
-import com.carlosarroyoam.userservice.dto.AppExceptionResponse;
+import com.carlosarroyoam.userservice.dto.AppExceptionDto;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
@@ -27,14 +27,14 @@ class ExceptionMappers {
 
 	@ServerExceptionMapper
 	public Response mapException(WebApplicationException ex) {
-		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
-		appExceptionResponse.setMessage(ex.getMessage());
-		appExceptionResponse.setCode(ex.getResponse().getStatus());
-		appExceptionResponse.setStatus(ex.getResponse().getStatusInfo().getReasonPhrase());
-		appExceptionResponse.setPath(uriInfo.getPath());
-		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
+		AppExceptionDto appExceptionDto = new AppExceptionDto();
+		appExceptionDto.setMessage(ex.getMessage());
+		appExceptionDto.setCode(ex.getResponse().getStatus());
+		appExceptionDto.setStatus(ex.getResponse().getStatusInfo().getReasonPhrase());
+		appExceptionDto.setPath(uriInfo.getPath());
+		appExceptionDto.setTimestamp(ZonedDateTime.now(clock));
 
-		return Response.status(ex.getResponse().getStatus()).entity(appExceptionResponse).build();
+		return Response.status(ex.getResponse().getStatus()).entity(appExceptionDto).build();
 	}
 
 }

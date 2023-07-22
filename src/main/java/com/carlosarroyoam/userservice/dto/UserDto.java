@@ -2,7 +2,7 @@ package com.carlosarroyoam.userservice.dto;
 
 import java.time.ZonedDateTime;
 
-public class UserResponse {
+public class UserDto {
 
 	private Long id;
 	private String name;

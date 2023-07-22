@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.carlosarroyoam.userservice.constants.AppMessages;
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.dto.CreateUserDto;
 
 import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
@@ -58,17 +58,17 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testCreateEndpoint() {
-		User user = new User();
-		user.setName("Cathy Stefania Guido Rojas");
-		user.setMail("cguidor@mail.com");
-		user.setUsername("cguidor");
-		user.setPassword("secret");
-		user.setRole("User");
-		user.setAge(28);
+		CreateUserDto createUserDto = new CreateUserDto();
+		createUserDto.setName("Cathy Stefania Guido Rojas");
+		createUserDto.setMail("cguidor@mail.com");
+		createUserDto.setUsername("cguidor");
+		createUserDto.setPassword("secret");
+		createUserDto.setRole("User");
+		createUserDto.setAge(28);
 
 		given()
 		.contentType(ContentType.JSON)
-		.body(user)
+		.body(createUserDto)
 		.when().post("/api/users")
 		.then()
 		.statusCode(Status.CREATED.getStatusCode())
@@ -78,17 +78,17 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testCreateEndpointWithExistingUsername() {
-		User user = new User();
-		user.setName("Cathy Stefania Guido Rojas");
-		user.setMail("cguidor@mail.com");
-		user.setUsername("carroyom");
-		user.setPassword("secret");
-		user.setRole("User");
-		user.setAge(28);
+		CreateUserDto createUserDto = new CreateUserDto();
+		createUserDto.setName("Cathy Stefania Guido Rojas");
+		createUserDto.setMail("cguidor@mail.com");
+		createUserDto.setUsername("carroyom");
+		createUserDto.setPassword("secret");
+		createUserDto.setRole("User");
+		createUserDto.setAge(28);
 		
 		given()
 		.contentType(ContentType.JSON)
-		.body(user)
+		.body(createUserDto)
 		.when().post("/api/users")
 		.then()
 		.statusCode(Status.BAD_REQUEST.getStatusCode())
@@ -98,17 +98,17 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = {"Admin", "User"})
 	void testCreateEndpointWithExistingMail() {
-		User user = new User();
-		user.setName("Cathy Stefania Guido Rojas");
-		user.setMail("carroyom@mail.com");
-		user.setUsername("cguidor");
-		user.setPassword("secret");
-		user.setRole("User");
-		user.setAge(28);
+		CreateUserDto createUserDto = new CreateUserDto();
+		createUserDto.setName("Cathy Stefania Guido Rojas");
+		createUserDto.setMail("carroyom@mail.com");
+		createUserDto.setUsername("cguidor");
+		createUserDto.setPassword("secret");
+		createUserDto.setRole("User");
+		createUserDto.setAge(28);
 		
 		given()
 		.contentType(ContentType.JSON)
-		.body(user)
+		.body(createUserDto)
 		.when().post("/api/users")
 		.then()
 		.statusCode(Status.BAD_REQUEST.getStatusCode())

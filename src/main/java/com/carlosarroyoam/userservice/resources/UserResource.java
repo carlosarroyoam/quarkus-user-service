@@ -6,8 +6,8 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import com.carlosarroyoam.userservice.dto.CreateUserRequest;
-import com.carlosarroyoam.userservice.dto.UserResponse;
+import com.carlosarroyoam.userservice.dto.CreateUserDto;
+import com.carlosarroyoam.userservice.dto.UserDto;
 import com.carlosarroyoam.userservice.services.UserService;
 
 import io.quarkus.security.Authenticated;
@@ -40,7 +40,7 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<List<UserResponse>> findAll() {
+	public RestResponse<List<UserDto>> findAll() {
 		return RestResponse.ok(userService.findAll());
 	}
 
@@ -48,7 +48,7 @@ public class UserResource {
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<UserResponse> findById(@RestPath Long id) {
+	public RestResponse<UserDto> findById(@RestPath Long id) {
 		return RestResponse.ok(userService.findById(id));
 	}
 
@@ -57,15 +57,15 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	@Transactional
-	public RestResponse<Object> create(CreateUserRequest createUserRequest) {
-		UserResponse user = userService.create(createUserRequest);
-		return RestResponse.created(URI.create("/users/" + user.getId()));
+	public RestResponse<Object> create(CreateUserDto createUserRequest) {
+		UserDto userDto = userService.create(createUserRequest);
+		return RestResponse.created(URI.create("/users/" + userDto.getId()));
 	}
 
 	@GET
 	@Path("/me")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RestResponse<UserResponse> me(@Context SecurityContext securityContext) {
+	public RestResponse<UserDto> me(@Context SecurityContext securityContext) {
 		return RestResponse.ok(userService.findByUsername(securityContext.getUserPrincipal().getName()));
 	}
 

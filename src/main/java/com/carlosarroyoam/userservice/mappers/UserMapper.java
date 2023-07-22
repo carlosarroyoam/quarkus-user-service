@@ -8,18 +8,18 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-import com.carlosarroyoam.userservice.dto.CreateUserRequest;
-import com.carlosarroyoam.userservice.dto.UserResponse;
+import com.carlosarroyoam.userservice.dto.CreateUserDto;
+import com.carlosarroyoam.userservice.dto.UserDto;
 import com.carlosarroyoam.userservice.model.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 
-	UserResponse toDto(User user);
+	UserDto toDto(User user);
 
-	List<UserResponse> toDtos(List<User> users);
+	List<UserDto> toDtos(List<User> users);
 
 	@BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-	User createRequestToEntity(CreateUserRequest user);
+	User toEntity(CreateUserDto createUserDto);
 
 }
