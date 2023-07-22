@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.resources;
+package com.carlosarroyoam.userservice.resource;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -9,7 +9,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.carlosarroyoam.userservice.constants.AppMessages;
+import com.carlosarroyoam.userservice.constant.AppMessages;
 import com.carlosarroyoam.userservice.dto.CreateUserDto;
 
 import io.quarkus.test.TestTransaction;

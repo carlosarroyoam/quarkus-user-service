@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.resources;
+package com.carlosarroyoam.userservice.resource;
 
 import org.junit.jupiter.api.Test;
 

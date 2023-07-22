@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.resources;
+package com.carlosarroyoam.userservice.resource;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 

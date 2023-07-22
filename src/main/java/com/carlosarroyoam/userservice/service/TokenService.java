@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.services;
+package com.carlosarroyoam.userservice.service;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import com.carlosarroyoam.userservice.constants.AppConstants;
+import com.carlosarroyoam.userservice.constant.AppConstants;
 import com.carlosarroyoam.userservice.model.User;
 
 import io.smallrye.jwt.build.Jwt;

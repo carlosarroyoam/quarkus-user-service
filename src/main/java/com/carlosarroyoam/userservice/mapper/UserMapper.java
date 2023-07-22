@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.mappers;
+package com.carlosarroyoam.userservice.mapper;
 
 import java.util.List;
 

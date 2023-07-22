@@ -1,12 +1,12 @@
-package com.carlosarroyoam.userservice.services;
+package com.carlosarroyoam.userservice.service;
 
 import org.jboss.logging.Logger;
 
-import com.carlosarroyoam.userservice.constants.AppMessages;
+import com.carlosarroyoam.userservice.constant.AppMessages;
 import com.carlosarroyoam.userservice.dto.LoginRequest;
 import com.carlosarroyoam.userservice.dto.LoginResponse;
 import com.carlosarroyoam.userservice.model.User;
-import com.carlosarroyoam.userservice.repositories.UserRepository;
+import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.security.AuthenticationFailedException;

@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.repositories;
+package com.carlosarroyoam.userservice.repository;
 
 import com.carlosarroyoam.userservice.model.User;
 

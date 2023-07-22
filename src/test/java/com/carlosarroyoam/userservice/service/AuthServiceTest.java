@@ -1,18 +1,18 @@
-package com.carlosarroyoam.userservice.services;
+package com.carlosarroyoam.userservice.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.carlosarroyoam.userservice.constants.AppMessages;
+import com.carlosarroyoam.userservice.constant.AppMessages;
 import com.carlosarroyoam.userservice.dto.LoginRequest;
 import com.carlosarroyoam.userservice.dto.LoginResponse;
 import com.carlosarroyoam.userservice.model.User;
-import com.carlosarroyoam.userservice.repositories.UserRepository;
+import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.security.AuthenticationFailedException;
 import io.quarkus.test.junit.QuarkusTest;

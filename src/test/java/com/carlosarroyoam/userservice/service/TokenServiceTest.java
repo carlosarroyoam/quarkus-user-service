@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.services;
+package com.carlosarroyoam.userservice.service;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;

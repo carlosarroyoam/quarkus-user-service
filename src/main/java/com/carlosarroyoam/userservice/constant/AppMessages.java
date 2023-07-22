@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.constants;
+package com.carlosarroyoam.userservice.constant;
 
 public class AppMessages {
 

@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.services;
+package com.carlosarroyoam.userservice.service;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -14,11 +14,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.carlosarroyoam.userservice.constants.AppMessages;
+import com.carlosarroyoam.userservice.constant.AppMessages;
 import com.carlosarroyoam.userservice.dto.CreateUserDto;
 import com.carlosarroyoam.userservice.dto.UserDto;
 import com.carlosarroyoam.userservice.model.User;
-import com.carlosarroyoam.userservice.repositories.UserRepository;
+import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;

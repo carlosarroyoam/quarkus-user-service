@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.resources;
+package com.carlosarroyoam.userservice.resource;
 
 import java.net.URI;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 
 import com.carlosarroyoam.userservice.dto.CreateUserDto;
 import com.carlosarroyoam.userservice.dto.UserDto;
-import com.carlosarroyoam.userservice.services.UserService;
+import com.carlosarroyoam.userservice.service.UserService;
 
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
