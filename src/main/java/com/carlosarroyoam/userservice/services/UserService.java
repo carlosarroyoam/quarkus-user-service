@@ -1,5 +1,6 @@
 package com.carlosarroyoam.userservice.services;
 
+import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -24,12 +25,14 @@ public class UserService {
 	private static final Logger LOG = Logger.getLogger(UserService.class);
 	private final UserRepository userRepository;
 	private final UserMapper mapper;
+	private final Clock clock;
 
 	@Inject
-	public UserService(final UserRepository userRepository, final UserMapper mapper) {
+	public UserService(final UserRepository userRepository, final UserMapper mapper, final Clock clock) {
 		super();
 		this.userRepository = userRepository;
 		this.mapper = mapper;
+		this.clock = clock;
 	}
 
 	public List<UserResponse> findAll() {
@@ -77,8 +80,8 @@ public class UserService {
 
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 		user.setIsActive(Boolean.FALSE);
-		user.setCreatedAt(ZonedDateTime.now());
-		user.setUpdatedAt(ZonedDateTime.now());
+		user.setCreatedAt(ZonedDateTime.now(clock));
+		user.setUpdatedAt(ZonedDateTime.now(clock));
 
 		userRepository.persist(user);
 
