@@ -1,10 +1,16 @@
 package com.carlosarroyoam.userservice.dto;
 
 import java.time.ZonedDateTime;
+import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class AppExceptionDto {
 
 	private String message;
+	private Set<String> details;
 	private Integer code;
 	private String status;
 	private String path;
@@ -16,6 +22,14 @@ public class AppExceptionDto {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public Set<String> getDetails() {
+		return details;
+	}
+
+	public void setDetails(Set<String> details) {
+		this.details = details;
 	}
 
 	public Integer getCode() {

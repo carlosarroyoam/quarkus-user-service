@@ -2,6 +2,7 @@ package com.carlosarroyoam.userservice.exception;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
+import java.util.stream.Collectors;
 
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -9,6 +10,8 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import com.carlosarroyoam.userservice.dto.AppExceptionDto;
 
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
@@ -39,6 +42,22 @@ class ExceptionMappers {
 		LOG.error(ex.getMessage());
 
 		return Response.status(ex.getResponse().getStatus()).entity(appExceptionDto).build();
+	}
+
+	@ServerExceptionMapper
+	public Response mapConstraintViolationException(ConstraintViolationException ex) {
+		AppExceptionDto appExceptionDto = new AppExceptionDto();
+		appExceptionDto.setMessage(Status.BAD_REQUEST.getReasonPhrase());
+		appExceptionDto.setDetails(
+				ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet()));
+		appExceptionDto.setCode(Status.BAD_REQUEST.getStatusCode());
+		appExceptionDto.setStatus(Status.BAD_REQUEST.getReasonPhrase());
+		appExceptionDto.setPath(uriInfo.getPath());
+		appExceptionDto.setTimestamp(ZonedDateTime.now(clock));
+
+		LOG.error(appExceptionDto.getDetails());
+
+		return Response.status(Status.BAD_REQUEST.getStatusCode()).entity(appExceptionDto).build();
 	}
 
 	@ServerExceptionMapper

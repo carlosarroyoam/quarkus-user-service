@@ -9,6 +9,7 @@ import com.carlosarroyoam.userservice.service.AuthService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -31,7 +32,7 @@ public class AuthResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public RestResponse<LoginResponse> auth(LoginRequest loginRequest) {
+	public RestResponse<LoginResponse> auth(@Valid LoginRequest loginRequest) {
 		return RestResponse.ok(authService.auth(loginRequest));
 	}
 

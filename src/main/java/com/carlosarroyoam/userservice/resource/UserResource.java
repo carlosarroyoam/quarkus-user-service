@@ -15,6 +15,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -57,7 +58,7 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	@Transactional
-	public RestResponse<Object> create(CreateUserDto createUserRequest) {
+	public RestResponse<Object> create(@Valid CreateUserDto createUserRequest) {
 		UserDto userDto = userService.create(createUserRequest);
 		return RestResponse.created(URI.create("/users/" + userDto.getId()));
 	}
