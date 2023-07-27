@@ -34,7 +34,6 @@ public class UserResource {
 
 	@Inject
 	public UserResource(final UserService userService) {
-		super();
 		this.userService = userService;
 	}
 

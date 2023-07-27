@@ -1,5 +1,6 @@
 package com.carlosarroyoam.userservice.model;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import io.quarkus.security.jpa.Password;
@@ -12,11 +13,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name = "users")
 @UserDefinition
-public class User {
+@Data
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 4866188536792947164L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,89 +56,5 @@ public class User {
 
 	@Column(nullable = false)
 	private ZonedDateTime updatedAt;
-
-	public User() {
-		super();
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public ZonedDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(ZonedDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public ZonedDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(ZonedDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 
 }

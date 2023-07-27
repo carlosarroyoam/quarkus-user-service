@@ -25,7 +25,6 @@ public class AuthResource {
 
 	@Inject
 	public AuthResource(final AuthService authService) {
-		super();
 		this.authService = authService;
 	}
 

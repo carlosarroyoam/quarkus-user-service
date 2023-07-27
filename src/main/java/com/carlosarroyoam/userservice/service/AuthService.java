@@ -22,7 +22,6 @@ public class AuthService {
 
 	@Inject
 	public AuthService(UserRepository userRepository, TokenService tokenService) {
-		super();
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
 	}

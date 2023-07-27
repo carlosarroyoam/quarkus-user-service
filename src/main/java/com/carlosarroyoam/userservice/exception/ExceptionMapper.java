@@ -25,7 +25,6 @@ class ExceptionMappers {
 
 	@Inject
 	public ExceptionMappers(UriInfo uriInfo, Clock clock) {
-		super();
 		this.uriInfo = uriInfo;
 		this.clock = clock;
 	}

@@ -29,7 +29,6 @@ public class UserService {
 
 	@Inject
 	public UserService(final UserRepository userRepository, final UserMapper mapper, final Clock clock) {
-		super();
 		this.userRepository = userRepository;
 		this.mapper = mapper;
 		this.clock = clock;
@@ -77,11 +76,12 @@ public class UserService {
 		}
 
 		User user = mapper.toEntity(createUserDto);
+		ZonedDateTime now = ZonedDateTime.now(clock);
 
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 		user.setIsActive(Boolean.FALSE);
-		user.setCreatedAt(ZonedDateTime.now(clock));
-		user.setUpdatedAt(ZonedDateTime.now(clock));
+		user.setCreatedAt(now);
+		user.setUpdatedAt(now);
 
 		userRepository.persist(user);
 
