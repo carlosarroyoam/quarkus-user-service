@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 
 @ApplicationScoped
-public class ClockProducer {
+public class ClockConfig {
 
 	@Produces
 	public Clock getClock() {
