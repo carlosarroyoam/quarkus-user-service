@@ -18,7 +18,7 @@
 		<skipITs>true</skipITs>
 		<surefire-plugin.version>3.0.0</surefire-plugin.version>
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-		<org.projectlombok.version>1.18.20</org.projectlombok.version>
+		<org.projectlombok.version>1.18.28</org.projectlombok.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
