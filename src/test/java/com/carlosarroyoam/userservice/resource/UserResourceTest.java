@@ -52,7 +52,8 @@ class UserResourceTest {
 		.contentType(ContentType.JSON)
 		.when().get("/api/users/" + 10000)
 		.then()
-		.statusCode(Status.NOT_FOUND.getStatusCode());
+		.statusCode(Status.NOT_FOUND.getStatusCode())
+		.body("message", equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
 	}
 
 	@Test
