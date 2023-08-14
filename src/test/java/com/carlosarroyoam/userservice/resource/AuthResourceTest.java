@@ -1,5 +1,10 @@
 package com.carlosarroyoam.userservice.resource;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+
 import org.junit.jupiter.api.Test;
 
 import com.carlosarroyoam.userservice.dto.LoginRequest;
@@ -7,8 +12,6 @@ import com.carlosarroyoam.userservice.dto.LoginRequest;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
-
-import static io.restassured.RestAssured.given;
 
 @QuarkusTest
 class AuthResourceTest {
@@ -24,7 +27,9 @@ class AuthResourceTest {
 		.body(loginRequest)
 		.when().post("/api/auth")
 		.then()
-		.statusCode(Status.OK.getStatusCode());
+		.statusCode(Status.OK.getStatusCode())
+		.body("username", is(not(nullValue())))
+		.body("access_token", is(not(nullValue())));
 	}
 
 	@Test

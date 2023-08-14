@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.emptyArray;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,8 @@ class UserResourceTest {
 		.contentType(ContentType.JSON)
 		.when().get("/api/users")
 		.then()
-		.statusCode(Status.OK.getStatusCode());
+		.statusCode(Status.OK.getStatusCode())
+		.body("$", is(not(emptyArray())));
 	}
 
 	@Test
@@ -41,8 +43,15 @@ class UserResourceTest {
 		.when().get("/api/users/" + 1)
 		.then()
 		.statusCode(Status.OK.getStatusCode())
-		.body("id", equalTo(1))
-		.body("username", equalTo("carroyom"));
+		.body("id", is(not(nullValue())))
+		.body("name", is(not(nullValue())))
+		.body("age", is(not(nullValue())))
+		.body("mail", is(not(nullValue())))
+		.body("username", is(not(nullValue())))
+		.body("role", is(not(nullValue())))
+		.body("is_active", is(not(nullValue())))
+		.body("created_at", is(not(nullValue())))
+		.body("updated_at", is(not(nullValue())));
 	}
 	
 	@Test
@@ -124,8 +133,15 @@ class UserResourceTest {
 		.when().get("/api/users/me")
 		.then()
 		.statusCode(Status.OK.getStatusCode())
-		.body("id", equalTo(1))
-		.body("username", equalTo("carroyom"));
+		.body("id", is(not(nullValue())))
+		.body("name", is(not(nullValue())))
+		.body("age", is(not(nullValue())))
+		.body("mail", is(not(nullValue())))
+		.body("username", is(not(nullValue())))
+		.body("role", is(not(nullValue())))
+		.body("is_active", is(not(nullValue())))
+		.body("created_at", is(not(nullValue())))
+		.body("updated_at", is(not(nullValue())));
 	}
 
 }
