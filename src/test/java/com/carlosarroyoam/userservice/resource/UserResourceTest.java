@@ -32,7 +32,16 @@ class UserResourceTest {
 		.when().get("/api/users")
 		.then()
 		.statusCode(Status.OK.getStatusCode())
-		.body("$", is(not(emptyArray())));
+		.body("$", is(not(emptyArray())))
+		.body("$.id", is(not(nullValue())))
+		.body("$.name", is(not(nullValue())))
+		.body("$.age", is(not(nullValue())))
+		.body("$.mail", is(not(nullValue())))
+		.body("$.username", is(not(nullValue())))
+		.body("$.role", is(not(nullValue())))
+		.body("$.is_active", is(not(nullValue())))
+		.body("$.created_at", is(not(nullValue())))
+		.body("$.updated_at", is(not(nullValue())));
 	}
 
 	@Test
