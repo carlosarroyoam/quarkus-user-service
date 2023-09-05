@@ -37,9 +37,13 @@ class UserServiceTest {
 
 	@Test
 	void testFindAllRetrievesListOfUsers() {
+		User user = createTestUser(false);
+		Mockito.when(userRepository.listAll()).thenReturn(List.of(user));
 		List<UserDto> usersDto = userService.findAll();
 
-		assertThat(usersDto, hasSize(0));
+		assertThat(usersDto, hasSize(1));
+		assertThat(usersDto.get(0).getId(), equalTo(user.getId()));
+		assertThat(usersDto.get(0).getUsername(), equalTo(user.getUsername()));
 	}
 
 	@Test
