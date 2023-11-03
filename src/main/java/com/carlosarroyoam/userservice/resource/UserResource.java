@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.SecurityContext;
 
 @Path("/api/users")
 @ApplicationScoped
+@Transactional
 @Authenticated
 public class UserResource {
 
@@ -56,7 +57,6 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	@Transactional
 	public RestResponse<Object> create(@Valid CreateUserDto createUserRequest) {
 		UserDto userDto = userService.create(createUserRequest);
 		return RestResponse.created(URI.create("/users/" + userDto.getId()));

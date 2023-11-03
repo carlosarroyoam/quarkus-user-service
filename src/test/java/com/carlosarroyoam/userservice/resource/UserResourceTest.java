@@ -12,14 +12,12 @@ import org.junit.jupiter.api.Test;
 import com.carlosarroyoam.userservice.constant.AppMessages;
 import com.carlosarroyoam.userservice.dto.CreateUserDto;
 
-import io.quarkus.test.TestTransaction;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
 
 @QuarkusTest
-@TestTransaction
 class UserResourceTest {
 
 	@Test
