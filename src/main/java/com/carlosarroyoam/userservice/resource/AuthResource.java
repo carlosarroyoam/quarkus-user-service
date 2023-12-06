@@ -29,6 +29,7 @@ public class AuthResource {
 	}
 
 	@POST
+	@Path("/signin")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse<LoginResponse> auth(@Valid LoginRequest loginRequest) {
