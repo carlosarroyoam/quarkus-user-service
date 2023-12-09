@@ -23,7 +23,7 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void testFindAllEndpoint() {
-		given().contentType(ContentType.JSON).when().get("/api/users").then().statusCode(Status.OK.getStatusCode())
+		given().contentType(ContentType.JSON).when().get("/api/v1/users").then().statusCode(Status.OK.getStatusCode())
 				.body("$", is(not(emptyArray()))).body("$.id", is(not(nullValue())))
 				.body("$.name", is(not(nullValue()))).body("$.age", is(not(nullValue())))
 				.body("$.mail", is(not(nullValue()))).body("$.username", is(not(nullValue())))
@@ -34,7 +34,7 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void testFindByIdEndpointWithExistingUser() {
-		given().contentType(ContentType.JSON).when().get("/api/users/" + 1).then().statusCode(Status.OK.getStatusCode())
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 1).then().statusCode(Status.OK.getStatusCode())
 				.body("id", is(not(nullValue()))).body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("mail", is(not(nullValue()))).body("username", is(not(nullValue())))
 				.body("role", is(not(nullValue()))).body("is_active", is(not(nullValue())))
@@ -44,7 +44,7 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void testFindByIdEndpointWithNonExistingUser() {
-		given().contentType(ContentType.JSON).when().get("/api/users/" + 10000).then()
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 10000).then()
 				.statusCode(Status.NOT_FOUND.getStatusCode())
 				.body("message", equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
 	}
@@ -60,7 +60,7 @@ class UserResourceTest {
 		createUserDto.setRole("User");
 		createUserDto.setAge(28);
 
-		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/users").then()
+		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/v1/users").then()
 				.statusCode(Status.CREATED.getStatusCode()).headers("Location", is(not(nullValue())));
 	}
 
@@ -75,7 +75,7 @@ class UserResourceTest {
 		createUserDto.setRole("User");
 		createUserDto.setAge(28);
 
-		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/users").then()
+		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/v1/users").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode())
 				.body("message", equalTo(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE));
 	}
@@ -91,7 +91,7 @@ class UserResourceTest {
 		createUserDto.setRole("User");
 		createUserDto.setAge(28);
 
-		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/users").then()
+		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/v1/users").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode())
 				.body("message", equalTo(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
 	}
@@ -99,7 +99,7 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void testMeEndpoint() {
-		given().contentType(ContentType.JSON).when().get("/api/users/me").then().statusCode(Status.OK.getStatusCode())
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/me").then().statusCode(Status.OK.getStatusCode())
 				.body("id", is(not(nullValue()))).body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("mail", is(not(nullValue()))).body("username", is(not(nullValue())))
 				.body("role", is(not(nullValue()))).body("is_active", is(not(nullValue())))
