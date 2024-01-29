@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -37,29 +38,29 @@ class UserServiceTest {
 
 	@Test
 	void testFindAllRetrievesListOfUsers() {
-		User user = createTestUser(false);
-		Mockito.when(userRepository.listAll()).thenReturn(List.of(user));
+		Optional<User> user = createTestUser(false);
+		Mockito.when(userRepository.listAll()).thenReturn(List.of(user.get()));
 		List<UserDto> usersDto = userService.findAll();
 
 		assertThat(usersDto, hasSize(1));
-		assertThat(usersDto.get(0).getId(), equalTo(user.getId()));
-		assertThat(usersDto.get(0).getUsername(), equalTo(user.getUsername()));
+		assertThat(usersDto.get(0).getId(), equalTo(user.get().getId()));
+		assertThat(usersDto.get(0).getUsername(), equalTo(user.get().getUsername()));
 	}
 
 	@Test
 	void testFindByIdRetrievesUser() {
-		User user = createTestUser(false);
-		Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(user);
+		Optional<User> user = createTestUser(false);
+		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(user);
 
 		UserDto userDto = userService.findById(1l);
 
-		assertThat(userDto.getId(), equalTo(user.getId()));
-		assertThat(userDto.getUsername(), equalTo(user.getUsername()));
+		assertThat(userDto.getId(), equalTo(user.get().getId()));
+		assertThat(userDto.getUsername(), equalTo(user.get().getUsername()));
 	}
 
 	@Test
 	void testFindByIdFailsWithNonExistingUser() {
-		Mockito.when(userRepository.findById(Mockito.anyLong())).thenReturn(null);
+		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.ofNullable(null));
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findById(1l));
 
@@ -69,20 +70,20 @@ class UserServiceTest {
 
 	@Test
 	void testFindByUsernameRetrievesUser() {
-		User user = createTestUser(false);
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(user);
+		Optional<User> user = createTestUser(false);
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(user);
 
 		UserDto userDto = userService.findByUsername("carroyom");
 
-		assertThat(userDto.getId(), equalTo(user.getId()));
-		assertThat(userDto.getUsername(), equalTo(user.getUsername()));
+		assertThat(userDto.getId(), equalTo(user.get().getId()));
+		assertThat(userDto.getUsername(), equalTo(user.get().getUsername()));
 	}
 
 	@Test
 	void testFindByUsernameFailsWithNonExistingUsername() {
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(null);
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 
-		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findByUsername(""));
+		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findByUsername("carroyom"));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(NotFoundException.class));
@@ -91,8 +92,8 @@ class UserServiceTest {
 	@Test
 	void testCreateUser() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(null);
-		Mockito.when(userRepository.findByMail(Mockito.anyString())).thenReturn(null);
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
 		UserDto userDto = userService.create(createUserDto);
@@ -106,8 +107,8 @@ class UserServiceTest {
 	@Test
 	void testCreateUserFailsWithExistingUsername() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(createTestUser(true));
-		Mockito.when(userRepository.findByMail(Mockito.anyString())).thenReturn(null);
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
+		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 
 		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserDto));
 
@@ -118,29 +119,29 @@ class UserServiceTest {
 	@Test
 	void testCreateUserFailsWithExistingMail() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(null);
-		Mockito.when(userRepository.findByMail(Mockito.anyString())).thenReturn(createTestUser(true));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(createTestUser(true));
 
 		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserDto));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(BadRequestException.class));
 	}
 
-	private User createTestUser(Boolean isActive) {
+	private Optional<User> createTestUser(Boolean isActive) {
 		User user = new User();
 		user.setId(1l);
 		user.setUsername("carroyom");
-		user.setMail("carroyom@mail.com");
+		user.setEmail("carroyom@mail.com");
 		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
 		user.setIsActive(isActive);
-		return user;
+		return Optional.of(user);
 	}
 
 	private CreateUserDto createTestCreateUserDto() {
 		CreateUserDto createUserDto = new CreateUserDto();
 		createUserDto.setName("Carlos Alberto Arroyo Martínez");
-		createUserDto.setMail("carroyom@mail.com");
+		createUserDto.setEmail("carroyom@mail.com");
 		createUserDto.setUsername("carroyom");
 		createUserDto.setPassword("secret");
 		createUserDto.setRole("Admin,User");

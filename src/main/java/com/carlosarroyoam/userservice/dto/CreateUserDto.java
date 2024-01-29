@@ -20,8 +20,8 @@ public class CreateUserDto implements Serializable {
 	@Max(message = "Age should be max 100", value = 100)
 	private Integer age;
 
-	@Email(message = "Mail should be an valid email address")
-	private String mail;
+	@Email(message = "Email should be an valid email address")
+	private String email;
 
 	@NotBlank(message = "Username should not be blank")
 	private String username;

@@ -1,5 +1,7 @@
 package com.carlosarroyoam.userservice.repository;
 
+import java.util.Optional;
+
 import com.carlosarroyoam.userservice.model.User;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
@@ -8,12 +10,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class UserRepository implements PanacheRepository<User> {
 
-	public User findByUsername(String username) {
-		return find("username", username).firstResult();
+	public Optional<User> findByUsernameOptional(String username) {
+		return find("username", username).firstResultOptional();
 	}
 
-	public User findByMail(String mail) {
-		return find("mail", mail).firstResult();
+	public Optional<User> findByEmailOptional(String email) {
+		return find("email", email).firstResultOptional();
 	}
 
 }

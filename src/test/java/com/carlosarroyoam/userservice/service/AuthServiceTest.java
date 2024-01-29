@@ -5,6 +5,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -33,7 +35,7 @@ class AuthServiceTest {
 
 	@Test
 	void testAuthsUserWithCorrectCredentials() {
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(getUser(true));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(true));
 		Mockito.when(tokenService.generateToken(Mockito.any(User.class))).thenReturn(getToken());
 
 		LoginRequest loginRequest = new LoginRequest();
@@ -48,7 +50,7 @@ class AuthServiceTest {
 
 	@Test
 	void testAuthFailsWithNonExistingUser() {
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(null);
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -62,7 +64,7 @@ class AuthServiceTest {
 
 	@Test
 	void testAuthFailsWithWrongCredentials() {
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(getUser(true));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(true));
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -76,7 +78,7 @@ class AuthServiceTest {
 
 	@Test
 	void testAuthFailsWithInactiveUser() {
-		Mockito.when(userRepository.findByUsername(Mockito.anyString())).thenReturn(getUser(false));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(false));
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -92,11 +94,11 @@ class AuthServiceTest {
 		return "adQssw5c";
 	}
 
-	private User getUser(Boolean isActive) {
+	private Optional<User> getUser(Boolean isActive) {
 		User user = new User();
 		user.setUsername("carroyom");
 		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
 		user.setIsActive(isActive);
-		return user;
+		return Optional.of(user);
 	}
 }

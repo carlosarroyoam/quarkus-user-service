@@ -39,40 +39,32 @@ public class UserService {
 	}
 
 	public UserDto findById(Long id) {
-		User userById = userRepository.findById(id);
-
-		if (userById == null) {
-			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, id);
-			throw new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
-		}
+		User userById = userRepository.findByIdOptional(id)
+				.orElseThrow(() -> new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
 
 		return mapper.toDto(userById);
 	}
 
 	public UserDto findByUsername(String username) {
-		User userByUsername = userRepository.findByUsername(username);
-
-		if (userByUsername == null) {
-			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
-			throw new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
-		}
+		User userByUsername = userRepository.findByUsernameOptional(username)
+				.orElseThrow(() -> new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE));
 
 		return mapper.toDto(userByUsername);
 	}
 
 	public UserDto create(CreateUserDto createUserDto) {
-		User userByUsername = userRepository.findByUsername(createUserDto.getUsername());
+		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserDto.getUsername()).isPresent();
 
-		if (userByUsername != null) {
+		if (existsUserWithUsername) {
 			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
-		User userByMail = userRepository.findByMail(createUserDto.getMail());
+		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserDto.getEmail()).isPresent();
 
-		if (userByMail != null) {
-			LOG.errorf(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
-			throw new BadRequestException(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
+		if (existsUserWithEmail) {
+			LOG.errorf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
+			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
 		User user = mapper.toEntity(createUserDto);

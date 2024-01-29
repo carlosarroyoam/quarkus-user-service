@@ -34,7 +34,7 @@ public class User implements Serializable {
 	private Integer age;
 
 	@Column(nullable = false, unique = true)
-	private String mail;
+	private String email;
 
 	@Column(nullable = false, unique = true)
 	@Username

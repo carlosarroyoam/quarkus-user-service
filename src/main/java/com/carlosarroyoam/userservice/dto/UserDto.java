@@ -12,7 +12,7 @@ public class UserDto implements Serializable {
 	private Long id;
 	private String name;
 	private Integer age;
-	private String mail;
+	private String email;
 	private String username;
 	private String role;
 	private Boolean isActive;

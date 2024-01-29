@@ -27,12 +27,8 @@ public class AuthService {
 	}
 
 	public LoginResponse auth(LoginRequest loginRequest) {
-		User userByUsername = userRepository.findByUsername(loginRequest.getUsername());
-
-		if (userByUsername == null) {
-			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
-			throw new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE);
-		}
+		User userByUsername = userRepository.findByUsernameOptional(loginRequest.getUsername()).orElseThrow(
+				() -> new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE));
 
 		if (userByUsername.getIsActive().equals(Boolean.FALSE)) {
 			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());

@@ -26,7 +26,7 @@ class UserResourceTest {
 		given().contentType(ContentType.JSON).when().get("/api/users").then().statusCode(Status.OK.getStatusCode())
 				.body("$", is(not(emptyArray()))).body("$.id", is(not(nullValue())))
 				.body("$.name", is(not(nullValue()))).body("$.age", is(not(nullValue())))
-				.body("$.mail", is(not(nullValue()))).body("$.username", is(not(nullValue())))
+				.body("$.email", is(not(nullValue()))).body("$.username", is(not(nullValue())))
 				.body("$.role", is(not(nullValue()))).body("$.is_active", is(not(nullValue())))
 				.body("$.created_at", is(not(nullValue()))).body("$.updated_at", is(not(nullValue())));
 	}
@@ -36,7 +36,7 @@ class UserResourceTest {
 	void testFindByIdEndpointWithExistingUser() {
 		given().contentType(ContentType.JSON).when().get("/api/users/" + 1).then().statusCode(Status.OK.getStatusCode())
 				.body("id", is(not(nullValue()))).body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
-				.body("mail", is(not(nullValue()))).body("username", is(not(nullValue())))
+				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))
 				.body("role", is(not(nullValue()))).body("is_active", is(not(nullValue())))
 				.body("created_at", is(not(nullValue()))).body("updated_at", is(not(nullValue())));
 	}
@@ -54,7 +54,7 @@ class UserResourceTest {
 	void testCreateEndpoint() {
 		CreateUserDto createUserDto = new CreateUserDto();
 		createUserDto.setName("Cathy Stefania Guido Rojas");
-		createUserDto.setMail("cguidor@mail.com");
+		createUserDto.setEmail("cguidor@mail.com");
 		createUserDto.setUsername("cguidor");
 		createUserDto.setPassword("secret");
 		createUserDto.setRole("User");
@@ -69,7 +69,7 @@ class UserResourceTest {
 	void testCreateEndpointWithExistingUsername() {
 		CreateUserDto createUserDto = new CreateUserDto();
 		createUserDto.setName("Cathy Stefania Guido Rojas");
-		createUserDto.setMail("cguidor@mail.com");
+		createUserDto.setEmail("cguidor@mail.com");
 		createUserDto.setUsername("carroyom");
 		createUserDto.setPassword("secret");
 		createUserDto.setRole("User");
@@ -85,7 +85,7 @@ class UserResourceTest {
 	void testCreateEndpointWithExistingMail() {
 		CreateUserDto createUserDto = new CreateUserDto();
 		createUserDto.setName("Cathy Stefania Guido Rojas");
-		createUserDto.setMail("carroyom@mail.com");
+		createUserDto.setEmail("carroyom@mail.com");
 		createUserDto.setUsername("cguidor");
 		createUserDto.setPassword("secret");
 		createUserDto.setRole("User");
@@ -93,7 +93,7 @@ class UserResourceTest {
 
 		given().contentType(ContentType.JSON).body(createUserDto).when().post("/api/users").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode())
-				.body("message", equalTo(AppMessages.MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
+				.body("message", equalTo(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
 	}
 
 	@Test
@@ -101,7 +101,7 @@ class UserResourceTest {
 	void testMeEndpoint() {
 		given().contentType(ContentType.JSON).when().get("/api/users/me").then().statusCode(Status.OK.getStatusCode())
 				.body("id", is(not(nullValue()))).body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
-				.body("mail", is(not(nullValue()))).body("username", is(not(nullValue())))
+				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))
 				.body("role", is(not(nullValue()))).body("is_active", is(not(nullValue())))
 				.body("created_at", is(not(nullValue()))).body("updated_at", is(not(nullValue())));
 	}

@@ -20,8 +20,8 @@ public class AppMessages {
 	public static final String USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Username already exists";
 	public static final String USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE = "User with username: %s already exists";
 
-	public static final String MAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Mail already exists";
-	public static final String MAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE = "Mail with address: %s already exists";
+	public static final String EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Email already exists";
+	public static final String EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE = "Email with address: %s already exists";
 
 	private AppMessages() {
 		throw new IllegalAccessError(AppConstants.STANDARD_ILLEGAL_ACCESS_EXCEPTION_MESSAGE_UTILITY_CLASS);
