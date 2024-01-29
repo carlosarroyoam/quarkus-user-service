@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -37,9 +38,11 @@ class UserServiceTest {
 	private UserRepository userRepository;
 
 	@Test
+	@DisplayName("Should return list of users")
 	void testFindAllRetrievesListOfUsers() {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.listAll()).thenReturn(List.of(user.get()));
+
 		List<UserDto> usersDto = userService.findAll();
 
 		assertThat(usersDto, hasSize(1));
@@ -48,27 +51,30 @@ class UserServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should return user when find user with existing id")
 	void testFindByIdRetrievesUser() {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(user);
 
-		UserDto userDto = userService.findById(1l);
+		UserDto userDto = userService.findById(1L);
 
 		assertThat(userDto.getId(), equalTo(user.get().getId()));
 		assertThat(userDto.getUsername(), equalTo(user.get().getUsername()));
 	}
 
 	@Test
+	@DisplayName("Should throw exception when find user with non existing id")
 	void testFindByIdFailsWithNonExistingUser() {
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.ofNullable(null));
 
-		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findById(1l));
+		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findById(1L));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(NotFoundException.class));
 	}
 
 	@Test
+	@DisplayName("Should return user when find user with existing username")
 	void testFindByUsernameRetrievesUser() {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(user);
@@ -80,6 +86,7 @@ class UserServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should throw exception when find user with non existing username")
 	void testFindByUsernameFailsWithNonExistingUsername() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 
@@ -90,6 +97,7 @@ class UserServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should create user with existing username")
 	void testCreateUser() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
@@ -105,6 +113,7 @@ class UserServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should throw exception when create user with existing username")
 	void testCreateUserFailsWithExistingUsername() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
@@ -117,7 +126,8 @@ class UserServiceTest {
 	}
 
 	@Test
-	void testCreateUserFailsWithExistingMail() {
+	@DisplayName("Should throw exception when create user with existing email")
+	void testCreateUserFailsWithExistingEmail() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(createTestUser(true));
@@ -130,7 +140,7 @@ class UserServiceTest {
 
 	private Optional<User> createTestUser(Boolean isActive) {
 		User user = new User();
-		user.setId(1l);
+		user.setId(1L);
 		user.setUsername("carroyom");
 		user.setEmail("carroyom@mail.com");
 		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");

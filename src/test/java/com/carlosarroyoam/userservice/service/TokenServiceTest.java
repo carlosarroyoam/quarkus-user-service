@@ -3,6 +3,7 @@ package com.carlosarroyoam.userservice.service;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.carlosarroyoam.userservice.model.User;
@@ -17,6 +18,7 @@ class TokenServiceTest {
 	private TokenService tokenService;
 
 	@Test
+	@DisplayName("Should return token")
 	void testGenerateToken() {
 		User user = new User();
 		user.setUsername("carroyom");

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -34,6 +35,7 @@ class AuthServiceTest {
 	private TokenService tokenService;
 
 	@Test
+	@DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
 	void testAuthsUserWithCorrectCredentials() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(true));
 		Mockito.when(tokenService.generateToken(Mockito.any(User.class))).thenReturn(getToken());
@@ -49,6 +51,7 @@ class AuthServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should throw exception when attempt to auth with non existing user")
 	void testAuthFailsWithNonExistingUser() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
 
@@ -63,6 +66,7 @@ class AuthServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should throw exception when attempt to auth with invalid credentials")
 	void testAuthFailsWithWrongCredentials() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(true));
 
@@ -77,6 +81,7 @@ class AuthServiceTest {
 	}
 
 	@Test
+	@DisplayName("Should throw exception when attempt to auth an inactive user")
 	void testAuthFailsWithInactiveUser() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(false));
 
