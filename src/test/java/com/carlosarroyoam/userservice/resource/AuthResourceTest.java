@@ -25,7 +25,7 @@ class AuthResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(loginRequest)
-		.when().post("/api/auth/signin")
+		.when().post("/api/v1/auth/signin")
 		.then()
 		.statusCode(Status.OK.getStatusCode())
 		.body("username", is(not(nullValue())))
@@ -41,7 +41,7 @@ class AuthResourceTest {
 		given()
 		.contentType(ContentType.JSON)
 		.body(loginRequest)
-		.when().post("/api/auth/signin")
+		.when().post("/api/v1/auth/signin")
 		.then()
 		.statusCode(Status.UNAUTHORIZED.getStatusCode());
 	}

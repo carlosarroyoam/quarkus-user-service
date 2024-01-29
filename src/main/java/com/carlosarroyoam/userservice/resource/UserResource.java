@@ -25,7 +25,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.SecurityContext;
 
-@Path("/api/users")
+@Path("/api/v1/users")
 @ApplicationScoped
 @Transactional
 @Authenticated
