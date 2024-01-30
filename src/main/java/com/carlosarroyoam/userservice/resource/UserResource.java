@@ -14,7 +14,6 @@ import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -27,7 +26,6 @@ import jakarta.ws.rs.core.SecurityContext;
 
 @Path("/api/v1/users")
 @ApplicationScoped
-@Transactional
 @Authenticated
 public class UserResource {
 

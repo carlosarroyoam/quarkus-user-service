@@ -16,10 +16,12 @@ import com.carlosarroyoam.userservice.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
+@Transactional
 public class UserService {
 
 	private static final Logger LOG = Logger.getLogger(UserService.class);
@@ -55,14 +57,14 @@ public class UserService {
 	public UserDto create(CreateUserDto createUserDto) {
 		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserDto.getUsername()).isPresent();
 
-		if (existsUserWithUsername) {
+		if (Boolean.TRUE.equals(existsUserWithUsername)) {
 			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
 		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserDto.getEmail()).isPresent();
 
-		if (existsUserWithEmail) {
+		if (Boolean.TRUE.equals(existsUserWithEmail)) {
 			LOG.errorf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
