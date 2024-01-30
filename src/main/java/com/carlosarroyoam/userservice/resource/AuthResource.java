@@ -33,7 +33,8 @@ public class AuthResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse<LoginResponse> auth(@Valid LoginRequest loginRequest) {
-		return RestResponse.ok(authService.auth(loginRequest));
+		LoginResponse loginResponse = authService.auth(loginRequest);
+		return RestResponse.ok(loginResponse);
 	}
 
 }

@@ -42,7 +42,8 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	public RestResponse<List<UserDto>> findAll() {
-		return RestResponse.ok(userService.findAll());
+		List<UserDto> users = userService.findAll();
+		return RestResponse.ok(users);
 	}
 
 	@GET
@@ -50,7 +51,8 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	public RestResponse<UserDto> findById(@RestPath Long id) {
-		return RestResponse.ok(userService.findById(id));
+		UserDto userById = userService.findById(id);
+		return RestResponse.ok(userById);
 	}
 
 	@POST
@@ -66,7 +68,9 @@ public class UserResource {
 	@Path("/me")
 	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse<UserDto> me(@Context SecurityContext securityContext) {
-		return RestResponse.ok(userService.findByUsername(securityContext.getUserPrincipal().getName()));
+		String principalName = securityContext.getUserPrincipal().getName();
+		UserDto userByUsername = userService.findByUsername(principalName);
+		return RestResponse.ok(userByUsername);
 	}
 
 }
