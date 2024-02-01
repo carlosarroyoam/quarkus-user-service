@@ -41,29 +41,31 @@ public class UserService {
 	}
 
 	public UserDto findById(Long id) {
-		User userById = userRepository.findByIdOptional(id)
-				.orElseThrow(() -> new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+		User userById = userRepository.findByIdOptional(id).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, id);
+			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+		});
 
 		return mapper.toDto(userById);
 	}
 
 	public UserDto findByUsername(String username) {
-		User userByUsername = userRepository.findByUsernameOptional(username)
-				.orElseThrow(() -> new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE));
+		User userByUsername = userRepository.findByUsernameOptional(username).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
+			return new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
+		});
 
 		return mapper.toDto(userByUsername);
 	}
 
 	public UserDto create(CreateUserDto createUserDto) {
 		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserDto.getUsername()).isPresent();
-
 		if (Boolean.TRUE.equals(existsUserWithUsername)) {
 			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
 		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserDto.getEmail()).isPresent();
-
 		if (Boolean.TRUE.equals(existsUserWithEmail)) {
 			LOG.errorf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
 			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);

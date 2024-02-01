@@ -12,8 +12,10 @@ import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.security.AuthenticationFailedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
+@Transactional
 public class AuthService {
 
 	private static final Logger LOG = Logger.getLogger(AuthService.class);
@@ -21,14 +23,16 @@ public class AuthService {
 	private final TokenService tokenService;
 
 	@Inject
-	public AuthService(UserRepository userRepository, TokenService tokenService) {
+	public AuthService(final UserRepository userRepository, final TokenService tokenService) {
 		this.userRepository = userRepository;
 		this.tokenService = tokenService;
 	}
 
 	public LoginResponse auth(LoginRequest loginRequest) {
-		User userByUsername = userRepository.findByUsernameOptional(loginRequest.getUsername()).orElseThrow(
-				() -> new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE));
+		User userByUsername = userRepository.findByUsernameOptional(loginRequest.getUsername()).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			return new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE);
+		});
 
 		if (Boolean.FALSE.equals(userByUsername.getIsActive())) {
 			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
