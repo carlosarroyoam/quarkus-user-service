@@ -53,7 +53,7 @@ class AuthServiceTest {
 	@Test
 	@DisplayName("Should throw exception when attempt to auth with non existing user")
 	void testAuthFailsWithNonExistingUser() {
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");

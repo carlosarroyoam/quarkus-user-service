@@ -71,9 +71,9 @@ public class UserService {
 			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
-		User user = mapper.toEntity(createUserDto);
 		ZonedDateTime now = ZonedDateTime.now(clock);
 
+		User user = mapper.toEntity(createUserDto);
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 		user.setIsActive(Boolean.FALSE);
 		user.setCreatedAt(now);

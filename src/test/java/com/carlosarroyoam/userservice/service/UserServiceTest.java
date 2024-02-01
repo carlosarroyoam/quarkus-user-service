@@ -65,7 +65,7 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should throw exception when find user with non existing id")
 	void testFindByIdFailsWithNonExistingUser() {
-		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.empty());
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findById(1L));
 
@@ -88,7 +88,7 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should throw exception when find user with non existing username")
 	void testFindByUsernameFailsWithNonExistingUsername() {
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findByUsername("carroyom"));
 
@@ -100,8 +100,8 @@ class UserServiceTest {
 	@DisplayName("Should create user with existing username")
 	void testCreateUser() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
-		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
+		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
 		UserDto userDto = userService.create(createUserDto);
@@ -117,7 +117,7 @@ class UserServiceTest {
 	void testCreateUserFailsWithExistingUsername() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
-		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());
 
 		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserDto));
 
@@ -129,7 +129,7 @@ class UserServiceTest {
 	@DisplayName("Should throw exception when create user with existing email")
 	void testCreateUserFailsWithExistingEmail() {
 		CreateUserDto createUserDto = createTestCreateUserDto();
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.ofNullable(null));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(createTestUser(true));
 
 		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserDto));
