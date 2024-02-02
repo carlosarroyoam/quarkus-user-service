@@ -7,7 +7,9 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 import com.carlosarroyoam.userservice.constant.AppMessages;
+import com.carlosarroyoam.userservice.dto.ChangePasswordDto;
 import com.carlosarroyoam.userservice.dto.CreateUserDto;
+import com.carlosarroyoam.userservice.dto.UpdateUserDto;
 import com.carlosarroyoam.userservice.dto.UserDto;
 import com.carlosarroyoam.userservice.mapper.UserMapper;
 import com.carlosarroyoam.userservice.model.User;
@@ -40,9 +42,9 @@ public class UserService {
 		return mapper.toDtos(userRepository.listAll());
 	}
 
-	public UserDto findById(Long id) {
-		User userById = userRepository.findByIdOptional(id).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, id);
+	public UserDto findById(Long userId) {
+		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
@@ -80,8 +82,59 @@ public class UserService {
 		user.setUpdatedAt(now);
 
 		userRepository.persist(user);
-
 		return mapper.toDto(user);
+	}
+
+	public UserDto update(Long userId, UpdateUserDto updateUserDto) {
+		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+		});
+
+		if (updateUserDto.getName() != null)
+			userById.setName(updateUserDto.getName());
+
+		if (updateUserDto.getAge() != null)
+			userById.setAge(updateUserDto.getAge());
+
+		userById.setUpdatedAt(ZonedDateTime.now(clock));
+		userRepository.persist(userById);
+		return mapper.toDto(userById);
+	}
+
+	public void deleteById(Long userId) {
+		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+		});
+
+		userById.setIsActive(Boolean.FALSE);
+		userById.setUpdatedAt(ZonedDateTime.now(clock));
+
+		userRepository.persist(userById);
+	}
+
+	public void changePassword(Long userId, ChangePasswordDto changePasswordDto) {
+		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
+			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+		});
+
+		if (!BcryptUtil.matches(changePasswordDto.getCurrentPassword(), userById.getPassword())) {
+			LOG.errorf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE,
+					changePasswordDto.getCurrentPassword());
+			throw new BadRequestException(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE);
+		}
+
+		if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())) {
+			LOG.errorf(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_MESSAGE);
+			throw new BadRequestException(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE);
+		}
+
+		userById.setPassword(BcryptUtil.bcryptHash(changePasswordDto.getNewPassword()));
+		userById.setUpdatedAt(ZonedDateTime.now(clock));
+
+		userRepository.persist(userById);
 	}
 
 }

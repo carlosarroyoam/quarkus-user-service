@@ -23,6 +23,9 @@ public class AppMessages {
 	public static final String EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE = "Email already exists";
 	public static final String EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE = "Email with address: %s already exists";
 
+	public static final String PASSWORDS_NOT_MATCH_EXCEPTION_MESSAGE = "Passwords doesn't match";
+	public static final String PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE = "Passwords doesn't match";
+
 	private AppMessages() {
 		throw new IllegalAccessError(AppConstants.STANDARD_ILLEGAL_ACCESS_EXCEPTION_MESSAGE_UTILITY_CLASS);
 	}
