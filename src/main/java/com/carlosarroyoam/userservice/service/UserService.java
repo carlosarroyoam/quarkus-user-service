@@ -44,7 +44,7 @@ public class UserService {
 
 	public UserResponse findById(Long userId) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
@@ -53,7 +53,7 @@ public class UserService {
 
 	public UserResponse findByUsername(String username) {
 		User userByUsername = userRepository.findByUsernameOptional(username).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
+			LOG.warnf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
 			return new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
@@ -63,13 +63,13 @@ public class UserService {
 	public UserResponse create(CreateUserRequest createUserRequest) {
 		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserRequest.getUsername()).isPresent();
 		if (Boolean.TRUE.equals(existsUserWithUsername)) {
-			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
+			LOG.warnf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
 			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
 		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserRequest.getEmail()).isPresent();
 		if (Boolean.TRUE.equals(existsUserWithEmail)) {
-			LOG.errorf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
+			LOG.warnf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
 			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
@@ -87,7 +87,7 @@ public class UserService {
 
 	public UserResponse update(Long userId, UpdateUserRequest updateUserRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
@@ -104,7 +104,7 @@ public class UserService {
 
 	public void deleteById(Long userId) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
@@ -116,18 +116,18 @@ public class UserService {
 
 	public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
+			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
 		if (!BcryptUtil.matches(changePasswordRequest.getCurrentPassword(), userById.getPassword())) {
-			LOG.errorf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE,
+			LOG.warnf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE,
 					changePasswordRequest.getCurrentPassword());
 			throw new BadRequestException(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE);
 		}
 
 		if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
-			LOG.errorf(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_MESSAGE);
+			LOG.warnf(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_MESSAGE);
 			throw new BadRequestException(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE);
 		}
 

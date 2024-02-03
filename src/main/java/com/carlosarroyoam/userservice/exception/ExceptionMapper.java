@@ -38,8 +38,6 @@ class ExceptionMappers {
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
-		LOG.error(ex.getMessage());
-
 		return Response.status(ex.getResponse().getStatus()).entity(appExceptionResponse).build();
 	}
 
@@ -53,8 +51,6 @@ class ExceptionMappers {
 		appExceptionResponse.setStatus(Status.BAD_REQUEST.getReasonPhrase());
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
-
-		LOG.error(appExceptionResponse.getDetails());
 
 		return Response.status(Status.BAD_REQUEST.getStatusCode()).entity(appExceptionResponse).build();
 	}

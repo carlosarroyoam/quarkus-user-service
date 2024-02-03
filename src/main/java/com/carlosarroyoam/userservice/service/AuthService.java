@@ -30,17 +30,17 @@ public class AuthService {
 
 	public LoginResponse auth(LoginRequest loginRequest) {
 		User userByUsername = userRepository.findByUsernameOptional(loginRequest.getUsername()).orElseThrow(() -> {
-			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			LOG.warnf(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
 			return new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
 		if (Boolean.FALSE.equals(userByUsername.getIsActive())) {
-			LOG.errorf(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			LOG.warnf(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
 			throw new AuthenticationFailedException(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_MESSAGE);
 		}
 
 		if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
-			LOG.errorf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
+			LOG.warnf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE, loginRequest.getUsername());
 			throw new AuthenticationFailedException(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE);
 		}
 
