@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CreateUserDto implements Serializable {
+public class CreateUserRequest implements Serializable {
 
 	private static final long serialVersionUID = 3245759926280364595L;
 

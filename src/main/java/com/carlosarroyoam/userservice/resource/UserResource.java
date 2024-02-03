@@ -6,10 +6,10 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestPath;
 import org.jboss.resteasy.reactive.RestResponse;
 
-import com.carlosarroyoam.userservice.dto.ChangePasswordDto;
-import com.carlosarroyoam.userservice.dto.CreateUserDto;
-import com.carlosarroyoam.userservice.dto.UpdateUserDto;
-import com.carlosarroyoam.userservice.dto.UserDto;
+import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
+import com.carlosarroyoam.userservice.dto.CreateUserRequest;
+import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
+import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.service.UserService;
 
 import io.quarkus.security.Authenticated;
@@ -43,8 +43,8 @@ public class UserResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<List<UserDto>> findAll() {
-		List<UserDto> users = userService.findAll();
+	public RestResponse<List<UserResponse>> findAll() {
+		List<UserResponse> users = userService.findAll();
 		return RestResponse.ok(users);
 	}
 
@@ -52,8 +52,8 @@ public class UserResource {
 	@Path("/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<UserDto> findById(@RestPath Long userId) {
-		UserDto userById = userService.findById(userId);
+	public RestResponse<UserResponse> findById(@RestPath Long userId) {
+		UserResponse userById = userService.findById(userId);
 		return RestResponse.ok(userById);
 	}
 
@@ -61,8 +61,8 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<Void> create(@Valid CreateUserDto createUserDto) {
-		UserDto createdUser = userService.create(createUserDto);
+	public RestResponse<Void> create(@Valid CreateUserRequest createUserRequest) {
+		UserResponse createdUser = userService.create(createUserRequest);
 		return RestResponse.created(URI.create("/users/" + createdUser.getId()));
 	}
 
@@ -71,8 +71,8 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<UserDto> update(@RestPath Long userId, @Valid UpdateUserDto updateUserDto) {
-		UserDto updatedUser = userService.update(userId, updateUserDto);
+	public RestResponse<UserResponse> update(@RestPath Long userId, @Valid UpdateUserRequest updateUserRequest) {
+		UserResponse updatedUser = userService.update(userId, updateUserRequest);
 		return RestResponse.ok(updatedUser);
 	}
 
@@ -81,9 +81,9 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse<Void> changePassword(@Context SecurityContext securityContext,
-			@Valid ChangePasswordDto changePasswordDto) {
-		UserDto userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
-		userService.changePassword(userByUsername.getId(), changePasswordDto);
+			@Valid ChangePasswordRequest changePasswordRequest) {
+		UserResponse userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
+		userService.changePassword(userByUsername.getId(), changePasswordRequest);
 		return RestResponse.ok();
 	}
 
@@ -99,8 +99,8 @@ public class UserResource {
 	@GET
 	@Path("/me")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RestResponse<UserDto> me(@Context SecurityContext securityContext) {
-		UserDto userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
+	public RestResponse<UserResponse> me(@Context SecurityContext securityContext) {
+		UserResponse userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(userByUsername);
 	}
 

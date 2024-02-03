@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
-import com.carlosarroyoam.userservice.dto.AppExceptionDto;
+import com.carlosarroyoam.userservice.dto.AppExceptionResponse;
 
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
@@ -31,46 +31,46 @@ class ExceptionMappers {
 
 	@ServerExceptionMapper
 	public Response mapWebApplicationException(WebApplicationException ex) {
-		AppExceptionDto appExceptionDto = new AppExceptionDto();
-		appExceptionDto.setMessage(ex.getMessage());
-		appExceptionDto.setCode(ex.getResponse().getStatus());
-		appExceptionDto.setStatus(ex.getResponse().getStatusInfo().getReasonPhrase());
-		appExceptionDto.setPath(uriInfo.getPath());
-		appExceptionDto.setTimestamp(ZonedDateTime.now(clock));
+		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
+		appExceptionResponse.setMessage(ex.getMessage());
+		appExceptionResponse.setCode(ex.getResponse().getStatus());
+		appExceptionResponse.setStatus(ex.getResponse().getStatusInfo().getReasonPhrase());
+		appExceptionResponse.setPath(uriInfo.getPath());
+		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
 		LOG.error(ex.getMessage());
 
-		return Response.status(ex.getResponse().getStatus()).entity(appExceptionDto).build();
+		return Response.status(ex.getResponse().getStatus()).entity(appExceptionResponse).build();
 	}
 
 	@ServerExceptionMapper
 	public Response mapConstraintViolationException(ConstraintViolationException ex) {
-		AppExceptionDto appExceptionDto = new AppExceptionDto();
-		appExceptionDto.setMessage(Status.BAD_REQUEST.getReasonPhrase());
-		appExceptionDto.setDetails(
+		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
+		appExceptionResponse.setMessage(Status.BAD_REQUEST.getReasonPhrase());
+		appExceptionResponse.setDetails(
 				ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet()));
-		appExceptionDto.setCode(Status.BAD_REQUEST.getStatusCode());
-		appExceptionDto.setStatus(Status.BAD_REQUEST.getReasonPhrase());
-		appExceptionDto.setPath(uriInfo.getPath());
-		appExceptionDto.setTimestamp(ZonedDateTime.now(clock));
+		appExceptionResponse.setCode(Status.BAD_REQUEST.getStatusCode());
+		appExceptionResponse.setStatus(Status.BAD_REQUEST.getReasonPhrase());
+		appExceptionResponse.setPath(uriInfo.getPath());
+		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
-		LOG.error(appExceptionDto.getDetails());
+		LOG.error(appExceptionResponse.getDetails());
 
-		return Response.status(Status.BAD_REQUEST.getStatusCode()).entity(appExceptionDto).build();
+		return Response.status(Status.BAD_REQUEST.getStatusCode()).entity(appExceptionResponse).build();
 	}
 
 	@ServerExceptionMapper
 	public Response mapException(Exception ex) {
-		AppExceptionDto appExceptionDto = new AppExceptionDto();
-		appExceptionDto.setMessage("Whoops! Something went wrong");
-		appExceptionDto.setCode(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		appExceptionDto.setStatus(Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
-		appExceptionDto.setPath(uriInfo.getPath());
-		appExceptionDto.setTimestamp(ZonedDateTime.now(clock));
+		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
+		appExceptionResponse.setMessage("Whoops! Something went wrong");
+		appExceptionResponse.setCode(Status.INTERNAL_SERVER_ERROR.getStatusCode());
+		appExceptionResponse.setStatus(Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
+		appExceptionResponse.setPath(uriInfo.getPath());
+		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
 		LOG.error(ex.getMessage());
 
-		return Response.status(Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(appExceptionDto).build();
+		return Response.status(Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(appExceptionResponse).build();
 	}
 
 }

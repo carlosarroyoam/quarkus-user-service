@@ -7,10 +7,10 @@ import java.util.List;
 import org.jboss.logging.Logger;
 
 import com.carlosarroyoam.userservice.constant.AppMessages;
-import com.carlosarroyoam.userservice.dto.ChangePasswordDto;
-import com.carlosarroyoam.userservice.dto.CreateUserDto;
-import com.carlosarroyoam.userservice.dto.UpdateUserDto;
-import com.carlosarroyoam.userservice.dto.UserDto;
+import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
+import com.carlosarroyoam.userservice.dto.CreateUserRequest;
+import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
+import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.mapper.UserMapper;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
@@ -38,11 +38,11 @@ public class UserService {
 		this.clock = clock;
 	}
 
-	public List<UserDto> findAll() {
+	public List<UserResponse> findAll() {
 		return mapper.toDtos(userRepository.listAll());
 	}
 
-	public UserDto findById(Long userId) {
+	public UserResponse findById(Long userId) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
@@ -51,7 +51,7 @@ public class UserService {
 		return mapper.toDto(userById);
 	}
 
-	public UserDto findByUsername(String username) {
+	public UserResponse findByUsername(String username) {
 		User userByUsername = userRepository.findByUsernameOptional(username).orElseThrow(() -> {
 			LOG.errorf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
 			return new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
@@ -60,22 +60,22 @@ public class UserService {
 		return mapper.toDto(userByUsername);
 	}
 
-	public UserDto create(CreateUserDto createUserDto) {
-		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserDto.getUsername()).isPresent();
+	public UserResponse create(CreateUserRequest createUserRequest) {
+		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserRequest.getUsername()).isPresent();
 		if (Boolean.TRUE.equals(existsUserWithUsername)) {
-			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
+			LOG.errorf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
 			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
-		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserDto.getEmail()).isPresent();
+		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserRequest.getEmail()).isPresent();
 		if (Boolean.TRUE.equals(existsUserWithEmail)) {
-			LOG.errorf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserDto.getUsername());
+			LOG.errorf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
 			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
 		}
 
 		ZonedDateTime now = ZonedDateTime.now(clock);
 
-		User user = mapper.toEntity(createUserDto);
+		User user = mapper.toEntity(createUserRequest);
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 		user.setIsActive(Boolean.FALSE);
 		user.setCreatedAt(now);
@@ -85,17 +85,17 @@ public class UserService {
 		return mapper.toDto(user);
 	}
 
-	public UserDto update(Long userId, UpdateUserDto updateUserDto) {
+	public UserResponse update(Long userId, UpdateUserRequest updateUserRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
-		if (updateUserDto.getName() != null)
-			userById.setName(updateUserDto.getName());
+		if (updateUserRequest.getName() != null)
+			userById.setName(updateUserRequest.getName());
 
-		if (updateUserDto.getAge() != null)
-			userById.setAge(updateUserDto.getAge());
+		if (updateUserRequest.getAge() != null)
+			userById.setAge(updateUserRequest.getAge());
 
 		userById.setUpdatedAt(ZonedDateTime.now(clock));
 		userRepository.persist(userById);
@@ -114,24 +114,24 @@ public class UserService {
 		userRepository.persist(userById);
 	}
 
-	public void changePassword(Long userId, ChangePasswordDto changePasswordDto) {
+	public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.errorf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
 			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
 		});
 
-		if (!BcryptUtil.matches(changePasswordDto.getCurrentPassword(), userById.getPassword())) {
+		if (!BcryptUtil.matches(changePasswordRequest.getCurrentPassword(), userById.getPassword())) {
 			LOG.errorf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE,
-					changePasswordDto.getCurrentPassword());
+					changePasswordRequest.getCurrentPassword());
 			throw new BadRequestException(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE);
 		}
 
-		if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())) {
+		if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
 			LOG.errorf(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_MESSAGE);
 			throw new BadRequestException(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE);
 		}
 
-		userById.setPassword(BcryptUtil.bcryptHash(changePasswordDto.getNewPassword()));
+		userById.setPassword(BcryptUtil.bcryptHash(changePasswordRequest.getNewPassword()));
 		userById.setUpdatedAt(ZonedDateTime.now(clock));
 
 		userRepository.persist(userById);

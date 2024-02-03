@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import lombok.Data;
 
 @Data
-public class UserDto implements Serializable {
+public class UserResponse implements Serializable {
 
 	private static final long serialVersionUID = -6935255287896729891L;
 	private Long id;

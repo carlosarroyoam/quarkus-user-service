@@ -11,7 +11,7 @@ import lombok.Data;
 
 @JsonInclude(Include.NON_NULL)
 @Data
-public class AppExceptionDto implements Serializable {
+public class AppExceptionResponse implements Serializable {
 
 	private static final long serialVersionUID = 1982149359567491484L;
 	private String message;

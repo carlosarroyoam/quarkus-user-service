@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import com.carlosarroyoam.userservice.constant.AppMessages;
-import com.carlosarroyoam.userservice.dto.ChangePasswordDto;
-import com.carlosarroyoam.userservice.dto.CreateUserDto;
-import com.carlosarroyoam.userservice.dto.UpdateUserDto;
-import com.carlosarroyoam.userservice.dto.UserDto;
+import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
+import com.carlosarroyoam.userservice.dto.CreateUserRequest;
+import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
+import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 
@@ -45,7 +45,7 @@ class UserServiceTest {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.listAll()).thenReturn(List.of(user.get()));
 
-		List<UserDto> usersDto = userService.findAll();
+		List<UserResponse> usersDto = userService.findAll();
 
 		assertThat(usersDto, hasSize(1));
 		assertThat(usersDto.get(0).getId(), equalTo(user.get().getId()));
@@ -58,10 +58,10 @@ class UserServiceTest {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(user);
 
-		UserDto userDto = userService.findById(1L);
+		UserResponse userResponse = userService.findById(1L);
 
-		assertThat(userDto.getId(), equalTo(user.get().getId()));
-		assertThat(userDto.getUsername(), equalTo(user.get().getUsername()));
+		assertThat(userResponse.getId(), equalTo(user.get().getId()));
+		assertThat(userResponse.getUsername(), equalTo(user.get().getUsername()));
 	}
 
 	@Test
@@ -81,10 +81,10 @@ class UserServiceTest {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(user);
 
-		UserDto userDto = userService.findByUsername("carroyom");
+		UserResponse userResponse = userService.findByUsername("carroyom");
 
-		assertThat(userDto.getId(), equalTo(user.get().getId()));
-		assertThat(userDto.getUsername(), equalTo(user.get().getUsername()));
+		assertThat(userResponse.getId(), equalTo(user.get().getId()));
+		assertThat(userResponse.getUsername(), equalTo(user.get().getUsername()));
 	}
 
 	@Test
@@ -101,27 +101,35 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should create user with valid data")
 	void testCreateUser() {
-		CreateUserDto createUserDto = createTestCreateUserDto();
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setEmail("carroyom@mail.com");
+		createUserRequest.setUsername("carroyom");
+		createUserRequest.setPassword("secret");
+
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		UserDto userDto = userService.create(createUserDto);
+		UserResponse userResponse = userService.create(createUserRequest);
 
-		assertThat(userDto.getUsername(), equalTo(createUserDto.getUsername()));
-		assertThat(userDto.getIsActive(), is(not(nullValue())));
-		assertThat(userDto.getCreatedAt(), is(not(nullValue())));
-		assertThat(userDto.getUpdatedAt(), is(not(nullValue())));
+		assertThat(userResponse.getUsername(), equalTo(createUserRequest.getUsername()));
+		assertThat(userResponse.getIsActive(), is(not(nullValue())));
+		assertThat(userResponse.getCreatedAt(), is(not(nullValue())));
+		assertThat(userResponse.getUpdatedAt(), is(not(nullValue())));
 	}
 
 	@Test
 	@DisplayName("Should throw exception when create user with existing username")
 	void testCreateUserFailsWithExistingUsername() {
-		CreateUserDto createUserDto = createTestCreateUserDto();
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setEmail("carroyom@mail.com");
+		createUserRequest.setUsername("carroyom");
+		createUserRequest.setPassword("secret");
+
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());
 
-		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserDto));
+		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserRequest));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(BadRequestException.class));
@@ -130,11 +138,15 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should throw exception when create user with existing email")
 	void testCreateUserFailsWithExistingEmail() {
-		CreateUserDto createUserDto = createTestCreateUserDto();
+		CreateUserRequest createUserRequest = new CreateUserRequest();
+		createUserRequest.setEmail("carroyom@mail.com");
+		createUserRequest.setUsername("carroyom");
+		createUserRequest.setPassword("secret");
+
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(createTestUser(true));
 
-		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserDto));
+		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserRequest));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(BadRequestException.class));
@@ -143,33 +155,33 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should update user with valid data")
 	void testUpdateUser() {
-		UpdateUserDto updateUserDto = new UpdateUserDto();
-		updateUserDto.setName("Carlos Arroyo Martínez");
-		updateUserDto.setAge(29);
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+		updateUserRequest.setName("Carlos Arroyo Martínez");
+		updateUserRequest.setAge(29);
 
 		Optional<User> user = createTestUser(true);
-		user.get().setName(updateUserDto.getName());
-		user.get().setAge(updateUserDto.getAge());
+		user.get().setName(updateUserRequest.getName());
+		user.get().setAge(updateUserRequest.getAge());
 
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(user);
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		UserDto userDto = userService.update(1L, updateUserDto);
+		UserResponse userResponse = userService.update(1L, updateUserRequest);
 
-		assertThat(userDto.getName(), is(user.get().getName()));
-		assertThat(userDto.getAge(), is(user.get().getAge()));
+		assertThat(userResponse.getName(), is(user.get().getName()));
+		assertThat(userResponse.getAge(), is(user.get().getAge()));
 	}
 
 	@Test
 	@DisplayName("Should throw exception when update non existing user")
 	void testUpdateUserFailsWithNonExistingUser() {
-		UpdateUserDto updateUserDto = new UpdateUserDto();
-		updateUserDto.setName("Carlos Arroyo Martínez");
-		updateUserDto.setAge(29);
+		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+		updateUserRequest.setName("Carlos Arroyo Martínez");
+		updateUserRequest.setAge(29);
 
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.empty());
 
-		Throwable ex = assertThrows(NotFoundException.class, () -> userService.update(1L, updateUserDto));
+		Throwable ex = assertThrows(NotFoundException.class, () -> userService.update(1L, updateUserRequest));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(NotFoundException.class));
@@ -199,15 +211,15 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should change user password with valid credentials")
 	void testChangeUserPassword() {
-		ChangePasswordDto changePasswordDto = new ChangePasswordDto();
-		changePasswordDto.setCurrentPassword("secret");
-		changePasswordDto.setNewPassword("new-secret");
-		changePasswordDto.setConfirmPassword("new-secret");
+		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+		changePasswordRequest.setCurrentPassword("secret");
+		changePasswordRequest.setNewPassword("new-secret");
+		changePasswordRequest.setConfirmPassword("new-secret");
 
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(createTestUser(true));
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		userService.changePassword(1L, changePasswordDto);
+		userService.changePassword(1L, changePasswordRequest);
 
 		Mockito.verify(userRepository, Mockito.times(1)).persist(Mockito.any(User.class));
 	}
@@ -215,15 +227,16 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should throw exception when change user password with non valid credentials")
 	void testChangeUserPasswordFailsWithNonValidCredentials() {
-		ChangePasswordDto changePasswordDto = new ChangePasswordDto();
-		changePasswordDto.setCurrentPassword("non-valid-secret");
-		changePasswordDto.setNewPassword("new-secret");
-		changePasswordDto.setConfirmPassword("new-secret");
+		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+		changePasswordRequest.setCurrentPassword("non-valid-secret");
+		changePasswordRequest.setNewPassword("new-secret");
+		changePasswordRequest.setConfirmPassword("new-secret");
 
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(createTestUser(true));
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		Throwable ex = assertThrows(BadRequestException.class, () -> userService.changePassword(1L, changePasswordDto));
+		Throwable ex = assertThrows(BadRequestException.class,
+				() -> userService.changePassword(1L, changePasswordRequest));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE));
 		assertThat(ex, instanceOf(BadRequestException.class));
@@ -232,15 +245,16 @@ class UserServiceTest {
 	@Test
 	@DisplayName("Should throw exception when change user password with non valid confirm password")
 	void testChangeUserPasswordFailsWithNonValidConfirmPassword() {
-		ChangePasswordDto changePasswordDto = new ChangePasswordDto();
-		changePasswordDto.setCurrentPassword("secret");
-		changePasswordDto.setNewPassword("new-secret");
-		changePasswordDto.setConfirmPassword("non-valid-new-secret");
+		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
+		changePasswordRequest.setCurrentPassword("secret");
+		changePasswordRequest.setNewPassword("new-secret");
+		changePasswordRequest.setConfirmPassword("non-valid-new-secret");
 
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(createTestUser(true));
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		Throwable ex = assertThrows(BadRequestException.class, () -> userService.changePassword(1L, changePasswordDto));
+		Throwable ex = assertThrows(BadRequestException.class,
+				() -> userService.changePassword(1L, changePasswordRequest));
 
 		assertThat(ex.getMessage(), equalTo(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE));
 		assertThat(ex, instanceOf(BadRequestException.class));
@@ -253,17 +267,8 @@ class UserServiceTest {
 		user.setEmail("carroyom@mail.com");
 		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
 		user.setIsActive(isActive);
+
 		return Optional.of(user);
 	}
 
-	private CreateUserDto createTestCreateUserDto() {
-		CreateUserDto createUserDto = new CreateUserDto();
-		createUserDto.setName("Carlos Alberto Arroyo Martínez");
-		createUserDto.setEmail("carroyom@mail.com");
-		createUserDto.setUsername("carroyom");
-		createUserDto.setPassword("secret");
-		createUserDto.setRole("Admin,User");
-		createUserDto.setAge(28);
-		return createUserDto;
-	}
 }

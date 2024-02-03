@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class ChangePasswordDto implements Serializable {
+public class ChangePasswordRequest implements Serializable {
 
 	private static final long serialVersionUID = -8023584346199877536L;
 

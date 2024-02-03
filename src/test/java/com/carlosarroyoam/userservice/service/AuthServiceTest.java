@@ -37,8 +37,8 @@ class AuthServiceTest {
 	@Test
 	@DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
 	void testAuthsUserWithCorrectCredentials() {
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(true));
-		Mockito.when(tokenService.generateToken(Mockito.any(User.class))).thenReturn(getToken());
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
+		Mockito.when(tokenService.generateToken(Mockito.any(User.class))).thenReturn(createTestToken());
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -47,7 +47,7 @@ class AuthServiceTest {
 		LoginResponse loginResponse = authService.auth(loginRequest);
 
 		assertThat(loginResponse.getUsername(), equalTo("carroyom"));
-		assertThat(loginResponse.getAccessToken(), equalTo("adQssw5c"));
+		assertThat(loginResponse.getAccessToken(), equalTo("eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW"));
 	}
 
 	@Test
@@ -68,7 +68,7 @@ class AuthServiceTest {
 	@Test
 	@DisplayName("Should throw exception when attempt to auth with invalid credentials")
 	void testAuthFailsWithWrongCredentials() {
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(true));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -83,7 +83,7 @@ class AuthServiceTest {
 	@Test
 	@DisplayName("Should throw exception when attempt to auth an inactive user")
 	void testAuthFailsWithInactiveUser() {
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(getUser(false));
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(false));
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -95,15 +95,16 @@ class AuthServiceTest {
 		assertThat(ex, instanceOf(AuthenticationFailedException.class));
 	}
 
-	private String getToken() {
-		return "adQssw5c";
+	private String createTestToken() {
+		return "eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW";
 	}
 
-	private Optional<User> getUser(Boolean isActive) {
+	private Optional<User> createTestUser(Boolean isActive) {
 		User user = new User();
 		user.setUsername("carroyom");
 		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
 		user.setIsActive(isActive);
+
 		return Optional.of(user);
 	}
 }
