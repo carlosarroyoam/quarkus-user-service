@@ -24,8 +24,8 @@ import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
