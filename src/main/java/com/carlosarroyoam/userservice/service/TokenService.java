@@ -15,12 +15,16 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TokenService {
 
-	@ConfigProperty(name = AppConstants.JWT_ISSUER_PROPERTY)
-	private String issuer;
+	private final String issuer;
+
+	public TokenService(@ConfigProperty(name = AppConstants.JWT_ISSUER_PROPERTY) String issuer) {
+		this.issuer = issuer;
+	}
 
 	public String generateToken(User user) {
-		return Jwt.issuer(issuer).upn(user.getUsername())
-				.groups(new HashSet<>(Stream.of(user.getRole().split(",")).collect(Collectors.toSet()))).sign();
+		HashSet<String> roles = new HashSet<>(Stream.of(user.getRole().split(",")).collect(Collectors.toSet()));
+
+		return Jwt.issuer(issuer).upn(user.getUsername()).groups(roles).sign();
 	}
 
 }
