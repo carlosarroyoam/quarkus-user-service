@@ -3,10 +3,6 @@ package com.carlosarroyoam.userservice.model;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-import io.quarkus.security.jpa.Password;
-import io.quarkus.security.jpa.Roles;
-import io.quarkus.security.jpa.UserDefinition;
-import io.quarkus.security.jpa.Username;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +13,6 @@ import lombok.Data;
 
 @Entity
 @Table(name = "users")
-@UserDefinition
 @Data
 public class User implements Serializable {
 
@@ -37,15 +32,12 @@ public class User implements Serializable {
 	private String email;
 
 	@Column(nullable = false, unique = true)
-	@Username
 	private String username;
 
 	@Column(nullable = false)
-	@Password
 	private String password;
 
 	@Column(nullable = false)
-	@Roles
 	private String role;
 
 	@Column(nullable = false)
