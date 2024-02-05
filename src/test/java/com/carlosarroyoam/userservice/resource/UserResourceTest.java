@@ -150,7 +150,7 @@ class UserResourceTest {
 		body.put("confirm_password", "new-secret");
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/" + 1L + "/change-password").then()
-				.statusCode(Status.OK.getStatusCode());
+				.statusCode(Status.NO_CONTENT.getStatusCode());
 	}
 
 	@Test

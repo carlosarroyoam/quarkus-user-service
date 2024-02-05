@@ -84,7 +84,7 @@ public class UserResource {
 			@Valid ChangePasswordRequest changePasswordRequest) {
 		UserResponse userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		userService.changePassword(userByUsername.getId(), changePasswordRequest);
-		return RestResponse.ok();
+		return RestResponse.noContent();
 	}
 
 	@DELETE
