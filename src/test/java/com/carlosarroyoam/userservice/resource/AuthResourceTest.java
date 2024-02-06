@@ -22,14 +22,9 @@ class AuthResourceTest {
 		loginRequest.setUsername("carroyom");
 		loginRequest.setPassword("secret");
 
-		given()
-		.contentType(ContentType.JSON)
-		.body(loginRequest)
-		.when().post("/api/v1/auth/signin")
-		.then()
-		.statusCode(Status.OK.getStatusCode())
-		.body("username", is(not(nullValue())))
-		.body("access_token", is(not(nullValue())));
+		given().contentType(ContentType.JSON).body(loginRequest).when().post("/api/v1/auth/signin").then()
+				.statusCode(Status.OK.getStatusCode()).body("username", is(not(nullValue())))
+				.body("access_token", is(not(nullValue())));
 	}
 
 	@Test
@@ -38,12 +33,8 @@ class AuthResourceTest {
 		loginRequest.setUsername("nonExist");
 		loginRequest.setPassword("nonExist");
 
-		given()
-		.contentType(ContentType.JSON)
-		.body(loginRequest)
-		.when().post("/api/v1/auth/signin")
-		.then()
-		.statusCode(Status.UNAUTHORIZED.getStatusCode());
+		given().contentType(ContentType.JSON).body(loginRequest).when().post("/api/v1/auth/signin").then()
+				.statusCode(Status.UNAUTHORIZED.getStatusCode());
 	}
 
 }

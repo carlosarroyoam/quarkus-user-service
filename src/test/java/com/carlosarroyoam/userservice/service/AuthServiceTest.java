@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.carlosarroyoam.userservice.constant.AppMessages;
+import com.carlosarroyoam.userservice.config.AppMessages;
 import com.carlosarroyoam.userservice.dto.LoginRequest;
 import com.carlosarroyoam.userservice.dto.LoginResponse;
 import com.carlosarroyoam.userservice.model.User;
@@ -33,6 +33,9 @@ class AuthServiceTest {
 
 	@InjectMock
 	private TokenService tokenService;
+
+	@Inject
+	private AppMessages messages;
 
 	@Test
 	@DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
@@ -61,7 +64,7 @@ class AuthServiceTest {
 
 		Throwable ex = assertThrows(AuthenticationFailedException.class, () -> authService.auth(loginRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ACCOUNT_NOT_FOUND_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.userAccountNotFound()));
 		assertThat(ex, instanceOf(AuthenticationFailedException.class));
 	}
 
@@ -76,7 +79,7 @@ class AuthServiceTest {
 
 		Throwable ex = assertThrows(AuthenticationFailedException.class, () -> authService.auth(loginRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.unauthorizedCredentials()));
 		assertThat(ex, instanceOf(AuthenticationFailedException.class));
 	}
 
@@ -91,7 +94,7 @@ class AuthServiceTest {
 
 		Throwable ex = assertThrows(AuthenticationFailedException.class, () -> authService.auth(loginRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ACCOUNT_NOT_ACTIVE_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.userAccountNotActive()));
 		assertThat(ex, instanceOf(AuthenticationFailedException.class));
 	}
 

@@ -12,15 +12,19 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.carlosarroyoam.userservice.constant.AppMessages;
+import com.carlosarroyoam.userservice.config.AppMessages;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 
 @QuarkusTest
 class UserResourceTest {
+
+	@Inject
+	private AppMessages messages;
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
@@ -48,8 +52,7 @@ class UserResourceTest {
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void testFindByIdEndpointWithNonExistingUser() {
 		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 10000L).then()
-				.statusCode(Status.NOT_FOUND.getStatusCode())
-				.body("message", equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
 	@Test
@@ -80,7 +83,7 @@ class UserResourceTest {
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode())
-				.body("message", equalTo(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE));
+				.body("message", equalTo(messages.usernameAlreadyTaken()));
 	}
 
 	@Test
@@ -95,8 +98,7 @@ class UserResourceTest {
 		body.put("age", 28);
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode())
-				.body("message", equalTo(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
+				.statusCode(Status.BAD_REQUEST.getStatusCode()).body("message", equalTo(messages.emailAlreadyTaken()));
 	}
 
 	@Test
@@ -122,8 +124,7 @@ class UserResourceTest {
 		body.put("age", 29);
 
 		given().contentType(ContentType.JSON).body(body).when().patch("/api/v1/users/" + 1000L).then()
-				.statusCode(Status.NOT_FOUND.getStatusCode())
-				.body("message", equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
 	@Test
@@ -137,8 +138,7 @@ class UserResourceTest {
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void testDeleteEndpointWithNonExistingUser() {
 		given().contentType(ContentType.JSON).when().delete("/api/v1/users/" + 1000L).then()
-				.statusCode(Status.NOT_FOUND.getStatusCode())
-				.body("message", equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
 	@Test
@@ -163,7 +163,7 @@ class UserResourceTest {
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/" + 1L + "/change-password").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode())
-				.body("message", equalTo(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE));
+				.body("message", equalTo(messages.unauthorizedCredentials()));
 	}
 
 	@Test
@@ -176,7 +176,7 @@ class UserResourceTest {
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/" + 1L + "/change-password").then()
 				.statusCode(Status.BAD_REQUEST.getStatusCode())
-				.body("message", equalTo(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE));
+				.body("message", equalTo(messages.passwordsDoesntMatch()));
 	}
 
 	@Test

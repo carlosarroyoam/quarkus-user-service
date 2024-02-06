@@ -16,7 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import com.carlosarroyoam.userservice.constant.AppMessages;
+import com.carlosarroyoam.userservice.config.AppMessages;
 import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
 import com.carlosarroyoam.userservice.dto.CreateUserRequest;
 import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
@@ -38,6 +38,9 @@ class UserServiceTest {
 
 	@InjectMock
 	private UserRepository userRepository;
+
+	@Inject
+	private AppMessages messages;
 
 	@Test
 	@DisplayName("Should return list of users")
@@ -71,7 +74,7 @@ class UserServiceTest {
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findById(1L));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.userNotFound()));
 		assertThat(ex, instanceOf(NotFoundException.class));
 	}
 
@@ -94,7 +97,7 @@ class UserServiceTest {
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findByUsername("carroyom"));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.userNotFound()));
 		assertThat(ex, instanceOf(NotFoundException.class));
 	}
 
@@ -131,7 +134,7 @@ class UserServiceTest {
 
 		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.usernameAlreadyTaken()));
 		assertThat(ex, instanceOf(BadRequestException.class));
 	}
 
@@ -148,7 +151,7 @@ class UserServiceTest {
 
 		Throwable ex = assertThrows(BadRequestException.class, () -> userService.create(createUserRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.emailAlreadyTaken()));
 		assertThat(ex, instanceOf(BadRequestException.class));
 	}
 
@@ -183,7 +186,7 @@ class UserServiceTest {
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.update(1L, updateUserRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.userNotFound()));
 		assertThat(ex, instanceOf(NotFoundException.class));
 	}
 
@@ -204,7 +207,7 @@ class UserServiceTest {
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.deleteById(1L));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.userNotFound()));
 		assertThat(ex, instanceOf(NotFoundException.class));
 	}
 
@@ -238,7 +241,7 @@ class UserServiceTest {
 		Throwable ex = assertThrows(BadRequestException.class,
 				() -> userService.changePassword(1L, changePasswordRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.unauthorizedCredentials()));
 		assertThat(ex, instanceOf(BadRequestException.class));
 	}
 
@@ -256,7 +259,7 @@ class UserServiceTest {
 		Throwable ex = assertThrows(BadRequestException.class,
 				() -> userService.changePassword(1L, changePasswordRequest));
 
-		assertThat(ex.getMessage(), equalTo(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE));
+		assertThat(ex.getMessage(), equalTo(messages.passwordsDoesntMatch()));
 		assertThat(ex, instanceOf(BadRequestException.class));
 	}
 

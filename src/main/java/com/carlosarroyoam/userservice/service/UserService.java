@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.jboss.logging.Logger;
 
-import com.carlosarroyoam.userservice.constant.AppMessages;
+import com.carlosarroyoam.userservice.config.AppMessages;
 import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
 import com.carlosarroyoam.userservice.dto.CreateUserRequest;
 import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
@@ -29,12 +29,15 @@ public class UserService {
 	private static final Logger LOG = Logger.getLogger(UserService.class);
 	private final UserRepository userRepository;
 	private final UserMapper mapper;
+	private final AppMessages messages;
 	private final Clock clock;
 
 	@Inject
-	public UserService(final UserRepository userRepository, final UserMapper mapper, final Clock clock) {
+	public UserService(final UserRepository userRepository, final UserMapper mapper, AppMessages messages,
+			final Clock clock) {
 		this.userRepository = userRepository;
 		this.mapper = mapper;
+		this.messages = messages;
 		this.clock = clock;
 	}
 
@@ -44,8 +47,8 @@ public class UserService {
 
 	public UserResponse findById(Long userId) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
-			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+			LOG.warn(messages.userWithIdNotFound(userId));
+			return new NotFoundException(messages.userNotFound());
 		});
 
 		return mapper.toDto(userById);
@@ -53,24 +56,25 @@ public class UserService {
 
 	public UserResponse findByUsername(String username) {
 		User userByUsername = userRepository.findByUsernameOptional(username).orElseThrow(() -> {
-			LOG.warnf(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, username);
-			return new NotFoundException(AppMessages.USER_USERNAME_NOT_FOUND_EXCEPTION_MESSAGE);
+			LOG.warn(messages.userWithUsernameNotFound(username));
+			return new NotFoundException(messages.userNotFound());
 		});
 
 		return mapper.toDto(userByUsername);
 	}
 
 	public UserResponse create(CreateUserRequest createUserRequest) {
-		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserRequest.getUsername()).isPresent();
+		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserRequest.getUsername())
+				.isPresent();
 		if (Boolean.TRUE.equals(existsUserWithUsername)) {
-			LOG.warnf(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
-			throw new BadRequestException(AppMessages.USERNAME_ALREADY_EXISTS_EXCEPTION_MESSAGE);
+			LOG.warn(messages.usernameAlreadyTakenDetailed(createUserRequest.getUsername()));
+			throw new BadRequestException(messages.usernameAlreadyTaken());
 		}
 
 		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserRequest.getEmail()).isPresent();
 		if (Boolean.TRUE.equals(existsUserWithEmail)) {
-			LOG.warnf(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_DETAILED_MESSAGE, createUserRequest.getUsername());
-			throw new BadRequestException(AppMessages.EMAIL_ALREADY_EXISTS_EXCEPTION_MESSAGE);
+			LOG.warn(messages.emailAlreadyTakenDetailed(createUserRequest.getEmail()));
+			throw new BadRequestException(messages.emailAlreadyTaken());
 		}
 
 		ZonedDateTime now = ZonedDateTime.now(clock);
@@ -87,8 +91,8 @@ public class UserService {
 
 	public UserResponse update(Long userId, UpdateUserRequest updateUserRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
-			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+			LOG.warn(messages.userWithIdNotFound(userId));
+			return new NotFoundException(messages.userNotFound());
 		});
 
 		if (updateUserRequest.getName() != null)
@@ -104,8 +108,8 @@ public class UserService {
 
 	public void deleteById(Long userId) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
-			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+			LOG.warn(messages.userWithIdNotFound(userId));
+			return new NotFoundException(messages.userNotFound());
 		});
 
 		userById.setIsActive(Boolean.FALSE);
@@ -116,19 +120,18 @@ public class UserService {
 
 	public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
-			LOG.warnf(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_DETAILED_MESSAGE, userId);
-			return new NotFoundException(AppMessages.USER_ID_NOT_FOUND_EXCEPTION_MESSAGE);
+			LOG.warn(messages.userWithIdNotFound(userId));
+			return new NotFoundException(messages.userNotFound());
 		});
 
 		if (!BcryptUtil.matches(changePasswordRequest.getCurrentPassword(), userById.getPassword())) {
-			LOG.warnf(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_DETAILED_MESSAGE,
-					changePasswordRequest.getCurrentPassword());
-			throw new BadRequestException(AppMessages.UNAUTHORIZED_CREDENTIALS_EXCEPTION_MESSAGE);
+			LOG.warn(messages.unauthorizedCredentialsDetailed(userById.getUsername()));
+			throw new BadRequestException(messages.unauthorizedCredentials());
 		}
 
 		if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
-			LOG.warnf(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_MESSAGE);
-			throw new BadRequestException(AppMessages.PASSWORDS_NOT_MATCH_EXCEPTION_DETAILED_MESSAGE);
+			LOG.warn(messages.passwordsDoesntMatch());
+			throw new BadRequestException(messages.passwordsDoesntMatch());
 		}
 
 		userById.setPassword(BcryptUtil.bcryptHash(changePasswordRequest.getNewPassword()));
