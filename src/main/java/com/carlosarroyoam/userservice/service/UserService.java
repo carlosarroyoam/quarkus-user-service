@@ -42,7 +42,8 @@ public class UserService {
 	}
 
 	public List<UserResponse> findAll() {
-		return mapper.toDtos(userRepository.listAll());
+		List<User> users = userRepository.listAll();
+		return mapper.toDtos(users);
 	}
 
 	public UserResponse findById(Long userId) {

@@ -43,30 +43,34 @@ class ExceptionMappers {
 
 	@ServerExceptionMapper
 	public Response mapConstraintViolationException(ConstraintViolationException ex) {
+		Status status = Status.BAD_REQUEST;
+
 		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
-		appExceptionResponse.setMessage(Status.BAD_REQUEST.getReasonPhrase());
-		appExceptionResponse.setDetails(
-				ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet()));
-		appExceptionResponse.setCode(Status.BAD_REQUEST.getStatusCode());
-		appExceptionResponse.setStatus(Status.BAD_REQUEST.getReasonPhrase());
+		appExceptionResponse.setMessage("Request data is not valid");
+		appExceptionResponse.setCode(status.getStatusCode());
+		appExceptionResponse.setStatus(status.getReasonPhrase());
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
+		appExceptionResponse.setDetails(
+				ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet()));
 
-		return Response.status(Status.BAD_REQUEST.getStatusCode()).entity(appExceptionResponse).build();
+		return Response.status(status.getStatusCode()).entity(appExceptionResponse).build();
 	}
 
 	@ServerExceptionMapper
 	public Response mapException(Exception ex) {
+		Status status = Status.INTERNAL_SERVER_ERROR;
+
 		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
 		appExceptionResponse.setMessage("Whoops! Something went wrong");
-		appExceptionResponse.setCode(Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		appExceptionResponse.setStatus(Status.INTERNAL_SERVER_ERROR.getReasonPhrase());
+		appExceptionResponse.setCode(status.getStatusCode());
+		appExceptionResponse.setStatus(status.getReasonPhrase());
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
 		LOG.error(ex.getMessage());
 
-		return Response.status(Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(appExceptionResponse).build();
+		return Response.status(status.getStatusCode()).entity(appExceptionResponse).build();
 	}
 
 }
