@@ -19,7 +19,7 @@ class TokenServiceTest {
 
 	@Test
 	@DisplayName("Should return token")
-	void testGenerateToken() {
+	void shouldReturnToken() {
 		User user = new User();
 		user.setUsername("carroyom");
 		user.setRole("Admin");

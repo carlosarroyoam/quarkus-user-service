@@ -17,7 +17,7 @@ import jakarta.ws.rs.core.Response.Status;
 class AuthResourceTest {
 
 	@Test
-	void testAuthEndpointWithCorrectUserCredentials() {
+	void shouldReturnOkWhenAuthUserWithValidCredentials() {
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
 		loginRequest.setPassword("secret");
@@ -28,7 +28,7 @@ class AuthResourceTest {
 	}
 
 	@Test
-	void testAuthEndpointWithIncorrectUserCredentials() {
+	void shouldReturnUnauthorizedWhenAuthUserWithNonValidCredentials() {
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("nonExist");
 		loginRequest.setPassword("nonExist");

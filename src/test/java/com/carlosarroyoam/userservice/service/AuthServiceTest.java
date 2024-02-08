@@ -39,7 +39,7 @@ class AuthServiceTest {
 
 	@Test
 	@DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
-	void testAuthsUserWithCorrectCredentials() {
+	void shouldReturnLoginResponseWhenAuthWithValidCredentials() {
 		Optional<User> user = createTestUser(true);
 		String jwt = createTestToken();
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(user);
@@ -57,7 +57,7 @@ class AuthServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when attempt to auth with non existing user")
-	void testAuthFailsWithNonExistingUser() {
+	void shouldThrowExceptionWhenAuthWithNonExistingUser() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 
 		LoginRequest loginRequest = new LoginRequest();
@@ -72,7 +72,7 @@ class AuthServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when attempt to auth with invalid credentials")
-	void testAuthFailsWithWrongCredentials() {
+	void shouldThrowExceptionWhenAuthWithInvalidCredentials() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
 
 		LoginRequest loginRequest = new LoginRequest();
@@ -87,7 +87,7 @@ class AuthServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when attempt to auth an inactive user")
-	void testAuthFailsWithInactiveUser() {
+	void shouldThrowExceptionWhenAuthWithInactiveUser() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(false));
 
 		LoginRequest loginRequest = new LoginRequest();

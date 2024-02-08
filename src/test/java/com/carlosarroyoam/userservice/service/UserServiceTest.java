@@ -43,8 +43,8 @@ class UserServiceTest {
 	private AppMessages messages;
 
 	@Test
-	@DisplayName("Should return list of users")
-	void testFindAllRetrievesListOfUsers() {
+	@DisplayName("Should return List<UserResponse> when find all")
+	void shouldReturnUsersListWhenFindAll() {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.listAll()).thenReturn(List.of(user.get()));
 
@@ -56,8 +56,8 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("Should return user when find user with existing id")
-	void testFindByIdRetrievesUser() {
+	@DisplayName("Should return UserResponse when find user with existing userId")
+	void shouldReturnUserResponseWhenFindUserWithExistingId() {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(user);
 
@@ -69,7 +69,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when find user with non existing id")
-	void testFindByIdFailsWithNonExistingUser() {
+	void shouldThrowExceptionWhenFindUserWithNonExistingId() {
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.empty());
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findById(1L));
@@ -79,8 +79,8 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("Should return user when find user with existing username")
-	void testFindByUsernameRetrievesUser() {
+	@DisplayName("Should return UserResponse when find user with existing username")
+	void shouldReturnUserResponseWhenFindUserWithExistingUsername() {
 		Optional<User> user = createTestUser(false);
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(user);
 
@@ -92,7 +92,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when find user with non existing username")
-	void testFindByUsernameFailsWithNonExistingUsername() {
+	void shouldThrowExceptionWhenFindUserWithNonExistingUsername() {
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.findByUsername("carroyom"));
@@ -102,8 +102,8 @@ class UserServiceTest {
 	}
 
 	@Test
-	@DisplayName("Should create user with valid data")
-	void testCreateUser() {
+	@DisplayName("Should create user when valid data is provided")
+	void shouldCreateUserWhenProvideValidData() {
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setEmail("carroyom@mail.com");
 		createUserRequest.setUsername("carroyom");
@@ -123,7 +123,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when create user with existing username")
-	void testCreateUserFailsWithExistingUsername() {
+	void shouldThrowExceptionWhenCreateUserWithExistingUsername() {
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setEmail("carroyom@mail.com");
 		createUserRequest.setUsername("carroyom");
@@ -140,7 +140,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when create user with existing email")
-	void testCreateUserFailsWithExistingEmail() {
+	void shouldThrowExceptionWhenCreateUserWithExistingEmail() {
 		CreateUserRequest createUserRequest = new CreateUserRequest();
 		createUserRequest.setEmail("carroyom@mail.com");
 		createUserRequest.setUsername("carroyom");
@@ -157,7 +157,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should update user with valid data")
-	void testUpdateUser() {
+	void shouldUpdateUserWhenProvideValidData() {
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 		updateUserRequest.setName("Carlos Arroyo Martínez");
 		updateUserRequest.setAge(29);
@@ -177,7 +177,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when update non existing user")
-	void testUpdateUserFailsWithNonExistingUser() {
+	void shouldThrowExceptionWhenUpdateWithNonExistingUser() {
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 		updateUserRequest.setName("Carlos Arroyo Martínez");
 		updateUserRequest.setAge(29);
@@ -192,7 +192,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should delete a user")
-	void testDeleteUser() {
+	void shouldDeleteUserWhenProvideExistingId() {
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(createTestUser(true));
 
 		userService.deleteById(1L);
@@ -202,7 +202,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when delete a non existing user")
-	void testDeleteUserFailsWithNonExistingUser() {
+	void shouldThrowExceptionWhenDeleteWithNonExistingUser() {
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.empty());
 
 		Throwable ex = assertThrows(NotFoundException.class, () -> userService.deleteById(1L));
@@ -213,7 +213,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should change user password with valid credentials")
-	void testChangeUserPassword() {
+	void shouldChangePasswordWhenProvideValidCredentials() {
 		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
 		changePasswordRequest.setCurrentPassword("secret");
 		changePasswordRequest.setNewPassword("new-secret");
@@ -229,7 +229,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when change user password with non valid credentials")
-	void testChangeUserPasswordFailsWithNonValidCredentials() {
+	void shouldThrowExceptionWhenChangePasswordWithNonValidCredentials() {
 		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
 		changePasswordRequest.setCurrentPassword("non-valid-secret");
 		changePasswordRequest.setNewPassword("new-secret");
@@ -247,7 +247,7 @@ class UserServiceTest {
 
 	@Test
 	@DisplayName("Should throw exception when change user password with non valid confirm password")
-	void testChangeUserPasswordFailsWithNonValidConfirmPassword() {
+	void shouldThrowExceptionWhenChangePasswordWithNonValidConfirmPassword() {
 		ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
 		changePasswordRequest.setCurrentPassword("secret");
 		changePasswordRequest.setNewPassword("new-secret");
