@@ -40,8 +40,10 @@ class AuthServiceTest {
 	@Test
 	@DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
 	void testAuthsUserWithCorrectCredentials() {
-		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(createTestUser(true));
-		Mockito.when(tokenService.generateToken(Mockito.any(User.class))).thenReturn(createTestToken());
+		Optional<User> user = createTestUser(true);
+		String jwt = createTestToken();
+		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(user);
+		Mockito.when(tokenService.generateToken(Mockito.any(User.class))).thenReturn(jwt);
 
 		LoginRequest loginRequest = new LoginRequest();
 		loginRequest.setUsername("carroyom");
@@ -49,8 +51,8 @@ class AuthServiceTest {
 
 		LoginResponse loginResponse = authService.auth(loginRequest);
 
-		assertThat(loginResponse.getUsername(), equalTo("carroyom"));
-		assertThat(loginResponse.getAccessToken(), equalTo("eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW"));
+		assertThat(loginResponse.getUsername(), equalTo(user.get().getUsername()));
+		assertThat(loginResponse.getAccessToken(), equalTo(jwt));
 	}
 
 	@Test

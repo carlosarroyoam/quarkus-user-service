@@ -22,19 +22,19 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(length = 128)
 	private String name;
 
 	@Column
 	private Integer age;
 
-	@Column(nullable = false, unique = true)
+	@Column(length = 128, nullable = false, unique = true)
 	private String email;
 
 	@Column(nullable = false, unique = true)
 	private String username;
 
-	@Column(nullable = false)
+	@Column(length = 128, nullable = false)
 	private String password;
 
 	@Column(nullable = false)
