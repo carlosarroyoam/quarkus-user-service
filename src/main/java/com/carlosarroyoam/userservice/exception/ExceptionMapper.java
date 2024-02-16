@@ -4,7 +4,6 @@ import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import com.carlosarroyoam.userservice.dto.AppExceptionResponse;
@@ -13,13 +12,13 @@ import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
 class ExceptionMappers {
 
-	private static final Logger LOG = Logger.getLogger(ExceptionMappers.class);
 	private final UriInfo uriInfo;
 	private final Clock clock;
 
@@ -31,14 +30,16 @@ class ExceptionMappers {
 
 	@ServerExceptionMapper
 	public Response mapWebApplicationException(WebApplicationException ex) {
+		Status status = Status.fromStatusCode(ex.getResponse().getStatus());
+
 		AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
 		appExceptionResponse.setMessage(ex.getMessage());
-		appExceptionResponse.setCode(ex.getResponse().getStatus());
-		appExceptionResponse.setStatus(ex.getResponse().getStatusInfo().getReasonPhrase());
+		appExceptionResponse.setCode(status.getStatusCode());
+		appExceptionResponse.setStatus(status.getReasonPhrase());
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
-		return Response.status(ex.getResponse().getStatus()).entity(appExceptionResponse).build();
+		return Response.status(status).entity(appExceptionResponse).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	@ServerExceptionMapper
@@ -54,7 +55,7 @@ class ExceptionMappers {
 		appExceptionResponse.setDetails(
 				ex.getConstraintViolations().stream().map(ConstraintViolation::getMessage).collect(Collectors.toSet()));
 
-		return Response.status(status.getStatusCode()).entity(appExceptionResponse).build();
+		return Response.status(status).entity(appExceptionResponse).type(MediaType.APPLICATION_JSON).build();
 	}
 
 	@ServerExceptionMapper
@@ -68,9 +69,9 @@ class ExceptionMappers {
 		appExceptionResponse.setPath(uriInfo.getPath());
 		appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
 
-		LOG.error(ex.getMessage());
+		ex.printStackTrace();
 
-		return Response.status(status.getStatusCode()).entity(appExceptionResponse).build();
+		return Response.status(status).entity(appExceptionResponse).type(MediaType.APPLICATION_JSON).build();
 	}
 
 }
