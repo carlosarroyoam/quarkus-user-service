@@ -12,10 +12,8 @@ import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.security.AuthenticationFailedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 
 @ApplicationScoped
-@Transactional
 public class AuthService {
 
 	private static final Logger LOG = Logger.getLogger(AuthService.class);
@@ -47,8 +45,8 @@ public class AuthService {
 		}
 
 		LoginResponse loginResponse = new LoginResponse();
-		loginResponse.setAccessToken(tokenService.generateToken(userByUsername));
 		loginResponse.setUsername(userByUsername.getUsername());
+		loginResponse.setAccessToken(tokenService.generateToken(userByUsername));
 		return loginResponse;
 	}
 

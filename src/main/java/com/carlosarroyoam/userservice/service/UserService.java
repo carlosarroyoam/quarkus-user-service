@@ -23,7 +23,6 @@ import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
-@Transactional
 public class UserService {
 
 	private static final Logger LOG = Logger.getLogger(UserService.class);
@@ -64,6 +63,7 @@ public class UserService {
 		return mapper.toDto(userByUsername);
 	}
 
+	@Transactional
 	public UserResponse create(CreateUserRequest createUserRequest) {
 		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserRequest.getUsername())
 				.isPresent();
@@ -90,6 +90,7 @@ public class UserService {
 		return mapper.toDto(user);
 	}
 
+	@Transactional
 	public UserResponse update(Long userId, UpdateUserRequest updateUserRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.warn(messages.userWithIdNotFound(userId));
@@ -107,6 +108,7 @@ public class UserService {
 		return mapper.toDto(userById);
 	}
 
+	@Transactional
 	public void deleteById(Long userId) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.warn(messages.userWithIdNotFound(userId));
@@ -119,6 +121,7 @@ public class UserService {
 		userRepository.persist(userById);
 	}
 
+	@Transactional
 	public void changePassword(Long userId, ChangePasswordRequest changePasswordRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.warn(messages.userWithIdNotFound(userId));
