@@ -61,7 +61,7 @@ class UserResourceTest {
 		Map<String, Object> body = new HashMap<>();
 		body.put("name", "Cathy Stefania Guido Rojas");
 		body.put("email", "cguidor@mail.com");
-		body.put("username", "cguidor");
+		body.put("username", "cguidor1995");
 		body.put("password", "secret");
 		body.put("role", "User");
 		body.put("age", 28);
@@ -170,7 +170,7 @@ class UserResourceTest {
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidConfirmPassword() {
 		Map<String, Object> body = new HashMap<>();
-		body.put("current_password", "new-secret");
+		body.put("current_password", "secret");
 		body.put("new_password", "new-secret");
 		body.put("confirm_password", "non-valid-new-secret");
 
@@ -181,8 +181,8 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void shouldReturnUserWhenCallUsersMeEndpoint() {
-		given().contentType(ContentType.JSON).when().get("/api/v1/users/me").then()
+	void shouldReturnUserWhenCallUsersSelfEndpoint() {
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/self").then()
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))

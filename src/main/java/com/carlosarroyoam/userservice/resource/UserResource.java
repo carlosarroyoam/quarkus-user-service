@@ -97,9 +97,9 @@ public class UserResource {
 	}
 
 	@GET
-	@Path("/me")
+	@Path("/self")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RestResponse<UserResponse> me(@Context SecurityContext securityContext) {
+	public RestResponse<UserResponse> self(@Context SecurityContext securityContext) {
 		UserResponse userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(userByUsername);
 	}
