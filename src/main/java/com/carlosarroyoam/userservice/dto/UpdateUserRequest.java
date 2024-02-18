@@ -21,6 +21,6 @@ public class UpdateUserRequest implements Serializable {
 	@NotNull(message = "Age should not be null")
 	@Min(message = "Age should be min 18", value = 18)
 	@Max(message = "Age should be max 100", value = 100)
-	private Integer age;
+	private Byte age;
 
 }

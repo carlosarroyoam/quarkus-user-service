@@ -160,7 +160,7 @@ class UserServiceTest {
 	void shouldUpdateUserWhenProvideValidData() {
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 		updateUserRequest.setName("Carlos Arroyo Martínez");
-		updateUserRequest.setAge(29);
+		updateUserRequest.setAge(Byte.valueOf("29"));
 
 		Optional<User> user = createTestUser(true);
 		user.get().setName(updateUserRequest.getName());
@@ -180,7 +180,7 @@ class UserServiceTest {
 	void shouldThrowExceptionWhenUpdateWithNonExistingUser() {
 		UpdateUserRequest updateUserRequest = new UpdateUserRequest();
 		updateUserRequest.setName("Carlos Arroyo Martínez");
-		updateUserRequest.setAge(29);
+		updateUserRequest.setAge(Byte.valueOf("29"));
 
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(Optional.empty());
 
