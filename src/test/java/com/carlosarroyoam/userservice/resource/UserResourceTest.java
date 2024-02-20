@@ -28,7 +28,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testFindAllEndpoint() {
+	void shouldReturnListOfUsersWhenCallFindAllEndpoint() {
 		given().contentType(ContentType.JSON).when().get("/api/v1/users").then().statusCode(Status.OK.getStatusCode())
 				.body("$", is(not(emptyArray()))).body("$.id", is(not(nullValue())))
 				.body("$.name", is(not(nullValue()))).body("$.age", is(not(nullValue())))
@@ -39,7 +39,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testFindByIdEndpointWithExistingUser() {
+	void shouldReturnUserWhenCallFindByIdEndpointWithExistingUserId() {
 		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 1L).then()
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
@@ -50,18 +50,18 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testFindByIdEndpointWithNonExistingUser() {
+	void shouldReturnNotFoundWhenCallFindByIdEndpointWithNonExistingUserId() {
 		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 10000L).then()
 				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testCreateEndpoint() {
+	void shouldReturnCreatedWhenCallCreateEndpointWithValidData() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("name", "Cathy Stefania Guido Rojas");
 		body.put("email", "cguidor@mail.com");
-		body.put("username", "cguidor");
+		body.put("username", "cguidor1995");
 		body.put("password", "secret");
 		body.put("role", "User");
 		body.put("age", 28);
@@ -72,7 +72,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testCreateEndpointWithExistingUsername() {
+	void shouldReturnBadRequestWhenCallCreateEndpointWithExistingUsername() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("name", "Cathy Stefania Guido Rojas");
 		body.put("email", "cguidor@mail.com");
@@ -88,7 +88,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testCreateEndpointWithExistingMail() {
+	void shouldReturnBadRequestWhenCallCreateEndpointWithExistingEmail() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("name", "Cathy Stefania Guido Rojas");
 		body.put("email", "carroyom@mail.com");
@@ -103,7 +103,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testUpdateEndpoint() {
+	void shouldReturnUserWhenCallUpdateEndpointWithValidData() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("name", "Carlos Arroyo Martínez");
 		body.put("age", 29);
@@ -118,7 +118,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testUpdateEndpointWithNonExistingUser() {
+	void shouldReturnNotFoundWhenCallUpdateEndpointWithNonExistingUserId() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("name", "Carlos Arroyo Martínez");
 		body.put("age", 29);
@@ -129,21 +129,21 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testDeleteEndpoint() {
+	void shouldReturnNoContentWhenCallDeleteEndpointWithExistingUserId() {
 		given().contentType(ContentType.JSON).when().delete("/api/v1/users/" + 1L).then()
 				.statusCode(Status.NO_CONTENT.getStatusCode());
 	}
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testDeleteEndpointWithNonExistingUser() {
+	void shouldReturnNotFoundWhenCallDeleteEndpointWithNonExistingUserId() {
 		given().contentType(ContentType.JSON).when().delete("/api/v1/users/" + 1000L).then()
 				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testChangePasswordEndpoint() {
+	void shouldReturnNoContentWhenCallChangePasswordEndpointWithValidData() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("current_password", "secret");
 		body.put("new_password", "new-secret");
@@ -155,7 +155,7 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testChangePasswordEndpointWithNonValidCredentials() {
+	void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidCredentials() {
 		Map<String, Object> body = new HashMap<>();
 		body.put("current_password", "non-valid-secret");
 		body.put("new_password", "new-secret");
@@ -168,9 +168,9 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testChangePasswordEndpointWithNonValidConfirmPassword() {
+	void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidConfirmPassword() {
 		Map<String, Object> body = new HashMap<>();
-		body.put("current_password", "new-secret");
+		body.put("current_password", "secret");
 		body.put("new_password", "new-secret");
 		body.put("confirm_password", "non-valid-new-secret");
 
@@ -181,8 +181,8 @@ class UserResourceTest {
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
-	void testMeEndpoint() {
-		given().contentType(ContentType.JSON).when().get("/api/v1/users/me").then()
+	void shouldReturnUserWhenCallUsersSelfEndpoint() {
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/self").then()
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))

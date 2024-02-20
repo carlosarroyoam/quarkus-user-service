@@ -22,31 +22,31 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column
+	@Column(name = "name", length = 128)
 	private String name;
 
-	@Column
-	private Integer age;
+	@Column(name = "age")
+	private Byte age;
 
-	@Column(nullable = false, unique = true)
+	@Column(name = "email", length = 128, nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false, unique = true)
+	@Column(name = "username", length = 128, nullable = false, unique = true)
 	private String username;
 
-	@Column(nullable = false)
+	@Column(name = "password", length = 128, nullable = false)
 	private String password;
 
-	@Column(nullable = false)
+	@Column(name = "role", length = 32, nullable = false)
 	private String role;
 
-	@Column(nullable = false)
+	@Column(name = "is_active", nullable = false)
 	private Boolean isActive;
 
-	@Column(nullable = false)
+	@Column(name = "created_at", nullable = false)
 	private ZonedDateTime createdAt;
 
-	@Column(nullable = false)
+	@Column(name = "updated_at", nullable = false)
 	private ZonedDateTime updatedAt;
 
 }
