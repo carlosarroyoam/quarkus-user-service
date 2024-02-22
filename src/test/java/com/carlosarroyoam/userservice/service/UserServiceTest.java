@@ -117,7 +117,6 @@ class UserServiceTest {
 
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());
-		Mockito.when(roleRepository.findByIdOptional(Mockito.anyLong())).thenReturn(createTestRole());
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
 		UserResponse userResponse = userService.create(createUserRequest);
@@ -270,6 +269,21 @@ class UserServiceTest {
 		assertThat(ex, instanceOf(BadRequestException.class));
 	}
 
+	private Optional<User> createTestUser(Boolean isActive) {
+		Role role = createTestRole().get();
+
+		User user = new User();
+		user.setId(1L);
+		user.setUsername("carroyom");
+		user.setEmail("carroyom@mail.com");
+		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
+		user.setIsActive(isActive);
+		user.setRole(role);
+		user.setRoleId(role.getId());
+
+		return Optional.of(user);
+	}
+
 	private Optional<Role> createTestRole() {
 		Role role = new Role();
 		role.setId(1L);
@@ -277,17 +291,6 @@ class UserServiceTest {
 		role.setDescription("Role for admins users");
 
 		return Optional.of(role);
-	}
-
-	private Optional<User> createTestUser(Boolean isActive) {
-		User user = new User();
-		user.setId(1L);
-		user.setUsername("carroyom");
-		user.setEmail("carroyom@mail.com");
-		user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
-		user.setIsActive(isActive);
-
-		return Optional.of(user);
 	}
 
 }

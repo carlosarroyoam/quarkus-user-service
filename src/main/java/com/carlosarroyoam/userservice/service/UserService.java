@@ -12,9 +12,7 @@ import com.carlosarroyoam.userservice.dto.CreateUserRequest;
 import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
 import com.carlosarroyoam.userservice.dto.UserResponse;
 import com.carlosarroyoam.userservice.mapper.UserMapper;
-import com.carlosarroyoam.userservice.model.Role;
 import com.carlosarroyoam.userservice.model.User;
-import com.carlosarroyoam.userservice.repository.RoleRepository;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.elytron.security.common.BcryptUtil;
@@ -29,16 +27,13 @@ public class UserService {
 
 	private static final Logger LOG = Logger.getLogger(UserService.class);
 	private final UserRepository userRepository;
-	private final RoleRepository roleRepository;
 	private final UserMapper mapper;
 	private final AppMessages messages;
 	private final Clock clock;
 
 	@Inject
-	public UserService(UserRepository userRepository, RoleRepository roleRepository, UserMapper mapper,
-			AppMessages messages, Clock clock) {
+	public UserService(UserRepository userRepository, UserMapper mapper, AppMessages messages, Clock clock) {
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
 		this.mapper = mapper;
 		this.messages = messages;
 		this.clock = clock;
@@ -82,17 +77,11 @@ public class UserService {
 			throw new BadRequestException(messages.emailAlreadyTaken());
 		}
 
-		Role role = roleRepository.findByIdOptional(createUserRequest.getRoleId()).orElseThrow(() -> {
-			LOG.warn(messages.roleNotFound());
-			return new NotFoundException(messages.roleNotFound());
-		});
-
 		ZonedDateTime now = ZonedDateTime.now(clock);
 
 		User user = mapper.toEntity(createUserRequest);
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
 		user.setIsActive(Boolean.FALSE);
-		user.setRole(role);
 		user.setCreatedAt(now);
 		user.setUpdatedAt(now);
 
