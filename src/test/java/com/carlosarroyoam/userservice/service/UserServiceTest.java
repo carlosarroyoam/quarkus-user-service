@@ -21,7 +21,9 @@ import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
 import com.carlosarroyoam.userservice.dto.CreateUserRequest;
 import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
 import com.carlosarroyoam.userservice.dto.UserResponse;
+import com.carlosarroyoam.userservice.model.Role;
 import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.repository.RoleRepository;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.test.InjectMock;
@@ -38,6 +40,9 @@ class UserServiceTest {
 
 	@InjectMock
 	private UserRepository userRepository;
+
+	@InjectMock
+	private RoleRepository roleRepository;
 
 	@Inject
 	private AppMessages messages;
@@ -108,9 +113,11 @@ class UserServiceTest {
 		createUserRequest.setEmail("carroyom@mail.com");
 		createUserRequest.setUsername("carroyom");
 		createUserRequest.setPassword("secret");
+		createUserRequest.setRoleId(1L);
 
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());
+		Mockito.when(roleRepository.findByIdOptional(Mockito.anyLong())).thenReturn(createTestRole());
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
 		UserResponse userResponse = userService.create(createUserRequest);
@@ -261,6 +268,15 @@ class UserServiceTest {
 
 		assertThat(ex.getMessage(), equalTo(messages.passwordsDoesntMatch()));
 		assertThat(ex, instanceOf(BadRequestException.class));
+	}
+
+	private Optional<Role> createTestRole() {
+		Role role = new Role();
+		role.setId(1L);
+		role.setTitle("Admin");
+		role.setDescription("Role for admins users");
+
+		return Optional.of(role);
 	}
 
 	private Optional<User> createTestUser(Boolean isActive) {

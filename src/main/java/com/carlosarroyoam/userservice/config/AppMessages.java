@@ -48,4 +48,7 @@ public interface AppMessages {
 	@Message
 	String usernameAlreadyTakenDetailed(String username);
 
+	@Message
+	String roleNotFound();
+
 }

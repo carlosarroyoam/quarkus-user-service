@@ -14,8 +14,8 @@ public class UserResponse implements Serializable {
 	private Byte age;
 	private String email;
 	private String username;
-	private Long roleId;
 	private Boolean isActive;
+	private Long roleId;
 	private ZonedDateTime createdAt;
 	private ZonedDateTime updatedAt;
 
