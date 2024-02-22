@@ -37,7 +37,7 @@ public class CreateUserRequest implements Serializable {
 	@Size(min = 3, max = 32, message = "Password should be between 3 and 32")
 	private String password;
 
-	@NotBlank(message = "Role should not be blank")
-	private String role;
+	@NotBlank(message = "RoleId should not be blank")
+	private Long roleId;
 
 }

@@ -22,7 +22,7 @@ public class TokenService {
 	}
 
 	public String generateToken(User user) {
-		HashSet<String> roles = new HashSet<>(Stream.of(user.getRole().split(",")).collect(Collectors.toSet()));
+		HashSet<String> roles = new HashSet<>(Stream.of(user.getRole().getTitle()).collect(Collectors.toSet()));
 
 		return Jwt.issuer(issuer).upn(user.getUsername()).groups(roles).sign();
 	}

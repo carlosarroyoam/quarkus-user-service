@@ -44,7 +44,7 @@ class UserResourceTest {
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))
-				.body("role", is(not(nullValue()))).body("is_active", is(not(nullValue())))
+				.body("role_id", is(not(nullValue()))).body("is_active", is(not(nullValue())))
 				.body("created_at", is(not(nullValue()))).body("updated_at", is(not(nullValue())));
 	}
 
@@ -63,7 +63,7 @@ class UserResourceTest {
 		body.put("email", "cguidor@mail.com");
 		body.put("username", "cguidor1995");
 		body.put("password", "secret");
-		body.put("role", "User");
+		body.put("role_id", "User");
 		body.put("age", 28);
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users").then()
@@ -78,7 +78,7 @@ class UserResourceTest {
 		body.put("email", "cguidor@mail.com");
 		body.put("username", "carroyom");
 		body.put("password", "secret");
-		body.put("role", "User");
+		body.put("role_id", "User");
 		body.put("age", 28);
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users").then()
@@ -94,7 +94,7 @@ class UserResourceTest {
 		body.put("email", "carroyom@mail.com");
 		body.put("username", "cguidor");
 		body.put("password", "secret");
-		body.put("role", "User");
+		body.put("role_id", "User");
 		body.put("age", 28);
 
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users").then()
@@ -112,7 +112,7 @@ class UserResourceTest {
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))
-				.body("role", is(not(nullValue()))).body("is_active", is(not(nullValue())))
+				.body("role_id", is(not(nullValue()))).body("is_active", is(not(nullValue())))
 				.body("created_at", is(not(nullValue()))).body("updated_at", is(not(nullValue())));
 	}
 
