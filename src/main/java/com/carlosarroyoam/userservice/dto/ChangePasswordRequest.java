@@ -1,15 +1,11 @@
 package com.carlosarroyoam.userservice.dto;
 
-import java.io.Serializable;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class ChangePasswordRequest implements Serializable {
-
-	private static final long serialVersionUID = -8023584346199877536L;
+public class ChangePasswordRequest {
 
 	@NotBlank(message = "Current password should not be blank")
 	private String currentPassword;

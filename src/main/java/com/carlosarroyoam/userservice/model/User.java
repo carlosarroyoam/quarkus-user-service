@@ -1,6 +1,5 @@
 package com.carlosarroyoam.userservice.model;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import jakarta.persistence.Column;
@@ -17,9 +16,7 @@ import lombok.Data;
 @Entity
 @Table(name = "users")
 @Data
-public class User implements Serializable {
-
-	private static final long serialVersionUID = 4866188536792947164L;
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +39,13 @@ public class User implements Serializable {
 
 	@Column(name = "is_active", nullable = false)
 	private Boolean isActive;
-
-	@Column(name = "role_id", nullable = false)
-	private Long roleId;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-	private Role role;
+//
+//	@Column(name = "role_id", nullable = false)
+//	private Long roleId;
+//
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+//	private Role role;
 
 	@Column(name = "created_at", nullable = false)
 	private ZonedDateTime createdAt;

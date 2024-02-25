@@ -1,6 +1,5 @@
 package com.carlosarroyoam.userservice.dto;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Set;
 
@@ -11,9 +10,8 @@ import lombok.Data;
 
 @JsonInclude(Include.NON_NULL)
 @Data
-public class AppExceptionResponse implements Serializable {
+public class AppExceptionResponse {
 
-	private static final long serialVersionUID = 1982149359567491484L;
 	private String message;
 	private Set<String> details;
 	private Integer code;

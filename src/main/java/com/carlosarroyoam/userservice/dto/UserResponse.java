@@ -1,14 +1,12 @@
 package com.carlosarroyoam.userservice.dto;
 
-import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import lombok.Data;
 
 @Data
-public class UserResponse implements Serializable {
+public class UserResponse {
 
-	private static final long serialVersionUID = -6935255287896729891L;
 	private Long id;
 	private String name;
 	private Byte age;

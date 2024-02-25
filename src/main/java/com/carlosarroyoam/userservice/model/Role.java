@@ -1,6 +1,5 @@
 package com.carlosarroyoam.userservice.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +12,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
-@Table(name = "roles")
-@Data
-public class Role implements Serializable {
-
-	private static final long serialVersionUID = 4866188536792947164L;
+//@Entity
+//@Table(name = "roles")
+//@Data
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

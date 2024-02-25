@@ -1,7 +1,5 @@
 package com.carlosarroyoam.userservice.dto;
 
-import java.io.Serializable;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -11,9 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateUserRequest implements Serializable {
-
-	private static final long serialVersionUID = 3245759926280364595L;
+public class CreateUserRequest {
 
 	@NotBlank(message = "Name should not be blank")
 	@Size(min = 3, max = 128, message = "Name should be between 3 and 128")
