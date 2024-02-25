@@ -22,7 +22,7 @@ class TokenServiceTest {
 	@DisplayName("Should return token")
 	void shouldReturnToken() {
 		Role role = new Role();
-		role.setId(1L);
+		role.setId(1);
 		role.setTitle("App//Admin");
 
 		User user = new User();

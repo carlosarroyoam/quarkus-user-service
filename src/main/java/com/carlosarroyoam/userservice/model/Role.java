@@ -12,14 +12,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-//@Entity
-//@Table(name = "roles")
-//@Data
+@Entity
+@Table(name = "roles")
+@Data
 public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 
 	@Column(name = "title", length = 32, nullable = false)
 	private String title;

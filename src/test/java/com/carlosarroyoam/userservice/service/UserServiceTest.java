@@ -286,7 +286,7 @@ class UserServiceTest {
 
 	private Optional<Role> createTestRole() {
 		Role role = new Role();
-		role.setId(1L);
+		role.setId(1);
 		role.setTitle("Admin");
 		role.setDescription("Role for admins users");
 

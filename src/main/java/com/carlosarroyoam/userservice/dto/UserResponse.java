@@ -13,7 +13,7 @@ public class UserResponse {
 	private String email;
 	private String username;
 	private Boolean isActive;
-	private Long roleId;
+	private Integer roleId;
 	private ZonedDateTime createdAt;
 	private ZonedDateTime updatedAt;
 
