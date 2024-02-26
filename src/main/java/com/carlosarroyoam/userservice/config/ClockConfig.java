@@ -8,7 +8,7 @@ public class ClockConfig {
 
 	@Produces
 	public Clock getClock() {
-		return Clock.systemUTC();
+		return Clock.systemDefaultZone();
 	}
 
 }
