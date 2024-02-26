@@ -1,7 +1,7 @@
 package com.carlosarroyoam.userservice.service;
 
 import java.time.Clock;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.jboss.logging.Logger;
@@ -77,7 +77,7 @@ public class UserService {
 			throw new BadRequestException(messages.emailAlreadyTaken());
 		}
 
-		ZonedDateTime now = ZonedDateTime.now(clock);
+		LocalDateTime now = LocalDateTime.now(clock);
 
 		User user = mapper.toEntity(createUserRequest);
 		user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
@@ -102,7 +102,7 @@ public class UserService {
 		if (updateUserRequest.getAge() != null)
 			userById.setAge(updateUserRequest.getAge());
 
-		userById.setUpdatedAt(ZonedDateTime.now(clock));
+		userById.setUpdatedAt(LocalDateTime.now(clock));
 		userRepository.persist(userById);
 		return mapper.toDto(userById);
 	}
@@ -115,7 +115,7 @@ public class UserService {
 		});
 
 		userById.setIsActive(Boolean.FALSE);
-		userById.setUpdatedAt(ZonedDateTime.now(clock));
+		userById.setUpdatedAt(LocalDateTime.now(clock));
 
 		userRepository.persist(userById);
 	}
@@ -138,7 +138,7 @@ public class UserService {
 		}
 
 		userById.setPassword(BcryptUtil.bcryptHash(changePasswordRequest.getNewPassword()));
-		userById.setUpdatedAt(ZonedDateTime.now(clock));
+		userById.setUpdatedAt(LocalDateTime.now(clock));
 
 		userRepository.persist(userById);
 	}

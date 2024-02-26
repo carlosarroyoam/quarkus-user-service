@@ -1,6 +1,6 @@
 package com.carlosarroyoam.userservice.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,9 +47,9 @@ public class User {
 	private Role role;
 
 	@Column(name = "created_at", nullable = false)
-	private ZonedDateTime createdAt;
+	private LocalDateTime createdAt;
 
 	@Column(name = "updated_at", nullable = false)
-	private ZonedDateTime updatedAt;
+	private LocalDateTime updatedAt;
 
 }

@@ -113,7 +113,7 @@ class UserServiceTest {
 		createUserRequest.setEmail("carroyom@mail.com");
 		createUserRequest.setUsername("carroyom");
 		createUserRequest.setPassword("secret");
-		createUserRequest.setRoleId(1L);
+		createUserRequest.setRoleId(1);
 
 		Mockito.when(userRepository.findByUsernameOptional(Mockito.anyString())).thenReturn(Optional.empty());
 		Mockito.when(userRepository.findByEmailOptional(Mockito.anyString())).thenReturn(Optional.empty());

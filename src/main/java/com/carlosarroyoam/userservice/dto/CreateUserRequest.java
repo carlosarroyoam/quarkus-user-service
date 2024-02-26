@@ -34,6 +34,6 @@ public class CreateUserRequest {
 	private String password;
 
 	@NotNull(message = "Role_id should not be null")
-	private Long roleId;
+	private Integer roleId;
 
 }
