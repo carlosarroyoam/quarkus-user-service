@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.exception;
+package com.carlosarroyoam.userservice.exception.mapper;
 
 import java.time.Clock;
 import java.time.ZonedDateTime;
