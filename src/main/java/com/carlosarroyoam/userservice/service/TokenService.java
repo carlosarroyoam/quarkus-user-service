@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import com.carlosarroyoam.userservice.constant.AppConstants;
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.entity.User;
 
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -6,8 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.carlosarroyoam.userservice.model.Role;
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.entity.Role;
+import com.carlosarroyoam.userservice.entity.User;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

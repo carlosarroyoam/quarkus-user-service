@@ -52,7 +52,7 @@ public class UserResource {
 	@Path("/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<UserResponse> findById(@RestPath Long userId) {
+	public RestResponse<UserResponse> findById(@RestPath("userId") Long userId) {
 		UserResponse userById = userService.findById(userId);
 		return RestResponse.ok(userById);
 	}
@@ -71,7 +71,8 @@ public class UserResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<UserResponse> update(@RestPath Long userId, @Valid UpdateUserRequest updateUserRequest) {
+	public RestResponse<UserResponse> update(@RestPath("userId") Long userId,
+			@Valid UpdateUserRequest updateUserRequest) {
 		UserResponse updatedUser = userService.update(userId, updateUserRequest);
 		return RestResponse.ok(updatedUser);
 	}
@@ -91,7 +92,7 @@ public class UserResource {
 	@Path("/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<Void> deleteById(@RestPath Long userId) {
+	public RestResponse<Void> deleteById(@RestPath("userId") Long userId) {
 		userService.deleteById(userId);
 		return RestResponse.noContent();
 	}

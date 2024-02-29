@@ -11,8 +11,8 @@ import com.carlosarroyoam.userservice.dto.ChangePasswordRequest;
 import com.carlosarroyoam.userservice.dto.CreateUserRequest;
 import com.carlosarroyoam.userservice.dto.UpdateUserRequest;
 import com.carlosarroyoam.userservice.dto.UserResponse;
+import com.carlosarroyoam.userservice.entity.User;
 import com.carlosarroyoam.userservice.mapper.UserMapper;
-import com.carlosarroyoam.userservice.model.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.elytron.security.common.BcryptUtil;

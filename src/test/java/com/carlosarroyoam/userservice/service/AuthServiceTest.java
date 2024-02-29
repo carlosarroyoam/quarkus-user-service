@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import com.carlosarroyoam.userservice.config.AppMessages;
 import com.carlosarroyoam.userservice.dto.LoginRequest;
 import com.carlosarroyoam.userservice.dto.LoginResponse;
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.entity.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 
 import io.quarkus.security.AuthenticationFailedException;

@@ -7,7 +7,7 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import com.carlosarroyoam.userservice.dto.RoleResponse;
-import com.carlosarroyoam.userservice.model.Role;
+import com.carlosarroyoam.userservice.entity.Role;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface RoleMapper {

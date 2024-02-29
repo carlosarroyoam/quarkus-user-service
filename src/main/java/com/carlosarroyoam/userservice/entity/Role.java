@@ -1,4 +1,4 @@
-package com.carlosarroyoam.userservice.model;
+package com.carlosarroyoam.userservice.entity;
 
 import java.util.ArrayList;
 import java.util.List;

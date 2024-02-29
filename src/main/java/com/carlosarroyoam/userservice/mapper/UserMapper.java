@@ -9,7 +9,7 @@ import org.mapstruct.ReportingPolicy;
 
 import com.carlosarroyoam.userservice.dto.CreateUserRequest;
 import com.carlosarroyoam.userservice.dto.UserResponse;
-import com.carlosarroyoam.userservice.model.User;
+import com.carlosarroyoam.userservice.entity.User;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.JAKARTA_CDI, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
