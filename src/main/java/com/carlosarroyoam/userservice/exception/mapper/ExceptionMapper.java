@@ -17,13 +17,13 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
-class ExceptionMappers {
+public class ExceptionMapper {
 
 	private final UriInfo uriInfo;
 	private final Clock clock;
 
 	@Inject
-	public ExceptionMappers(UriInfo uriInfo, Clock clock) {
+	public ExceptionMapper(UriInfo uriInfo, Clock clock) {
 		this.uriInfo = uriInfo;
 		this.clock = clock;
 	}
