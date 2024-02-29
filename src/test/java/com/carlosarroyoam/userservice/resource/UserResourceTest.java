@@ -40,7 +40,7 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void shouldReturnUserWhenCallFindByIdEndpointWithExistingUserId() {
-		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 1L).then()
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/{userId}", 1L).then()
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))
@@ -51,7 +51,7 @@ class UserResourceTest {
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void shouldReturnNotFoundWhenCallFindByIdEndpointWithNonExistingUserId() {
-		given().contentType(ContentType.JSON).when().get("/api/v1/users/" + 10000L).then()
+		given().contentType(ContentType.JSON).when().get("/api/v1/users/{userId}", 10000L).then()
 				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
@@ -108,7 +108,7 @@ class UserResourceTest {
 		body.put("name", "Carlos Arroyo Martínez");
 		body.put("age", 29);
 
-		given().contentType(ContentType.JSON).body(body).when().patch("/api/v1/users/" + 1L).then()
+		given().contentType(ContentType.JSON).body(body).when().patch("/api/v1/users/{userId}", 1L).then()
 				.statusCode(Status.OK.getStatusCode()).body("id", is(not(nullValue())))
 				.body("name", is(not(nullValue()))).body("age", is(not(nullValue())))
 				.body("email", is(not(nullValue()))).body("username", is(not(nullValue())))
@@ -123,21 +123,21 @@ class UserResourceTest {
 		body.put("name", "Carlos Arroyo Martínez");
 		body.put("age", 29);
 
-		given().contentType(ContentType.JSON).body(body).when().patch("/api/v1/users/" + 1000L).then()
+		given().contentType(ContentType.JSON).body(body).when().patch("/api/v1/users/{userId}", 1000L).then()
 				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void shouldReturnNoContentWhenCallDeleteEndpointWithExistingUserId() {
-		given().contentType(ContentType.JSON).when().delete("/api/v1/users/" + 1L).then()
+		given().contentType(ContentType.JSON).when().delete("/api/v1/users/{userId}", 1L).then()
 				.statusCode(Status.NO_CONTENT.getStatusCode());
 	}
 
 	@Test
 	@TestSecurity(user = "carroyom", roles = { "Admin", "User" })
 	void shouldReturnNotFoundWhenCallDeleteEndpointWithNonExistingUserId() {
-		given().contentType(ContentType.JSON).when().delete("/api/v1/users/" + 1000L).then()
+		given().contentType(ContentType.JSON).when().delete("/api/v1/users/{userId}", 1000L).then()
 				.statusCode(Status.NOT_FOUND.getStatusCode()).body("message", equalTo(messages.userNotFound()));
 	}
 
@@ -149,8 +149,8 @@ class UserResourceTest {
 		body.put("new_password", "new-secret");
 		body.put("confirm_password", "new-secret");
 
-		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/" + 1L + "/change-password").then()
-				.statusCode(Status.NO_CONTENT.getStatusCode());
+		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/{userId}/change-password", 1L)
+				.then().statusCode(Status.NO_CONTENT.getStatusCode());
 	}
 
 	@Test
@@ -161,8 +161,8 @@ class UserResourceTest {
 		body.put("new_password", "new-secret");
 		body.put("confirm_password", "new-secret");
 
-		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/" + 1L + "/change-password").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode())
+		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/{userId}/change-password", 1L)
+				.then().statusCode(Status.BAD_REQUEST.getStatusCode())
 				.body("message", equalTo(messages.unauthorizedCredentials()));
 	}
 
@@ -174,8 +174,8 @@ class UserResourceTest {
 		body.put("new_password", "new-secret");
 		body.put("confirm_password", "non-valid-new-secret");
 
-		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/" + 1L + "/change-password").then()
-				.statusCode(Status.BAD_REQUEST.getStatusCode())
+		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/users/{userId}/change-password", 1L)
+				.then().statusCode(Status.BAD_REQUEST.getStatusCode())
 				.body("message", equalTo(messages.passwordsDoesntMatch()));
 	}
 
