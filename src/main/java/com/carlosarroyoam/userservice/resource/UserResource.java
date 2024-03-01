@@ -20,8 +20,8 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
@@ -59,28 +59,24 @@ public class UserResource {
 
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	public RestResponse<Void> create(@Valid CreateUserRequest createUserRequest) {
 		UserResponse createdUser = userService.create(createUserRequest);
 		return RestResponse.created(URI.create("/users/" + createdUser.getId()));
 	}
 
-	@PATCH
+	@PUT
 	@Path("/{userId}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
-	public RestResponse<UserResponse> update(@RestPath("userId") Long userId,
-			@Valid UpdateUserRequest updateUserRequest) {
-		UserResponse updatedUser = userService.update(userId, updateUserRequest);
-		return RestResponse.ok(updatedUser);
+	public RestResponse<Void> update(@RestPath("userId") Long userId, @Valid UpdateUserRequest updateUserRequest) {
+		userService.update(userId, updateUserRequest);
+		return RestResponse.noContent();
 	}
 
 	@POST
 	@Path("/{userId}/change-password")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
 	public RestResponse<Void> changePassword(@Context SecurityContext securityContext,
 			@Valid ChangePasswordRequest changePasswordRequest) {
 		UserResponse userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
@@ -90,7 +86,6 @@ public class UserResource {
 
 	@DELETE
 	@Path("/{userId}")
-	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed("Admin")
 	public RestResponse<Void> deleteById(@RestPath("userId") Long userId) {
 		userService.deleteById(userId);

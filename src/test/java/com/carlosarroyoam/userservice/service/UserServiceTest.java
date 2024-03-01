@@ -175,10 +175,9 @@ class UserServiceTest {
 		Mockito.when(userRepository.findByIdOptional(Mockito.anyLong())).thenReturn(user);
 		Mockito.doNothing().when(userRepository).persist(Mockito.any(User.class));
 
-		UserResponse userResponse = userService.update(1L, updateUserRequest);
+		userService.update(1L, updateUserRequest);
 
-		assertThat(userResponse.getName(), is(user.get().getName()));
-		assertThat(userResponse.getAge(), is(user.get().getAge()));
+		Mockito.verify(userRepository, Mockito.times(1)).persist(Mockito.any(User.class));
 	}
 
 	@Test

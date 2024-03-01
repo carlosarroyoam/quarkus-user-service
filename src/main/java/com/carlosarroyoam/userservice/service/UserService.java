@@ -90,7 +90,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserResponse update(Long userId, UpdateUserRequest updateUserRequest) {
+	public void update(Long userId, UpdateUserRequest updateUserRequest) {
 		User userById = userRepository.findByIdOptional(userId).orElseThrow(() -> {
 			LOG.warn(messages.userWithIdNotFound(userId));
 			return new NotFoundException(messages.userNotFound());
@@ -104,7 +104,6 @@ public class UserService {
 
 		userById.setUpdatedAt(LocalDateTime.now(clock));
 		userRepository.persist(userById);
-		return mapper.toDto(userById);
 	}
 
 	@Transactional
