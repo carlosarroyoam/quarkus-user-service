@@ -64,15 +64,12 @@ public class UserService {
 
 	@Transactional
 	public UserResponse create(CreateUserRequest createUserRequest) {
-		boolean existsUserWithUsername = userRepository.findByUsernameOptional(createUserRequest.getUsername())
-				.isPresent();
-		if (Boolean.TRUE.equals(existsUserWithUsername)) {
+		if (userRepository.findByUsernameOptional(createUserRequest.getUsername()).isPresent()) {
 			LOG.warn(messages.usernameAlreadyTakenDetailed(createUserRequest.getUsername()));
 			throw new BadRequestException(messages.usernameAlreadyTaken());
 		}
 
-		boolean existsUserWithEmail = userRepository.findByEmailOptional(createUserRequest.getEmail()).isPresent();
-		if (Boolean.TRUE.equals(existsUserWithEmail)) {
+		if (userRepository.findByEmailOptional(createUserRequest.getEmail()).isPresent()) {
 			LOG.warn(messages.emailAlreadyTakenDetailed(createUserRequest.getEmail()));
 			throw new BadRequestException(messages.emailAlreadyTaken());
 		}
