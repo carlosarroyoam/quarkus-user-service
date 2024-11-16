@@ -14,7 +14,6 @@ import jakarta.inject.Inject;
 
 @QuarkusTest
 class TokenServiceTest {
-
 	@Inject
 	private TokenService tokenService;
 
@@ -33,5 +32,4 @@ class TokenServiceTest {
 
 		assertThat(token, notNullValue());
 	}
-
 }

@@ -14,7 +14,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class TokenService {
-
 	private final String issuer;
 
 	public TokenService(@ConfigProperty(name = AppConstants.JWT_ISSUER_PROPERTY) String issuer) {
@@ -26,5 +25,4 @@ public class TokenService {
 
 		return Jwt.issuer(issuer).upn(user.getUsername()).groups(roles).sign();
 	}
-
 }

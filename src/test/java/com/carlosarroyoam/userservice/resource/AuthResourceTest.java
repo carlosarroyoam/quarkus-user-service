@@ -18,7 +18,6 @@ import jakarta.ws.rs.core.Response.Status;
 
 @QuarkusTest
 class AuthResourceTest {
-
 	@Test
 	void shouldReturnOkWhenAuthUserWithValidCredentials() throws JsonProcessingException {
 		Map<String, Object> body = new HashMap<>();
@@ -39,5 +38,4 @@ class AuthResourceTest {
 		given().contentType(ContentType.JSON).body(body).when().post("/api/v1/auth/signin").then()
 				.statusCode(Status.UNAUTHORIZED.getStatusCode());
 	}
-
 }

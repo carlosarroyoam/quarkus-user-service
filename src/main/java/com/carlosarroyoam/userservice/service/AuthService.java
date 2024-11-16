@@ -15,7 +15,6 @@ import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class AuthService {
-
 	private static final Logger LOG = Logger.getLogger(AuthService.class);
 	private final UserRepository userRepository;
 	private final TokenService tokenService;
@@ -49,5 +48,4 @@ public class AuthService {
 		loginResponse.setAccessToken(tokenService.generateToken(userByUsername));
 		return loginResponse;
 	}
-
 }

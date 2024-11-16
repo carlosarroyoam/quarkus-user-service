@@ -34,7 +34,6 @@ import jakarta.ws.rs.NotFoundException;
 
 @QuarkusTest
 class UserServiceTest {
-
 	@Inject
 	private UserService userService;
 
@@ -291,5 +290,4 @@ class UserServiceTest {
 
 		return Optional.of(role);
 	}
-
 }

@@ -24,7 +24,6 @@ import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class UserService {
-
 	private static final Logger LOG = Logger.getLogger(UserService.class);
 	private final UserRepository userRepository;
 	private final UserMapper mapper;
@@ -138,5 +137,4 @@ public class UserService {
 
 		userRepository.persist(userById);
 	}
-
 }

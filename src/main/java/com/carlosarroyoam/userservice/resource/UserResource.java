@@ -32,7 +32,6 @@ import jakarta.ws.rs.core.SecurityContext;
 @ApplicationScoped
 @Authenticated
 public class UserResource {
-
 	private final UserService userService;
 
 	@Inject
@@ -99,5 +98,4 @@ public class UserResource {
 		UserResponse userByUsername = userService.findByUsername(securityContext.getUserPrincipal().getName());
 		return RestResponse.ok(userByUsername);
 	}
-
 }

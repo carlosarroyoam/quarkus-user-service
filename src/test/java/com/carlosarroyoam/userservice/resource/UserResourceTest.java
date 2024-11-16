@@ -22,7 +22,6 @@ import jakarta.ws.rs.core.Response.Status;
 
 @QuarkusTest
 class UserResourceTest {
-
 	@Inject
 	private AppMessages messages;
 
@@ -185,5 +184,4 @@ class UserResourceTest {
 				.body("role_id", is(not(nullValue()))).body("is_active", is(not(nullValue())))
 				.body("created_at", is(not(nullValue()))).body("updated_at", is(not(nullValue())));
 	}
-
 }

@@ -9,7 +9,6 @@ import lombok.Data;
 
 @Data
 public class UpdateUserRequest {
-
 	@NotBlank(message = "Name should not be blank")
 	@Size(min = 3, max = 128, message = "Name should be between 3 and 128")
 	private String name;
@@ -18,5 +17,4 @@ public class UpdateUserRequest {
 	@Min(message = "Age should be min 18", value = 18)
 	@Max(message = "Age should be max 100", value = 100)
 	private Byte age;
-
 }

@@ -20,7 +20,6 @@ import jakarta.ws.rs.core.MediaType;
 @ApplicationScoped
 @PermitAll
 public class AuthResource {
-
 	private final AuthService authService;
 
 	@Inject
@@ -36,5 +35,4 @@ public class AuthResource {
 		LoginResponse loginResponse = authService.auth(loginRequest);
 		return RestResponse.ok(loginResponse);
 	}
-
 }

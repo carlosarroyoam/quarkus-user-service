@@ -5,7 +5,6 @@ import io.quarkus.qute.i18n.MessageBundle;
 
 @MessageBundle
 public interface AppMessages {
-
 	@Message
 	String userAccountNotFound();
 
@@ -50,5 +49,4 @@ public interface AppMessages {
 
 	@Message
 	String roleNotFound();
-
 }

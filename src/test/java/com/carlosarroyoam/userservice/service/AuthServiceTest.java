@@ -24,7 +24,6 @@ import jakarta.inject.Inject;
 
 @QuarkusTest
 class AuthServiceTest {
-
 	@Inject
 	private AuthService authService;
 

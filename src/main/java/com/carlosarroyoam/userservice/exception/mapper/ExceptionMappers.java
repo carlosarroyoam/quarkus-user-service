@@ -18,7 +18,6 @@ import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
 
 class ExceptionMappers {
-
 	private final UriInfo uriInfo;
 	private final Clock clock;
 
@@ -73,5 +72,4 @@ class ExceptionMappers {
 
 		return Response.status(status).entity(appExceptionResponse).type(MediaType.APPLICATION_JSON).build();
 	}
-
 }

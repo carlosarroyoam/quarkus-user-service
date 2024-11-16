@@ -9,7 +9,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class UserRepository implements PanacheRepository<User> {
-
 	public Optional<User> findByUsernameOptional(String username) {
 		return find("username", username).firstResultOptional();
 	}
@@ -17,5 +16,4 @@ public class UserRepository implements PanacheRepository<User> {
 	public Optional<User> findByEmailOptional(String email) {
 		return find("email", email).firstResultOptional();
 	}
-
 }
