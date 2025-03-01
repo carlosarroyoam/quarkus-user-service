@@ -1,12 +1,11 @@
 package com.carlosarroyoam.userservice.config;
 
+import jakarta.enterprise.inject.Produces;
 import java.time.Clock;
 
-import jakarta.enterprise.inject.Produces;
-
 public class ClockConfig {
-	@Produces
-	public Clock getClock() {
-		return Clock.systemDefaultZone();
-	}
+  @Produces
+  public Clock getClock() {
+    return Clock.systemDefaultZone();
+  }
 }
