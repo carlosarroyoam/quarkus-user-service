@@ -28,12 +28,13 @@ class ExceptionMappers {
   public Response mapWebApplicationException(WebApplicationException ex) {
     Status status = Status.fromStatusCode(ex.getResponse().getStatus());
 
-    AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
-    appExceptionResponse.setMessage(ex.getMessage());
-    appExceptionResponse.setCode(status.getStatusCode());
-    appExceptionResponse.setStatus(status.getReasonPhrase());
-    appExceptionResponse.setPath(uriInfo.getPath());
-    appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
+    AppExceptionResponse appExceptionResponse = AppExceptionResponse.builder()
+        .message(ex.getMessage())
+        .code(status.getStatusCode())
+        .status(status.getReasonPhrase())
+        .path(uriInfo.getPath())
+        .timestamp(ZonedDateTime.now(clock))
+        .build();
 
     return Response.status(status)
         .entity(appExceptionResponse)
@@ -45,16 +46,17 @@ class ExceptionMappers {
   public Response mapConstraintViolationException(ConstraintViolationException ex) {
     Status status = Status.BAD_REQUEST;
 
-    AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
-    appExceptionResponse.setMessage("Request data is not valid");
-    appExceptionResponse.setCode(status.getStatusCode());
-    appExceptionResponse.setStatus(status.getReasonPhrase());
-    appExceptionResponse.setPath(uriInfo.getPath());
-    appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
-    appExceptionResponse.setDetails(ex.getConstraintViolations()
-        .stream()
-        .map(ConstraintViolation::getMessage)
-        .collect(Collectors.toSet()));
+    AppExceptionResponse appExceptionResponse = AppExceptionResponse.builder()
+        .message("Request data is not valid")
+        .code(status.getStatusCode())
+        .status(status.getReasonPhrase())
+        .path(uriInfo.getPath())
+        .timestamp(ZonedDateTime.now(clock))
+        .details(ex.getConstraintViolations()
+            .stream()
+            .map(ConstraintViolation::getMessage)
+            .collect(Collectors.toSet()))
+        .build();
 
     return Response.status(status)
         .entity(appExceptionResponse)
@@ -66,12 +68,13 @@ class ExceptionMappers {
   public Response mapException(Exception ex) {
     Status status = Status.INTERNAL_SERVER_ERROR;
 
-    AppExceptionResponse appExceptionResponse = new AppExceptionResponse();
-    appExceptionResponse.setMessage("Whoops! Something went wrong");
-    appExceptionResponse.setCode(status.getStatusCode());
-    appExceptionResponse.setStatus(status.getReasonPhrase());
-    appExceptionResponse.setPath(uriInfo.getPath());
-    appExceptionResponse.setTimestamp(ZonedDateTime.now(clock));
+    AppExceptionResponse appExceptionResponse = AppExceptionResponse.builder()
+        .message("Whoops! Something went wrong")
+        .code(status.getStatusCode())
+        .status(status.getReasonPhrase())
+        .path(uriInfo.getPath())
+        .timestamp(ZonedDateTime.now(clock))
+        .build();
 
     ex.printStackTrace();
 

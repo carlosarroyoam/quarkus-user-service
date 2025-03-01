@@ -7,6 +7,7 @@ import com.carlosarroyoam.userservice.entity.Role;
 import com.carlosarroyoam.userservice.entity.User;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,13 +19,19 @@ class TokenServiceTest {
   @Test
   @DisplayName("Should return token")
   void shouldReturnToken() {
-    Role role = new Role();
-    role.setId(1);
-    role.setTitle("App//Admin");
+    Role role = Role.builder().id(1).title("Admin").description("Role for admins users").build();
 
-    User user = new User();
-    user.setUsername("carroyom");
-    user.setRole(role);
+    User user = User.builder()
+        .id(1L)
+        .username("carroyom")
+        .email("carroyom@mail.com")
+        .password("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC")
+        .isActive(Boolean.TRUE)
+        .role(role)
+        .roleId(role.getId())
+        .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
+        .build();
 
     String token = tokenService.generateToken(user);
 

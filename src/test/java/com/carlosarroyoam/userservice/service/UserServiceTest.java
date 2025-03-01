@@ -23,6 +23,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -48,6 +49,7 @@ class UserServiceTest {
   @DisplayName("Should return List<UserResponse> when find all")
   void shouldReturnUsersListWhenFindAll() {
     Optional<User> user = createUser(false);
+
     Mockito.when(userRepository.listAll()).thenReturn(List.of(user.get()));
 
     List<UserResponse> usersDto = userService.findAll();
@@ -61,6 +63,7 @@ class UserServiceTest {
   @DisplayName("Should return UserResponse when find user with existing userId")
   void shouldReturnUserResponseWhenFindUserWithExistingId() {
     Optional<User> user = createUser(false);
+
     Mockito.when(userRepository.findByIdOptional(ArgumentMatchers.anyLong())).thenReturn(user);
 
     UserResponse userResponse = userService.findById(1L);
@@ -85,6 +88,7 @@ class UserServiceTest {
   @DisplayName("Should return UserResponse when find user with existing username")
   void shouldReturnUserResponseWhenFindUserWithExistingUsername() {
     Optional<User> user = createUser(false);
+
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(user);
 
@@ -110,16 +114,19 @@ class UserServiceTest {
   @Test
   @DisplayName("Should create user when valid data is provided")
   void shouldCreateUserWhenProvideValidData() {
-    CreateUserRequest createUserRequest = new CreateUserRequest();
-    createUserRequest.setEmail("carroyom@mail.com");
-    createUserRequest.setUsername("carroyom");
-    createUserRequest.setPassword("secret");
-    createUserRequest.setRoleId(1);
+    CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        .email("carroyom@mail.com")
+        .username("carroyom")
+        .password("secret")
+        .roleId(1)
+        .build();
 
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(Optional.empty());
+
     Mockito.when(userRepository.findByEmailOptional(ArgumentMatchers.anyString()))
         .thenReturn(Optional.empty());
+
     Mockito.doNothing().when(userRepository).persist(ArgumentMatchers.any(User.class));
 
     UserResponse userResponse = userService.create(createUserRequest);
@@ -133,10 +140,11 @@ class UserServiceTest {
   @Test
   @DisplayName("Should throw exception when create user with existing username")
   void shouldThrowExceptionWhenCreateUserWithExistingUsername() {
-    CreateUserRequest createUserRequest = new CreateUserRequest();
-    createUserRequest.setEmail("carroyom@mail.com");
-    createUserRequest.setUsername("carroyom");
-    createUserRequest.setPassword("secret");
+    CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        .email("carroyom@mail.com")
+        .username("carroyom")
+        .password("secret")
+        .build();
 
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(createUser(true));
@@ -153,13 +161,15 @@ class UserServiceTest {
   @Test
   @DisplayName("Should throw exception when create user with existing email")
   void shouldThrowExceptionWhenCreateUserWithExistingEmail() {
-    CreateUserRequest createUserRequest = new CreateUserRequest();
-    createUserRequest.setEmail("carroyom@mail.com");
-    createUserRequest.setUsername("carroyom");
-    createUserRequest.setPassword("secret");
+    CreateUserRequest createUserRequest = CreateUserRequest.builder()
+        .email("carroyom@mail.com")
+        .username("carroyom")
+        .password("secret")
+        .build();
 
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(Optional.empty());
+
     Mockito.when(userRepository.findByEmailOptional(ArgumentMatchers.anyString()))
         .thenReturn(createUser(true));
 
@@ -173,15 +183,17 @@ class UserServiceTest {
   @Test
   @DisplayName("Should update user with valid data")
   void shouldUpdateUserWhenProvideValidData() {
-    UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-    updateUserRequest.setName("Carlos Arroyo Martínez");
-    updateUserRequest.setAge(Byte.valueOf("29"));
+    UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
+        .name("Carlos Arroyo Martínez")
+        .age(Byte.valueOf("29"))
+        .build();
 
     Optional<User> user = createUser(true);
     user.get().setName(updateUserRequest.getName());
     user.get().setAge(updateUserRequest.getAge());
 
     Mockito.when(userRepository.findByIdOptional(ArgumentMatchers.anyLong())).thenReturn(user);
+
     Mockito.doNothing().when(userRepository).persist(ArgumentMatchers.any(User.class));
 
     userService.update(1L, updateUserRequest);
@@ -192,9 +204,10 @@ class UserServiceTest {
   @Test
   @DisplayName("Should throw exception when update non existing user")
   void shouldThrowExceptionWhenUpdateWithNonExistingUser() {
-    UpdateUserRequest updateUserRequest = new UpdateUserRequest();
-    updateUserRequest.setName("Carlos Arroyo Martínez");
-    updateUserRequest.setAge(Byte.valueOf("29"));
+    UpdateUserRequest updateUserRequest = UpdateUserRequest.builder()
+        .name("Carlos Arroyo Martínez")
+        .age(Byte.valueOf("29"))
+        .build();
 
     Mockito.when(userRepository.findByIdOptional(ArgumentMatchers.anyLong()))
         .thenReturn(Optional.empty());
@@ -232,13 +245,15 @@ class UserServiceTest {
   @Test
   @DisplayName("Should change user password with valid credentials")
   void shouldChangePasswordWhenProvideValidCredentials() {
-    ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-    changePasswordRequest.setCurrentPassword("secret");
-    changePasswordRequest.setNewPassword("new-secret");
-    changePasswordRequest.setConfirmPassword("new-secret");
+    ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+        .currentPassword("secret")
+        .newPassword("new-secret")
+        .confirmPassword("new-secret")
+        .build();
 
     Mockito.when(userRepository.findByIdOptional(ArgumentMatchers.anyLong()))
         .thenReturn(createUser(true));
+
     Mockito.doNothing().when(userRepository).persist(ArgumentMatchers.any(User.class));
 
     userService.changePassword(1L, changePasswordRequest);
@@ -249,13 +264,15 @@ class UserServiceTest {
   @Test
   @DisplayName("Should throw exception when change user password with non valid credentials")
   void shouldThrowExceptionWhenChangePasswordWithNonValidCredentials() {
-    ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-    changePasswordRequest.setCurrentPassword("non-valid-secret");
-    changePasswordRequest.setNewPassword("new-secret");
-    changePasswordRequest.setConfirmPassword("new-secret");
+    ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+        .currentPassword("non-valid-secret")
+        .newPassword("new-secret")
+        .confirmPassword("new-secret")
+        .build();
 
     Mockito.when(userRepository.findByIdOptional(ArgumentMatchers.anyLong()))
         .thenReturn(createUser(true));
+
     Mockito.doNothing().when(userRepository).persist(ArgumentMatchers.any(User.class));
 
     Throwable ex = assertThrows(BadRequestException.class,
@@ -268,13 +285,15 @@ class UserServiceTest {
   @Test
   @DisplayName("Should throw exception when change user password with non valid confirm password")
   void shouldThrowExceptionWhenChangePasswordWithNonValidConfirmPassword() {
-    ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
-    changePasswordRequest.setCurrentPassword("secret");
-    changePasswordRequest.setNewPassword("new-secret");
-    changePasswordRequest.setConfirmPassword("non-valid-new-secret");
+    ChangePasswordRequest changePasswordRequest = ChangePasswordRequest.builder()
+        .currentPassword("secret")
+        .newPassword("new-secret")
+        .confirmPassword("non-valid-new-secret")
+        .build();
 
     Mockito.when(userRepository.findByIdOptional(ArgumentMatchers.anyLong()))
         .thenReturn(createUser(true));
+
     Mockito.doNothing().when(userRepository).persist(ArgumentMatchers.any(User.class));
 
     Throwable ex = assertThrows(BadRequestException.class,
@@ -285,26 +304,20 @@ class UserServiceTest {
   }
 
   private Optional<User> createUser(Boolean isActive) {
-    Role role = createRole().get();
+    Role role = Role.builder().id(1).title("Admin").description("Role for admins users").build();
 
-    User user = new User();
-    user.setId(1L);
-    user.setUsername("carroyom");
-    user.setEmail("carroyom@mail.com");
-    user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
-    user.setIsActive(isActive);
-    user.setRole(role);
-    user.setRoleId(role.getId());
+    User user = User.builder()
+        .id(1L)
+        .username("carroyom")
+        .email("carroyom@mail.com")
+        .password("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC")
+        .isActive(isActive)
+        .role(role)
+        .roleId(role.getId())
+        .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
+        .build();
 
     return Optional.of(user);
-  }
-
-  private Optional<Role> createRole() {
-    Role role = new Role();
-    role.setId(1);
-    role.setTitle("Admin");
-    role.setDescription("Role for admins users");
-
-    return Optional.of(role);
   }
 }

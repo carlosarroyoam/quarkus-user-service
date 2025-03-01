@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.carlosarroyoam.userservice.config.AppMessages;
 import com.carlosarroyoam.userservice.dto.LoginRequest;
 import com.carlosarroyoam.userservice.dto.LoginResponse;
+import com.carlosarroyoam.userservice.entity.Role;
 import com.carlosarroyoam.userservice.entity.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 import io.quarkus.security.AuthenticationFailedException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,15 +39,19 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
   void shouldReturnLoginResponseWhenAuthWithValidCredentials() {
+    LoginRequest loginRequest = LoginRequest.builder()
+        .username("carroyom")
+        .password("secret")
+        .build();
+
     Optional<User> user = createUser(true);
+
     String jwt = createToken();
+
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(user);
-    Mockito.when(tokenService.generateToken(ArgumentMatchers.any(User.class))).thenReturn(jwt);
 
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setUsername("carroyom");
-    loginRequest.setPassword("secret");
+    Mockito.when(tokenService.generateToken(ArgumentMatchers.any(User.class))).thenReturn(jwt);
 
     LoginResponse loginResponse = authService.auth(loginRequest);
 
@@ -56,12 +62,13 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should throw exception when attempt to auth with non existing user")
   void shouldThrowExceptionWhenAuthWithNonExistingUser() {
+    LoginRequest loginRequest = LoginRequest.builder()
+        .username("carroyom")
+        .password("secret")
+        .build();
+
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(Optional.empty());
-
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setUsername("carroyom");
-    loginRequest.setPassword("secret");
 
     Throwable ex = assertThrows(AuthenticationFailedException.class,
         () -> authService.auth(loginRequest));
@@ -73,12 +80,13 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should throw exception when attempt to auth with invalid credentials")
   void shouldThrowExceptionWhenAuthWithInvalidCredentials() {
+    LoginRequest loginRequest = LoginRequest.builder()
+        .username("carroyom")
+        .password("wrong-pass")
+        .build();
+
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(createUser(true));
-
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setUsername("carroyom");
-    loginRequest.setPassword("wrong-pass");
 
     Throwable ex = assertThrows(AuthenticationFailedException.class,
         () -> authService.auth(loginRequest));
@@ -90,12 +98,13 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should throw exception when attempt to auth an inactive user")
   void shouldThrowExceptionWhenAuthWithInactiveUser() {
+    LoginRequest loginRequest = LoginRequest.builder()
+        .username("carroyom")
+        .password("secret")
+        .build();
+
     Mockito.when(userRepository.findByUsernameOptional(ArgumentMatchers.anyString()))
         .thenReturn(createUser(false));
-
-    LoginRequest loginRequest = new LoginRequest();
-    loginRequest.setUsername("carroyom");
-    loginRequest.setPassword("secret");
 
     Throwable ex = assertThrows(AuthenticationFailedException.class,
         () -> authService.auth(loginRequest));
@@ -109,10 +118,19 @@ class AuthServiceTest {
   }
 
   private Optional<User> createUser(Boolean isActive) {
-    User user = new User();
-    user.setUsername("carroyom");
-    user.setPassword("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC");
-    user.setIsActive(isActive);
+    Role role = Role.builder().id(1).title("Admin").description("Role for admins users").build();
+
+    User user = User.builder()
+        .id(1L)
+        .username("carroyom")
+        .email("carroyom@mail.com")
+        .password("$2a$10$eAksNP3QN8numBgJwshVpOg2ywD5o6YxOW/4WCrk/dZmV77pC6QqC")
+        .isActive(isActive)
+        .role(role)
+        .roleId(role.getId())
+        .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
+        .build();
 
     return Optional.of(user);
   }
