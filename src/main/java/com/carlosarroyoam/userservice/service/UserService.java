@@ -5,8 +5,8 @@ import com.carlosarroyoam.userservice.dto.ChangePasswordRequestDto;
 import com.carlosarroyoam.userservice.dto.CreateUserRequestDto;
 import com.carlosarroyoam.userservice.dto.UpdateUserRequestDto;
 import com.carlosarroyoam.userservice.dto.UserDto;
+import com.carlosarroyoam.userservice.dto.UserDto.UserDtoMapper;
 import com.carlosarroyoam.userservice.entity.User;
-import com.carlosarroyoam.userservice.mapper.UserMapper;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -23,22 +23,19 @@ import org.jboss.logging.Logger;
 public class UserService {
   private static final Logger LOG = Logger.getLogger(UserService.class);
   private final UserRepository userRepository;
-  private final UserMapper mapper;
   private final AppMessages messages;
   private final Clock clock;
 
   @Inject
-  public UserService(UserRepository userRepository, UserMapper mapper, AppMessages messages,
-      Clock clock) {
+  public UserService(UserRepository userRepository, AppMessages messages, Clock clock) {
     this.userRepository = userRepository;
-    this.mapper = mapper;
     this.messages = messages;
     this.clock = clock;
   }
 
   public List<UserDto> findAll() {
     List<User> users = userRepository.listAll();
-    return mapper.toDtos(users);
+    return UserDtoMapper.INSTANCE.toDtos(users);
   }
 
   public UserDto findById(Long userId) {
@@ -47,7 +44,7 @@ public class UserService {
       return new NotFoundException(messages.userNotFound());
     });
 
-    return mapper.toDto(userById);
+    return UserDtoMapper.INSTANCE.toDto(userById);
   }
 
   public UserDto findByUsername(String username) {
@@ -56,7 +53,7 @@ public class UserService {
       return new NotFoundException(messages.userNotFound());
     });
 
-    return mapper.toDto(userByUsername);
+    return UserDtoMapper.INSTANCE.toDto(userByUsername);
   }
 
   @Transactional
@@ -73,14 +70,14 @@ public class UserService {
 
     LocalDateTime now = LocalDateTime.now(clock);
 
-    User user = mapper.toEntity(requestDto);
+    User user = UserDtoMapper.INSTANCE.toEntity(requestDto);
     user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
     user.setIsActive(Boolean.FALSE);
     user.setCreatedAt(now);
     user.setUpdatedAt(now);
 
     userRepository.persist(user);
-    return mapper.toDto(user);
+    return UserDtoMapper.INSTANCE.toDto(user);
   }
 
   @Transactional
