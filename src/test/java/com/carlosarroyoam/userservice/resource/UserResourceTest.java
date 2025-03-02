@@ -8,19 +8,34 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.emptyArray;
 
 import com.carlosarroyoam.userservice.config.AppMessages;
+import com.carlosarroyoam.userservice.dto.ChangePasswordRequestDto;
+import com.carlosarroyoam.userservice.dto.CreateUserRequestDto;
+import com.carlosarroyoam.userservice.dto.UpdateUserRequestDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
+import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.HashMap;
-import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 class UserResourceTest {
   @Inject
   private AppMessages messages;
+
+  @Inject
+  private ObjectMapper mapper;
+
+  @BeforeEach
+  void setUp() {
+    RestAssured.config = RestAssured.config()
+        .objectMapperConfig(
+            new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> mapper));
+  }
 
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
@@ -46,8 +61,9 @@ class UserResourceTest {
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnUserWhenCallFindByIdEndpointWithExistingUserId() {
     given().contentType(ContentType.JSON)
+        .pathParam("userId", 1L)
         .when()
-        .get("/api/v1/users/{userId}", 1L)
+        .get("/api/v1/users/{userId}")
         .then()
         .statusCode(Status.OK.getStatusCode())
         .body("id", is(not(nullValue())))
@@ -65,8 +81,9 @@ class UserResourceTest {
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnNotFoundWhenCallFindByIdEndpointWithNonExistingUserId() {
     given().contentType(ContentType.JSON)
+        .pathParam("userId", 10000L)
         .when()
-        .get("/api/v1/users/{userId}", 10000L)
+        .get("/api/v1/users/{userId}")
         .then()
         .statusCode(Status.NOT_FOUND.getStatusCode())
         .body("message", equalTo(messages.userNotFound()));
@@ -75,16 +92,17 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnCreatedWhenCallCreateEndpointWithValidData() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("name", "Cathy Stefania Guido Rojas");
-    body.put("email", "cguidor@mail.com");
-    body.put("username", "cguidor1995");
-    body.put("password", "secret");
-    body.put("role_id", 2);
-    body.put("age", 28);
+    CreateUserRequestDto requestDto = CreateUserRequestDto.builder()
+        .name("Cathy Stefania Guido Rojas")
+        .email("cguidor@mail.com")
+        .username("cguidor1995")
+        .password("secret")
+        .roleId(2)
+        .age(Byte.valueOf("28"))
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .body(requestDto)
         .when()
         .post("/api/v1/users")
         .then()
@@ -95,16 +113,18 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnBadRequestWhenCallCreateEndpointWithExistingUsername() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("name", "Cathy Stefania Guido Rojas");
-    body.put("email", "cguidor@mail.com");
-    body.put("username", "carroyom");
-    body.put("password", "secret");
-    body.put("role_id", 2);
-    body.put("age", 28);
+    CreateUserRequestDto requestDto = CreateUserRequestDto.builder()
+        .name("Cathy Stefania Guido Rojas")
+        .email("cguidor@mail.com")
+        .username("carroyom")
+        .password("secret")
+        .roleId(2)
+        .age(Byte.valueOf("28"))
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+
+        .body(requestDto)
         .when()
         .post("/api/v1/users")
         .then()
@@ -115,16 +135,18 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnBadRequestWhenCallCreateEndpointWithExistingEmail() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("name", "Cathy Stefania Guido Rojas");
-    body.put("email", "carroyom@mail.com");
-    body.put("username", "cguidor");
-    body.put("password", "secret");
-    body.put("role_id", 2);
-    body.put("age", 28);
+    CreateUserRequestDto requestDto = CreateUserRequestDto.builder()
+        .name("Cathy Stefania Guido Rojas")
+        .email("carroyom@mail.com")
+        .username("cguidor")
+        .password("secret")
+        .roleId(2)
+        .age(Byte.valueOf("28"))
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+
+        .body(requestDto)
         .when()
         .post("/api/v1/users")
         .then()
@@ -135,14 +157,16 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnUserWhenCallUpdateEndpointWithValidData() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("name", "Carlos Arroyo Martínez");
-    body.put("age", 29);
+    UpdateUserRequestDto requestDto = UpdateUserRequestDto.builder()
+        .name("Carlos Arroyo Martínez")
+        .age(Byte.valueOf("29"))
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .pathParam("userId", 1L)
+        .body(requestDto)
         .when()
-        .put("/api/v1/users/{userId}", 1L)
+        .put("/api/v1/users/{userId}")
         .then()
         .statusCode(Status.NO_CONTENT.getStatusCode());
   }
@@ -150,14 +174,16 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnNotFoundWhenCallUpdateEndpointWithNonExistingUserId() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("name", "Carlos Arroyo Martínez");
-    body.put("age", 29);
+    UpdateUserRequestDto requestDto = UpdateUserRequestDto.builder()
+        .name("Carlos Arroyo Martínez")
+        .age(Byte.valueOf("29"))
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .pathParam("userId", 1000L)
+        .body(requestDto)
         .when()
-        .put("/api/v1/users/{userId}", 1000L)
+        .put("/api/v1/users/{userId}")
         .then()
         .statusCode(Status.NOT_FOUND.getStatusCode())
         .body("message", equalTo(messages.userNotFound()));
@@ -167,8 +193,9 @@ class UserResourceTest {
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnNoContentWhenCallDeleteEndpointWithExistingUserId() {
     given().contentType(ContentType.JSON)
+        .pathParam("userId", 1L)
         .when()
-        .delete("/api/v1/users/{userId}", 1L)
+        .delete("/api/v1/users/{userId}")
         .then()
         .statusCode(Status.NO_CONTENT.getStatusCode());
   }
@@ -177,8 +204,9 @@ class UserResourceTest {
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnNotFoundWhenCallDeleteEndpointWithNonExistingUserId() {
     given().contentType(ContentType.JSON)
+        .pathParam("userId", 1000L)
         .when()
-        .delete("/api/v1/users/{userId}", 1000L)
+        .delete("/api/v1/users/{userId}")
         .then()
         .statusCode(Status.NOT_FOUND.getStatusCode())
         .body("message", equalTo(messages.userNotFound()));
@@ -187,13 +215,15 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnNoContentWhenCallChangePasswordEndpointWithValidData() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("current_password", "secret");
-    body.put("new_password", "new-secret");
-    body.put("confirm_password", "new-secret");
+    ChangePasswordRequestDto requestDto = ChangePasswordRequestDto.builder()
+        .currentPassword("secret")
+        .newPassword("new-secret")
+        .confirmPassword("new-secret")
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .pathParam("userId", 1L)
+        .body(requestDto)
         .when()
         .post("/api/v1/users/{userId}/change-password", 1L)
         .then()
@@ -203,15 +233,17 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidCredentials() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("current_password", "non-valid-secret");
-    body.put("new_password", "new-secret");
-    body.put("confirm_password", "new-secret");
+    ChangePasswordRequestDto requestDto = ChangePasswordRequestDto.builder()
+        .currentPassword("non-valid-secret")
+        .newPassword("new-secret")
+        .confirmPassword("new-secret")
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .pathParam("userId", 1L)
+        .body(requestDto)
         .when()
-        .post("/api/v1/users/{userId}/change-password", 1L)
+        .post("/api/v1/users/{userId}/change-password")
         .then()
         .statusCode(Status.BAD_REQUEST.getStatusCode())
         .body("message", equalTo(messages.unauthorizedCredentials()));
@@ -220,15 +252,17 @@ class UserResourceTest {
   @Test
   @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
   void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidConfirmPassword() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("current_password", "secret");
-    body.put("new_password", "new-secret");
-    body.put("confirm_password", "non-valid-new-secret");
+    ChangePasswordRequestDto requestDto = ChangePasswordRequestDto.builder()
+        .currentPassword("secret")
+        .newPassword("new-secret")
+        .confirmPassword("non-valid-new-secret")
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .pathParam("userId", 1L)
+        .body(requestDto)
         .when()
-        .post("/api/v1/users/{userId}/change-password", 1L)
+        .post("/api/v1/users/{userId}/change-password")
         .then()
         .statusCode(Status.BAD_REQUEST.getStatusCode())
         .body("message", equalTo(messages.passwordsDoesntMatch()));

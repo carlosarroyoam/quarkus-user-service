@@ -6,8 +6,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.carlosarroyoam.userservice.config.AppMessages;
-import com.carlosarroyoam.userservice.dto.LoginRequest;
-import com.carlosarroyoam.userservice.dto.LoginResponse;
+import com.carlosarroyoam.userservice.dto.LoginRequestDto;
+import com.carlosarroyoam.userservice.dto.LoginResponseDto;
 import com.carlosarroyoam.userservice.entity.Role;
 import com.carlosarroyoam.userservice.entity.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
@@ -39,7 +39,7 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should return LoginResponse when attempt to auth a user with valid credentials")
   void shouldReturnLoginResponseWhenAuthWithValidCredentials() {
-    LoginRequest loginRequest = LoginRequest.builder()
+    LoginRequestDto loginRequestDto = LoginRequestDto.builder()
         .username("carroyom")
         .password("secret")
         .build();
@@ -53,16 +53,16 @@ class AuthServiceTest {
 
     Mockito.when(tokenService.generateToken(ArgumentMatchers.any(User.class))).thenReturn(jwt);
 
-    LoginResponse loginResponse = authService.auth(loginRequest);
+    LoginResponseDto loginResponseDto = authService.auth(loginRequestDto);
 
-    assertThat(loginResponse.getUsername(), equalTo(user.get().getUsername()));
-    assertThat(loginResponse.getAccessToken(), equalTo(jwt));
+    assertThat(loginResponseDto.getUsername(), equalTo(user.get().getUsername()));
+    assertThat(loginResponseDto.getAccessToken(), equalTo(jwt));
   }
 
   @Test
   @DisplayName("Should throw exception when attempt to auth with non existing user")
   void shouldThrowExceptionWhenAuthWithNonExistingUser() {
-    LoginRequest loginRequest = LoginRequest.builder()
+    LoginRequestDto loginRequestDto = LoginRequestDto.builder()
         .username("carroyom")
         .password("secret")
         .build();
@@ -71,7 +71,7 @@ class AuthServiceTest {
         .thenReturn(Optional.empty());
 
     Throwable ex = assertThrows(AuthenticationFailedException.class,
-        () -> authService.auth(loginRequest));
+        () -> authService.auth(loginRequestDto));
 
     assertThat(ex.getMessage(), equalTo(messages.userAccountNotFound()));
     assertThat(ex, instanceOf(AuthenticationFailedException.class));
@@ -80,7 +80,7 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should throw exception when attempt to auth with invalid credentials")
   void shouldThrowExceptionWhenAuthWithInvalidCredentials() {
-    LoginRequest loginRequest = LoginRequest.builder()
+    LoginRequestDto loginRequestDto = LoginRequestDto.builder()
         .username("carroyom")
         .password("wrong-pass")
         .build();
@@ -89,7 +89,7 @@ class AuthServiceTest {
         .thenReturn(createUser(true));
 
     Throwable ex = assertThrows(AuthenticationFailedException.class,
-        () -> authService.auth(loginRequest));
+        () -> authService.auth(loginRequestDto));
 
     assertThat(ex.getMessage(), equalTo(messages.unauthorizedCredentials()));
     assertThat(ex, instanceOf(AuthenticationFailedException.class));
@@ -98,7 +98,7 @@ class AuthServiceTest {
   @Test
   @DisplayName("Should throw exception when attempt to auth an inactive user")
   void shouldThrowExceptionWhenAuthWithInactiveUser() {
-    LoginRequest loginRequest = LoginRequest.builder()
+    LoginRequestDto loginRequestDto = LoginRequestDto.builder()
         .username("carroyom")
         .password("secret")
         .build();
@@ -107,7 +107,7 @@ class AuthServiceTest {
         .thenReturn(createUser(false));
 
     Throwable ex = assertThrows(AuthenticationFailedException.class,
-        () -> authService.auth(loginRequest));
+        () -> authService.auth(loginRequestDto));
 
     assertThat(ex.getMessage(), equalTo(messages.userAccountNotActive()));
     assertThat(ex, instanceOf(AuthenticationFailedException.class));

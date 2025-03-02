@@ -1,6 +1,6 @@
 package com.carlosarroyoam.userservice.exception.mapper;
 
-import com.carlosarroyoam.userservice.dto.AppExceptionResponse;
+import com.carlosarroyoam.userservice.dto.AppExceptionDto;
 import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -28,7 +28,7 @@ class ExceptionMappers {
   public Response mapWebApplicationException(WebApplicationException ex) {
     Status status = Status.fromStatusCode(ex.getResponse().getStatus());
 
-    AppExceptionResponse appExceptionResponse = AppExceptionResponse.builder()
+    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
         .message(ex.getMessage())
         .code(status.getStatusCode())
         .status(status.getReasonPhrase())
@@ -36,17 +36,14 @@ class ExceptionMappers {
         .timestamp(ZonedDateTime.now(clock))
         .build();
 
-    return Response.status(status)
-        .entity(appExceptionResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+    return Response.status(status).entity(appExceptionDto).type(MediaType.APPLICATION_JSON).build();
   }
 
   @ServerExceptionMapper
   public Response mapConstraintViolationException(ConstraintViolationException ex) {
     Status status = Status.BAD_REQUEST;
 
-    AppExceptionResponse appExceptionResponse = AppExceptionResponse.builder()
+    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
         .message("Request data is not valid")
         .code(status.getStatusCode())
         .status(status.getReasonPhrase())
@@ -58,17 +55,14 @@ class ExceptionMappers {
             .collect(Collectors.toSet()))
         .build();
 
-    return Response.status(status)
-        .entity(appExceptionResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+    return Response.status(status).entity(appExceptionDto).type(MediaType.APPLICATION_JSON).build();
   }
 
   @ServerExceptionMapper
   public Response mapException(Exception ex) {
     Status status = Status.INTERNAL_SERVER_ERROR;
 
-    AppExceptionResponse appExceptionResponse = AppExceptionResponse.builder()
+    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
         .message("Whoops! Something went wrong")
         .code(status.getStatusCode())
         .status(status.getReasonPhrase())
@@ -78,9 +72,6 @@ class ExceptionMappers {
 
     ex.printStackTrace();
 
-    return Response.status(status)
-        .entity(appExceptionResponse)
-        .type(MediaType.APPLICATION_JSON)
-        .build();
+    return Response.status(status).entity(appExceptionDto).type(MediaType.APPLICATION_JSON).build();
   }
 }

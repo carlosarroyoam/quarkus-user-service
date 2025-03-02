@@ -5,24 +5,24 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 
+import com.carlosarroyoam.userservice.dto.LoginRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 class AuthResourceTest {
   @Test
   void shouldReturnOkWhenAuthUserWithValidCredentials() throws JsonProcessingException {
-    Map<String, Object> body = new HashMap<>();
-    body.put("username", "carroyom");
-    body.put("password", "secret");
+    LoginRequestDto requestDto = LoginRequestDto.builder()
+        .username("carroyom")
+        .password("secret")
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .body(requestDto)
         .when()
         .post("/api/v1/auth/signin")
         .then()
@@ -33,12 +33,13 @@ class AuthResourceTest {
 
   @Test
   void shouldReturnUnauthorizedWhenAuthUserWithNonValidCredentials() {
-    Map<String, Object> body = new HashMap<>();
-    body.put("username", "nonExist");
-    body.put("password", "nonExist");
+    LoginRequestDto requestDto = LoginRequestDto.builder()
+        .username("nonExist")
+        .password("nonExist")
+        .build();
 
     given().contentType(ContentType.JSON)
-        .body(body)
+        .body(requestDto)
         .when()
         .post("/api/v1/auth/signin")
         .then()

@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LoginResponse {
-  private String username;
-  private String accessToken;
+public class RoleDto {
+  private Integer id;
+  private String title;
+  private String description;
 }

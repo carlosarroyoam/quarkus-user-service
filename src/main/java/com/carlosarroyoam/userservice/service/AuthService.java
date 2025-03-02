@@ -1,8 +1,8 @@
 package com.carlosarroyoam.userservice.service;
 
 import com.carlosarroyoam.userservice.config.AppMessages;
-import com.carlosarroyoam.userservice.dto.LoginRequest;
-import com.carlosarroyoam.userservice.dto.LoginResponse;
+import com.carlosarroyoam.userservice.dto.LoginRequestDto;
+import com.carlosarroyoam.userservice.dto.LoginResponseDto;
 import com.carlosarroyoam.userservice.entity.User;
 import com.carlosarroyoam.userservice.repository.UserRepository;
 import io.quarkus.elytron.security.common.BcryptUtil;
@@ -26,24 +26,24 @@ public class AuthService {
     this.messages = messages;
   }
 
-  public LoginResponse auth(LoginRequest loginRequest) {
-    User userByUsername = userRepository.findByUsernameOptional(loginRequest.getUsername())
+  public LoginResponseDto auth(LoginRequestDto requestDto) {
+    User userByUsername = userRepository.findByUsernameOptional(requestDto.getUsername())
         .orElseThrow(() -> {
-          LOG.warn(messages.userAccountNotFoundDetailed(loginRequest.getUsername()));
+          LOG.warn(messages.userAccountNotFoundDetailed(requestDto.getUsername()));
           return new AuthenticationFailedException(messages.userAccountNotFound());
         });
 
     if (Boolean.FALSE.equals(userByUsername.getIsActive())) {
-      LOG.warn(messages.userAccountNotActiveDetailed(loginRequest.getUsername()));
+      LOG.warn(messages.userAccountNotActiveDetailed(requestDto.getUsername()));
       throw new AuthenticationFailedException(messages.userAccountNotActive());
     }
 
-    if (!BcryptUtil.matches(loginRequest.getPassword(), userByUsername.getPassword())) {
-      LOG.warn(messages.unauthorizedCredentialsDetailed(loginRequest.getUsername()));
+    if (!BcryptUtil.matches(requestDto.getPassword(), userByUsername.getPassword())) {
+      LOG.warn(messages.unauthorizedCredentialsDetailed(requestDto.getUsername()));
       throw new AuthenticationFailedException(messages.unauthorizedCredentials());
     }
 
-    return LoginResponse.builder()
+    return LoginResponseDto.builder()
         .username(userByUsername.getUsername())
         .accessToken(tokenService.generateToken(userByUsername))
         .build();

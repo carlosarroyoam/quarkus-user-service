@@ -1,7 +1,7 @@
 package com.carlosarroyoam.userservice.resource;
 
-import com.carlosarroyoam.userservice.dto.LoginRequest;
-import com.carlosarroyoam.userservice.dto.LoginResponse;
+import com.carlosarroyoam.userservice.dto.LoginRequestDto;
+import com.carlosarroyoam.userservice.dto.LoginResponseDto;
 import com.carlosarroyoam.userservice.service.AuthService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -29,7 +29,7 @@ public class AuthResource {
   @Path("/signin")
   @Consumes(MediaType.APPLICATION_JSON)
   @Produces(MediaType.APPLICATION_JSON)
-  public RestResponse<LoginResponse> auth(@Valid LoginRequest loginRequest) {
-    return RestResponse.ok(authService.auth(loginRequest));
+  public RestResponse<LoginResponseDto> auth(@Valid LoginRequestDto requestDto) {
+    return RestResponse.ok(authService.auth(requestDto));
   }
 }
