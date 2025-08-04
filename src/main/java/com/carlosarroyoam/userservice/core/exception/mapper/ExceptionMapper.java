@@ -14,12 +14,12 @@ import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
-class ExceptionMappers {
+class ExceptionMapper {
   private final UriInfo uriInfo;
   private final Clock clock;
 
   @Inject
-  public ExceptionMappers(UriInfo uriInfo, Clock clock) {
+  public ExceptionMapper(UriInfo uriInfo, Clock clock) {
     this.uriInfo = uriInfo;
     this.clock = clock;
   }
