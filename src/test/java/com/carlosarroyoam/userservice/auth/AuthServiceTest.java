@@ -1,10 +1,5 @@
 package com.carlosarroyoam.userservice.auth;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.carlosarroyoam.userservice.auth.dto.LoginRequestDto;
 import com.carlosarroyoam.userservice.auth.dto.LoginResponseDto;
 import com.carlosarroyoam.userservice.core.config.AppMessages;
@@ -21,6 +16,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @QuarkusTest
 class AuthServiceTest {

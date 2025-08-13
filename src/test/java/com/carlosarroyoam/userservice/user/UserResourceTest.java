@@ -1,12 +1,5 @@
 package com.carlosarroyoam.userservice.user;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.emptyArray;
-
 import com.carlosarroyoam.userservice.core.config.AppMessages;
 import com.carlosarroyoam.userservice.user.dto.ChangePasswordRequestDto;
 import com.carlosarroyoam.userservice.user.dto.CreateUserRequestDto;
@@ -21,6 +14,13 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.emptyArray;
 
 @QuarkusTest
 class UserResourceTest {
