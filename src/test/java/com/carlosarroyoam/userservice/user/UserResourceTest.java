@@ -1,5 +1,12 @@
 package com.carlosarroyoam.userservice.user;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.Matchers.emptyArray;
+
 import com.carlosarroyoam.userservice.core.config.AppMessages;
 import com.carlosarroyoam.userservice.user.dto.ChangePasswordRequestDto;
 import com.carlosarroyoam.userservice.user.dto.CreateUserRequestDto;
@@ -15,32 +22,27 @@ import jakarta.ws.rs.core.Response.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.Matchers.emptyArray;
-
 @QuarkusTest
 class UserResourceTest {
-  @Inject
-  private AppMessages messages;
+  @Inject private AppMessages messages;
 
-  @Inject
-  private ObjectMapper mapper;
+  @Inject private ObjectMapper mapper;
 
   @BeforeEach
   void setUp() {
-    RestAssured.config = RestAssured.config()
-        .objectMapperConfig(
-            new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> mapper));
+    RestAssured.config =
+        RestAssured.config()
+            .objectMapperConfig(
+                new ObjectMapperConfig().jackson2ObjectMapperFactory((cls, charset) -> mapper));
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnListOfUsersWhenCallFindAllEndpoint() {
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .when()
         .get("/api/v1/users")
         .then()
@@ -58,9 +60,12 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnUserWhenCallFindByIdEndpointWithExistingUserId() {
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1L)
         .when()
         .get("/api/v1/users/{userId}")
@@ -78,9 +83,12 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnNotFoundWhenCallFindByIdEndpointWithNonExistingUserId() {
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 10000L)
         .when()
         .get("/api/v1/users/{userId}")
@@ -90,18 +98,22 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnCreatedWhenCallCreateEndpointWithValidData() {
-    CreateUserRequestDto requestDto = CreateUserRequestDto.builder()
-        .name("Cathy Stefania Guido Rojas")
-        .email("cguidor@mail.com")
-        .username("cguidor1995")
-        .password("secret")
-        .roleId(2)
-        .age(Byte.valueOf("28"))
-        .build();
+    CreateUserRequestDto requestDto =
+        CreateUserRequestDto.builder()
+            .name("Cathy Stefania Guido Rojas")
+            .email("cguidor@mail.com")
+            .username("cguidor1995")
+            .password("secret")
+            .roleId(2)
+            .age(Byte.valueOf("28"))
+            .build();
 
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .body(requestDto)
         .when()
         .post("/api/v1/users")
@@ -111,19 +123,22 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnBadRequestWhenCallCreateEndpointWithExistingUsername() {
-    CreateUserRequestDto requestDto = CreateUserRequestDto.builder()
-        .name("Cathy Stefania Guido Rojas")
-        .email("cguidor@mail.com")
-        .username("carroyom")
-        .password("secret")
-        .roleId(2)
-        .age(Byte.valueOf("28"))
-        .build();
+    CreateUserRequestDto requestDto =
+        CreateUserRequestDto.builder()
+            .name("Cathy Stefania Guido Rojas")
+            .email("cguidor@mail.com")
+            .username("carroyom")
+            .password("secret")
+            .roleId(2)
+            .age(Byte.valueOf("28"))
+            .build();
 
-    given().contentType(ContentType.JSON)
-
+    given()
+        .contentType(ContentType.JSON)
         .body(requestDto)
         .when()
         .post("/api/v1/users")
@@ -133,19 +148,22 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnBadRequestWhenCallCreateEndpointWithExistingEmail() {
-    CreateUserRequestDto requestDto = CreateUserRequestDto.builder()
-        .name("Cathy Stefania Guido Rojas")
-        .email("carroyom@mail.com")
-        .username("cguidor")
-        .password("secret")
-        .roleId(2)
-        .age(Byte.valueOf("28"))
-        .build();
+    CreateUserRequestDto requestDto =
+        CreateUserRequestDto.builder()
+            .name("Cathy Stefania Guido Rojas")
+            .email("carroyom@mail.com")
+            .username("cguidor")
+            .password("secret")
+            .roleId(2)
+            .age(Byte.valueOf("28"))
+            .build();
 
-    given().contentType(ContentType.JSON)
-
+    given()
+        .contentType(ContentType.JSON)
         .body(requestDto)
         .when()
         .post("/api/v1/users")
@@ -155,14 +173,18 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnUserWhenCallUpdateEndpointWithValidData() {
-    UpdateUserRequestDto requestDto = UpdateUserRequestDto.builder()
-        .name("Carlos Arroyo Martínez")
-        .age(Byte.valueOf("29"))
-        .build();
+    UpdateUserRequestDto requestDto =
+        UpdateUserRequestDto.builder()
+            .name("Carlos Arroyo Martínez")
+            .age(Byte.valueOf("29"))
+            .build();
 
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1L)
         .body(requestDto)
         .when()
@@ -172,14 +194,18 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnNotFoundWhenCallUpdateEndpointWithNonExistingUserId() {
-    UpdateUserRequestDto requestDto = UpdateUserRequestDto.builder()
-        .name("Carlos Arroyo Martínez")
-        .age(Byte.valueOf("29"))
-        .build();
+    UpdateUserRequestDto requestDto =
+        UpdateUserRequestDto.builder()
+            .name("Carlos Arroyo Martínez")
+            .age(Byte.valueOf("29"))
+            .build();
 
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1000L)
         .body(requestDto)
         .when()
@@ -190,9 +216,12 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnNoContentWhenCallDeleteEndpointWithExistingUserId() {
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1L)
         .when()
         .delete("/api/v1/users/{userId}")
@@ -201,9 +230,12 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnNotFoundWhenCallDeleteEndpointWithNonExistingUserId() {
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1000L)
         .when()
         .delete("/api/v1/users/{userId}")
@@ -213,15 +245,19 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnNoContentWhenCallChangePasswordEndpointWithValidData() {
-    ChangePasswordRequestDto requestDto = ChangePasswordRequestDto.builder()
-        .currentPassword("secret")
-        .newPassword("new-secret")
-        .confirmPassword("new-secret")
-        .build();
+    ChangePasswordRequestDto requestDto =
+        ChangePasswordRequestDto.builder()
+            .currentPassword("secret")
+            .newPassword("new-secret")
+            .confirmPassword("new-secret")
+            .build();
 
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1L)
         .body(requestDto)
         .when()
@@ -231,15 +267,19 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidCredentials() {
-    ChangePasswordRequestDto requestDto = ChangePasswordRequestDto.builder()
-        .currentPassword("non-valid-secret")
-        .newPassword("new-secret")
-        .confirmPassword("new-secret")
-        .build();
+    ChangePasswordRequestDto requestDto =
+        ChangePasswordRequestDto.builder()
+            .currentPassword("non-valid-secret")
+            .newPassword("new-secret")
+            .confirmPassword("new-secret")
+            .build();
 
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1L)
         .body(requestDto)
         .when()
@@ -250,15 +290,19 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnBadRequestWhenCallChangePasswordEndpointWithNonValidConfirmPassword() {
-    ChangePasswordRequestDto requestDto = ChangePasswordRequestDto.builder()
-        .currentPassword("secret")
-        .newPassword("new-secret")
-        .confirmPassword("non-valid-new-secret")
-        .build();
+    ChangePasswordRequestDto requestDto =
+        ChangePasswordRequestDto.builder()
+            .currentPassword("secret")
+            .newPassword("new-secret")
+            .confirmPassword("non-valid-new-secret")
+            .build();
 
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .pathParam("userId", 1L)
         .body(requestDto)
         .when()
@@ -269,9 +313,12 @@ class UserResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "carroyom", roles = { "Admin", "User" })
+  @TestSecurity(
+      user = "carroyom",
+      roles = {"Admin", "User"})
   void shouldReturnUserWhenCallUsersSelfEndpoint() {
-    given().contentType(ContentType.JSON)
+    given()
+        .contentType(ContentType.JSON)
         .when()
         .get("/api/v1/users/self")
         .then()

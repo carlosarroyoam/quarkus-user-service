@@ -62,8 +62,8 @@ public class UserResource {
   @Path("/{userId}")
   @Consumes(MediaType.APPLICATION_JSON)
   @RolesAllowed("Admin")
-  public RestResponse<Void> update(@RestPath("userId") Long userId,
-      @Valid UpdateUserRequestDto requestDto) {
+  public RestResponse<Void> update(
+      @RestPath("userId") Long userId, @Valid UpdateUserRequestDto requestDto) {
     userService.update(userId, requestDto);
     return RestResponse.noContent();
   }
@@ -71,10 +71,10 @@ public class UserResource {
   @POST
   @Path("/{userId}/change-password")
   @Consumes(MediaType.APPLICATION_JSON)
-  public RestResponse<Void> changePassword(@Context SecurityContext securityContext,
-      @Valid ChangePasswordRequestDto requestDto) {
-    UserDto userByUsername = userService
-        .findByUsername(securityContext.getUserPrincipal().getName());
+  public RestResponse<Void> changePassword(
+      @Context SecurityContext securityContext, @Valid ChangePasswordRequestDto requestDto) {
+    UserDto userByUsername =
+        userService.findByUsername(securityContext.getUserPrincipal().getName());
     userService.changePassword(userByUsername.getId(), requestDto);
     return RestResponse.noContent();
   }
@@ -91,7 +91,7 @@ public class UserResource {
   @Path("/self")
   @Produces(MediaType.APPLICATION_JSON)
   public RestResponse<UserDto> self(@Context SecurityContext securityContext) {
-    return RestResponse
-        .ok(userService.findByUsername(securityContext.getUserPrincipal().getName()));
+    return RestResponse.ok(
+        userService.findByUsername(securityContext.getUserPrincipal().getName()));
   }
 }

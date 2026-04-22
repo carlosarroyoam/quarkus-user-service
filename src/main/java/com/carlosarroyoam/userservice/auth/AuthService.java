@@ -19,19 +19,22 @@ public class AuthService {
   private final AppMessages messages;
 
   @Inject
-  public AuthService(final UserRepository userRepository, final TokenService tokenService,
-      AppMessages messages) {
+  public AuthService(
+      final UserRepository userRepository, final TokenService tokenService, AppMessages messages) {
     this.userRepository = userRepository;
     this.tokenService = tokenService;
     this.messages = messages;
   }
 
   public LoginResponseDto auth(LoginRequestDto requestDto) {
-    User userByUsername = userRepository.findByUsernameOptional(requestDto.getUsername())
-        .orElseThrow(() -> {
-          LOG.warn(messages.userAccountNotFoundDetailed(requestDto.getUsername()));
-          return new AuthenticationFailedException(messages.userAccountNotFound());
-        });
+    User userByUsername =
+        userRepository
+            .findByUsernameOptional(requestDto.getUsername())
+            .orElseThrow(
+                () -> {
+                  LOG.warn(messages.userAccountNotFoundDetailed(requestDto.getUsername()));
+                  return new AuthenticationFailedException(messages.userAccountNotFound());
+                });
 
     if (Boolean.FALSE.equals(userByUsername.getIsActive())) {
       LOG.warn(messages.userAccountNotActiveDetailed(requestDto.getUsername()));

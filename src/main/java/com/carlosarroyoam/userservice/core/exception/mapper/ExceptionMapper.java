@@ -28,13 +28,14 @@ class ExceptionMapper {
   public Response mapWebApplicationException(WebApplicationException ex) {
     Status status = Status.fromStatusCode(ex.getResponse().getStatus());
 
-    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
-        .message(ex.getMessage())
-        .code(status.getStatusCode())
-        .status(status.getReasonPhrase())
-        .path(uriInfo.getPath())
-        .timestamp(ZonedDateTime.now(clock))
-        .build();
+    AppExceptionDto appExceptionDto =
+        AppExceptionDto.builder()
+            .message(ex.getMessage())
+            .code(status.getStatusCode())
+            .status(status.getReasonPhrase())
+            .path(uriInfo.getPath())
+            .timestamp(ZonedDateTime.now(clock))
+            .build();
 
     return Response.status(status).entity(appExceptionDto).type(MediaType.APPLICATION_JSON).build();
   }
@@ -43,17 +44,18 @@ class ExceptionMapper {
   public Response mapConstraintViolationException(ConstraintViolationException ex) {
     Status status = Status.BAD_REQUEST;
 
-    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
-        .message("Request data is not valid")
-        .code(status.getStatusCode())
-        .status(status.getReasonPhrase())
-        .path(uriInfo.getPath())
-        .timestamp(ZonedDateTime.now(clock))
-        .details(ex.getConstraintViolations()
-            .stream()
-            .map(ConstraintViolation::getMessage)
-            .collect(Collectors.toSet()))
-        .build();
+    AppExceptionDto appExceptionDto =
+        AppExceptionDto.builder()
+            .message("Request data is not valid")
+            .code(status.getStatusCode())
+            .status(status.getReasonPhrase())
+            .path(uriInfo.getPath())
+            .timestamp(ZonedDateTime.now(clock))
+            .details(
+                ex.getConstraintViolations().stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.toSet()))
+            .build();
 
     return Response.status(status).entity(appExceptionDto).type(MediaType.APPLICATION_JSON).build();
   }
@@ -62,13 +64,14 @@ class ExceptionMapper {
   public Response mapException(Exception ex) {
     Status status = Status.INTERNAL_SERVER_ERROR;
 
-    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
-        .message("Whoops! Something went wrong")
-        .code(status.getStatusCode())
-        .status(status.getReasonPhrase())
-        .path(uriInfo.getPath())
-        .timestamp(ZonedDateTime.now(clock))
-        .build();
+    AppExceptionDto appExceptionDto =
+        AppExceptionDto.builder()
+            .message("Whoops! Something went wrong")
+            .code(status.getStatusCode())
+            .status(status.getReasonPhrase())
+            .path(uriInfo.getPath())
+            .timestamp(ZonedDateTime.now(clock))
+            .build();
 
     ex.printStackTrace();
 
