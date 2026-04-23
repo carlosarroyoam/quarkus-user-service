@@ -1,14 +1,12 @@
 package com.carlosarroyoam.userservice.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class LoginRequestDto {
   @NotBlank(message = "Username should not be blank")
