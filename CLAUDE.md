@@ -26,7 +26,7 @@ Single Quarkus REST service (`quarkus-rest` + Jackson, Hibernate ORM Panache, Sm
 
 - `auth/` — `AuthResource` → `AuthService` → `TokenService`. Login checks the account exists, is active, and the bcrypt hash matches, then issues an RS256 JWT (`upn` = username, `groups` = the user's single role title).
 - `user/` — `UserResource` → `UserService` → `UserRepository` / `RoleRepository` (Panache repositories), with `entity/` (`User`, `Role`) and `dto/`.
-- `core/` — `ClockConfig` (produces the injectable `Clock`), `AppMessages`, `ExceptionMapper`, `AppConstants`.
+- `core/` — `ClockConfig` (produces the injectable `Clock`), `AppMessages`, `ExceptionMapper`, `CommonConstants`.
 
 Cross-cutting conventions that span several files:
 
