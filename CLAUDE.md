@@ -18,7 +18,7 @@ No linter/formatter is wired into the build (the `checkstyle-maven-plugin.versio
 
 ## Javadoc
 
-All Javadoc is written in **Spanish** and must follow [docs/javadoc-style.md](docs/javadoc-style.md) (see also `AGENTS.md`) — read it before adding or changing any comment. Notable rules: third-person present-tense first sentence, `@throws` only for domain exceptions thrown by `UserService`/`AuthService`, REST methods guarded by `@RolesAllowed` end their first sentence with "Requiere rol {@code X}.", no `@author`/`@since`.
+All Javadoc is written in **Spanish** and must follow [docs/javadoc-style.md](docs/javadoc-style.md) — read it before adding or changing any comment. Notable rules: third-person present-tense first sentence, `@throws` only for domain exceptions thrown by `UserService`/`AuthService`, REST methods guarded by `@RolesAllowed` end their first sentence with "Requiere rol {@code X}.", no `@author`/`@since`.
 
 ## Architecture
 
