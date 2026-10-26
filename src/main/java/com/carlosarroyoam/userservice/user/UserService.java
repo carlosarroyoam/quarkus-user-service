@@ -17,6 +17,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.jboss.logging.Logger;
+import org.jspecify.annotations.NonNull;
 
 @ApplicationScoped
 public class UserService {
@@ -38,28 +39,12 @@ public class UserService {
   }
 
   public UserDto findById(Long userId) {
-    User userById =
-        userRepository
-            .findByIdOptional(userId)
-            .orElseThrow(
-                () -> {
-                  LOG.warn(messages.userWithIdNotFound(userId));
-                  return new NotFoundException(messages.userNotFound());
-                });
-
+    User userById = findUserById(userId);
     return UserDtoMapper.INSTANCE.toDto(userById);
   }
 
   public UserDto findByUsername(String username) {
-    User userByUsername =
-        userRepository
-            .findByUsernameOptional(username)
-            .orElseThrow(
-                () -> {
-                  LOG.warn(messages.userWithUsernameNotFound(username));
-                  return new NotFoundException(messages.userNotFound());
-                });
-
+    User userByUsername = findUserByUsername(username);
     return UserDtoMapper.INSTANCE.toDto(userByUsername);
   }
 
@@ -76,67 +61,36 @@ public class UserService {
     }
 
     LocalDateTime now = LocalDateTime.now(clock);
-
     User user = UserDtoMapper.INSTANCE.toEntity(requestDto);
     user.setPassword(BcryptUtil.bcryptHash(user.getPassword()));
     user.setIsActive(Boolean.FALSE);
     user.setCreatedAt(now);
     user.setUpdatedAt(now);
-
     userRepository.persist(user);
+
     return UserDtoMapper.INSTANCE.toDto(user);
   }
 
   @Transactional
   public void update(Long userId, UpdateUserRequestDto requestDto) {
-    User userById =
-        userRepository
-            .findByIdOptional(userId)
-            .orElseThrow(
-                () -> {
-                  LOG.warn(messages.userWithIdNotFound(userId));
-                  return new NotFoundException(messages.userNotFound());
-                });
-
-    if (requestDto.getName() != null) {
-      userById.setName(requestDto.getName());
-    }
-
-    if (requestDto.getAge() != null) {
-      userById.setAge(requestDto.getAge());
-    }
-
+    User userById = findUserById(userId);
+    userById.setName(requestDto.getName());
+    userById.setAge(requestDto.getAge());
     userById.setUpdatedAt(LocalDateTime.now(clock));
     userRepository.persist(userById);
   }
 
   @Transactional
   public void deleteById(Long userId) {
-    User userById =
-        userRepository
-            .findByIdOptional(userId)
-            .orElseThrow(
-                () -> {
-                  LOG.warn(messages.userWithIdNotFound(userId));
-                  return new NotFoundException(messages.userNotFound());
-                });
-
+    User userById = findUserById(userId);
     userById.setIsActive(Boolean.FALSE);
     userById.setUpdatedAt(LocalDateTime.now(clock));
-
     userRepository.persist(userById);
   }
 
   @Transactional
   public void changePassword(Long userId, ChangePasswordRequestDto requestDto) {
-    User userById =
-        userRepository
-            .findByIdOptional(userId)
-            .orElseThrow(
-                () -> {
-                  LOG.warn(messages.userWithIdNotFound(userId));
-                  return new NotFoundException(messages.userNotFound());
-                });
+    User userById = findUserById(userId);
 
     if (!BcryptUtil.matches(requestDto.getCurrentPassword(), userById.getPassword())) {
       LOG.warn(messages.unauthorizedCredentialsDetailed(userById.getUsername()));
@@ -150,7 +104,26 @@ public class UserService {
 
     userById.setPassword(BcryptUtil.bcryptHash(requestDto.getNewPassword()));
     userById.setUpdatedAt(LocalDateTime.now(clock));
-
     userRepository.persist(userById);
+  }
+
+  private @NonNull User findUserById(Long userId) {
+    return userRepository
+        .findByIdOptional(userId)
+        .orElseThrow(
+            () -> {
+              LOG.warn(messages.userWithIdNotFound(userId));
+              return new NotFoundException(messages.userNotFound());
+            });
+  }
+
+  private @NonNull User findUserByUsername(String username) {
+    return userRepository
+        .findByUsernameOptional(username)
+        .orElseThrow(
+            () -> {
+              LOG.warn(messages.userWithUsernameNotFound(username));
+              return new NotFoundException(messages.userNotFound());
+            });
   }
 }

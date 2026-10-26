@@ -91,7 +91,7 @@ public class UserResource {
   @Path("/self")
   @Produces(MediaType.APPLICATION_JSON)
   public RestResponse<UserDto> self(@Context SecurityContext securityContext) {
-    return RestResponse.ok(
-        userService.findByUsername(securityContext.getUserPrincipal().getName()));
+    UserDto userDto = userService.findByUsername(securityContext.getUserPrincipal().getName());
+    return RestResponse.ok(userDto);
   }
 }
