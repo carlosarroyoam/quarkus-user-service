@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa el cuerpo JSON de error devuelto al cliente. Los campos nulos, p. ej. {@code details},
+ * se omiten de la respuesta.
+ */
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter

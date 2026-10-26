@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/** Representa los datos de la petición para cambiar la contraseña de un usuario. */
 @Getter
 @Setter
 @Builder

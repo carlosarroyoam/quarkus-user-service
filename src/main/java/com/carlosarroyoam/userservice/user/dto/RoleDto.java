@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un {@link Role} expuesto por la API. */
 @Getter
 @Setter
 @Builder
@@ -17,6 +18,7 @@ public class RoleDto {
   private String title;
   private String description;
 
+  /** Mapeador MapStruct entre {@link Role} y sus DTO. */
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   public interface RoleDtoMapper {
     RoleDtoMapper INSTANCE = Mappers.getMapper(RoleDtoMapper.class);

@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** Representa un usuario del sistema con sus credenciales, su estado y su {@link Role}. */
 @Entity
 @Table(name = "users")
 @Getter

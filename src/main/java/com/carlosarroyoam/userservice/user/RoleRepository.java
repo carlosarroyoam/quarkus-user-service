@@ -4,5 +4,6 @@ import com.carlosarroyoam.userservice.user.entity.Role;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
+/** Repositorio Panache de {@link Role}. */
 @ApplicationScoped
 public class RoleRepository implements PanacheRepository<Role> {}

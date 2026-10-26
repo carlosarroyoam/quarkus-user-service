@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** Representa un rol que puede asignarse a un {@link User}. */
 @Entity
 @Table(name = "roles")
 @Getter

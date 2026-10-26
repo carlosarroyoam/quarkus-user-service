@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/** Representa los datos de la petición para actualizar el nombre y la edad de un usuario. */
 @Getter
 @Setter
 @Builder

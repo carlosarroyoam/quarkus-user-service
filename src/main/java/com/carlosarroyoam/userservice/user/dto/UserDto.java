@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un {@link User} expuesto por la API, sin su contraseña. */
 @Getter
 @Setter
 @Builder
@@ -25,6 +26,7 @@ public class UserDto {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
+  /** Mapeador MapStruct entre {@link User} y sus DTO. */
   @Mapper(
       nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
       unmappedTargetPolicy = ReportingPolicy.IGNORE)

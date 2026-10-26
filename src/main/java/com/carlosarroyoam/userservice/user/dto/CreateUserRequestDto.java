@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/** Representa los datos de la petición para crear un usuario. */
 @Getter
 @Setter
 @Builder
