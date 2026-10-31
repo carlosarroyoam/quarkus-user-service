@@ -80,8 +80,8 @@ public class UserService {
   }
 
   /**
-   * Crea un usuario inactivo con la contraseña cifrada con bcrypt. El nombre de usuario y el
-   * correo deben ser únicos.
+   * Crea un usuario inactivo con la contraseña cifrada con bcrypt. El nombre de usuario y el correo
+   * deben ser únicos.
    *
    * @param requestDto datos del usuario a crear
    * @return el usuario creado
@@ -127,8 +127,8 @@ public class UserService {
   }
 
   /**
-   * Desactiva un usuario. La baja es lógica: el registro se conserva con {@code isActive} en
-   * {@code false}.
+   * Desactiva un usuario. La baja es lógica: el registro se conserva con {@code isActive} en {@code
+   * false}.
    *
    * @param userId identificador del usuario
    * @throws NotFoundException si no existe un usuario con ese identificador
@@ -148,8 +148,8 @@ public class UserService {
    * @param userId identificador del usuario
    * @param requestDto contraseña actual, contraseña nueva y su confirmación
    * @throws NotFoundException si no existe un usuario con ese identificador
-   * @throws BadRequestException si la contraseña actual es incorrecta o la nueva no coincide con
-   *     su confirmación
+   * @throws BadRequestException si la contraseña actual es incorrecta o la nueva no coincide con su
+   *     confirmación
    */
   @Transactional
   public void changePassword(Long userId, ChangePasswordRequestDto requestDto) {
@@ -180,11 +180,10 @@ public class UserService {
   private @NonNull User findUserById(Long userId) {
     return userRepository
         .findByIdOptional(userId)
-        .orElseThrow(
-            () -> {
-              LOG.warn(messages.userWithIdNotFound(userId));
-              return new NotFoundException(messages.userNotFound());
-            });
+        .orElseThrow(() -> {
+          LOG.warn(messages.userWithIdNotFound(userId));
+          return new NotFoundException(messages.userNotFound());
+        });
   }
 
   /**
@@ -197,10 +196,9 @@ public class UserService {
   private @NonNull User findUserByUsername(String username) {
     return userRepository
         .findByUsernameOptional(username)
-        .orElseThrow(
-            () -> {
-              LOG.warn(messages.userWithUsernameNotFound(username));
-              return new NotFoundException(messages.userNotFound());
-            });
+        .orElseThrow(() -> {
+          LOG.warn(messages.userWithUsernameNotFound(username));
+          return new NotFoundException(messages.userNotFound());
+        });
   }
 }

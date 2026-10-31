@@ -38,8 +38,8 @@ public class AuthService {
   }
 
   /**
-   * Autentica a un usuario y genera su token de acceso. La cuenta debe existir y estar activa, y
-   * la contraseña debe coincidir con el hash almacenado.
+   * Autentica a un usuario y genera su token de acceso. La cuenta debe existir y estar activa, y la
+   * contraseña debe coincidir con el hash almacenado.
    *
    * @param requestDto credenciales del usuario
    * @return la respuesta con el nombre de usuario y el token de acceso
@@ -50,11 +50,10 @@ public class AuthService {
     User userByUsername =
         userRepository
             .findByUsernameOptional(requestDto.getUsername())
-            .orElseThrow(
-                () -> {
-                  LOG.warn(messages.userAccountNotFoundDetailed(requestDto.getUsername()));
-                  return new AuthenticationFailedException(messages.userAccountNotFound());
-                });
+            .orElseThrow(() -> {
+              LOG.warn(messages.userAccountNotFoundDetailed(requestDto.getUsername()));
+              return new AuthenticationFailedException(messages.userAccountNotFound());
+            });
 
     if (Boolean.FALSE.equals(userByUsername.getIsActive())) {
       LOG.warn(messages.userAccountNotActiveDetailed(requestDto.getUsername()));

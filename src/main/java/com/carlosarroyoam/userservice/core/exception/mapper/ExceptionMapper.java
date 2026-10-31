@@ -88,8 +88,8 @@ class ExceptionMapper {
   }
 
   /**
-   * Traduce cualquier excepción no controlada a una respuesta 500 con un mensaje genérico. La
-   * traza de la excepción se escribe en la salida de error.
+   * Traduce cualquier excepción no controlada a una respuesta 500 con un mensaje genérico. La traza
+   * de la excepción se escribe en la salida de error.
    *
    * @param ex excepción no controlada
    * @return la respuesta con el {@link AppExceptionDto} como cuerpo
