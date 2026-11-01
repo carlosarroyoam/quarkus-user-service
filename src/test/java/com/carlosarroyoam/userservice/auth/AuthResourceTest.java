@@ -6,7 +6,6 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 
 import com.carlosarroyoam.userservice.auth.dto.LoginRequestDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.ws.rs.core.Response.Status;
@@ -15,7 +14,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class AuthResourceTest {
   @Test
-  void shouldReturnOkWhenAuthUserWithValidCredentials() throws JsonProcessingException {
+  void shouldReturnOkWhenAuthUserWithValidCredentials() {
     LoginRequestDto requestDto =
         LoginRequestDto.builder().username("carroyom").password("secret").build();
 

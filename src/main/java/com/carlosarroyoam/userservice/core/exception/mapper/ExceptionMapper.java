@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.UriInfo;
 import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.util.stream.Collectors;
+import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 /**
@@ -22,6 +23,7 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
  * no exponer detalles internos al cliente; la traza se escribe únicamente en la salida de error.
  */
 class ExceptionMapper {
+  private static final Logger LOG = Logger.getLogger(ExceptionMapper.class);
   private final UriInfo uriInfo;
   private final Clock clock;
 
@@ -107,7 +109,7 @@ class ExceptionMapper {
             .timestamp(ZonedDateTime.now(clock))
             .build();
 
-    ex.printStackTrace();
+    LOG.error("Whoops! Something went wrong", ex);
 
     return Response.status(status).entity(appExceptionDto).type(MediaType.APPLICATION_JSON).build();
   }
