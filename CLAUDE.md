@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-Quarkus 3.40 / Java 17 / Maven wrapper (`./mvnw`; `mvnw.cmd` on Windows).
+Quarkus 3.40 / Java 25 / Maven wrapper (`./mvnw`; `mvnw.cmd` on Windows).
 
 - Dev mode (live reload, Dev UI at `http://localhost:8080/q/dev/`): `./mvnw compile quarkus:dev`
 - Unit/`@QuarkusTest` tests: `./mvnw test`
