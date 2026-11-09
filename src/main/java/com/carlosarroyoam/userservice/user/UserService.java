@@ -52,7 +52,7 @@ public class UserService {
    */
   public List<UserDto> findAll() {
     List<User> users = userRepository.listAll();
-    return UserDtoMapper.INSTANCE.toDtos(users);
+    return UserDtoMapper.INSTANCE.toDtoList(users);
   }
 
   /**
